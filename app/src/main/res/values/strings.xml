@@ -1,4 +1,13 @@
 <resources>
     <string name="app_name">MyHealthApp</string>
     <string name="title_activity_maps">Map</string>
+    <string name="action_intent_filter_label">MyHealthApp</string>
+    <string name="login_title">MyHealthApp</string>
+    <string name="login_subtitle">Bienvenido</string>
+    <string name="login_login_btn_text">Iniciar sesion</string>
+    <!-- \u00f1 es la ENIE en UTF-8 -->
+    <string name="login_password_hint">Contrase\u00f1a</string>
+    <string name="login_id_hint">DNI</string>
+    <string name="login_signup_btn_text">Registrarse</string>
+    <string name="login_logo_desc">Bienvenido a MyHealthApp</string>
 </resources>
