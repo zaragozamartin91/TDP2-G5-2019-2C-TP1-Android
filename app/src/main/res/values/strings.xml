@@ -2,12 +2,27 @@
     <string name="app_name">MyHealthApp</string>
     <string name="title_activity_maps">Map</string>
     <string name="action_intent_filter_label">MyHealthApp</string>
-    <string name="login_title">MyHealthApp</string>
-    <string name="login_subtitle">Bienvenido</string>
+
+    <!-- LOGIN *********************************************************************** -->
+    <string name="login_title">Bienvenido</string>
+    <string name="login_subtitle">Iniciar sesion</string>
     <string name="login_login_btn_text">Iniciar sesion</string>
     <!-- \u00f1 es la ENIE en UTF-8 -->
-    <string name="login_password_hint">Contrase\u00f1a</string>
+    <string name="login_password_hint">Contrase\u00F1a</string>
     <string name="login_id_hint">DNI</string>
     <string name="login_signup_btn_text">Registrarse</string>
     <string name="login_logo_desc">Bienvenido a MyHealthApp</string>
+
+    <!-- SIGNUP *********************************************************************** -->
+    <string name="signup_background_contentDescription">Fondo</string>
+    <string name="signup_title">Registro</string>
+    <string name="signup_firstname_hint">Nombres</string>
+    <string name="signup_lastname_hint">Apellidos</string>
+    <string name="signup_birth_hint">Fecha de nacimiento</string>
+    <string name="signup_btn_text">Registrarse</string>
+    <string name="signup_id_hint">DNI</string>
+    <string name="signup_member_hint">N\u00FAmero de afiliado</string>
+    <string name="signup_email_hint">Email</string>
+    <string name="signup_password_hint">Contrase\u00F1a</string>
+    <string name="signup_repeat_password_hint">Repetir contrase\u00F1a</string>
 </resources>
