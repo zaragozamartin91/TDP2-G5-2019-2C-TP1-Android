@@ -1,4 +1,4 @@
-package com.g5.tdp2.myhealthapp;
+package com.g5.tdp2.myhealthapp.ui;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -8,12 +8,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.g5.tdp2.myhealthapp.R;
 import com.g5.tdp2.myhealthapp.entity.Member;
 import com.g5.tdp2.myhealthapp.entity.MemberCredentials;
 import com.g5.tdp2.myhealthapp.usecase.LoginMember;
 import com.g5.tdp2.myhealthapp.usecase.UsecaseFactory;
 
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class LoginActivity extends AppCompatActivity {
@@ -46,9 +48,11 @@ public class LoginActivity extends AppCompatActivity {
         String pass = passField.getText().toString();
 
         AtomicReference<String> errMsg = new AtomicReference<>();
+        AtomicBoolean loginOk = new AtomicBoolean(false);
         try {
             Member member = loginUsecase.loginMember(MemberCredentials.of(id, pass));
             System.out.println(member);
+            loginOk.set(true);
         } catch (NumberFormatException e) {
             errMsg.set(getString(R.string.login_id_error_msg));
             idField.setError(errMsg.get());
@@ -71,5 +75,11 @@ public class LoginActivity extends AppCompatActivity {
         Optional.ofNullable(errMsg.get()).ifPresent(
                 e -> Toast.makeText(this, e, Toast.LENGTH_LONG).show()
         );
+        Optional.of(loginOk).filter(AtomicBoolean::get).ifPresent(a -> handleLoginOk());
+    }
+
+    private void handleLoginOk() {
+        Intent signupIntent = new Intent(this, MapsActivity.class);
+        startActivity(signupIntent);
     }
 }

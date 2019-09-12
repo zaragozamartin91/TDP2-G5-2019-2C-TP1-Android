@@ -1,15 +1,18 @@
-package com.g5.tdp2.myhealthapp;
+package com.g5.tdp2.myhealthapp.ui;
 
 import androidx.fragment.app.FragmentActivity;
 
 import android.os.Bundle;
 
+import com.g5.tdp2.myhealthapp.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.util.Optional;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -19,10 +22,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
+        Optional.ofNullable(getSupportFragmentManager())
+                .map(f -> f.findFragmentById(R.id.map))
+                .map(SupportMapFragment.class::cast)
+                .ifPresent(m -> m.getMapAsync(this));
     }
 
 
