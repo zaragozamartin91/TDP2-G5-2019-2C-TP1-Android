@@ -12,9 +12,14 @@
     <string name="login_id_hint">DNI</string>
     <string name="login_signup_btn_text">Registrarse</string>
     <string name="login_logo_desc">Bienvenido a MyHealthApp</string>
-    <string name="login_id_error_msg">Id invalido</string>
+    <string name="login_revover_pass_btn">¿Olvido su contrase\u00F1a?</string>
+
+    <string name="login_id_error_msg">DNI invalido</string>
     <string name="login_password_err_msg">Contrase\u00F1a invalida</string>
     <string name="login_password_err_short_msg">Contrase\u00F1a debe tener al menos 8 caracteres</string>
+    <string name="login_password_err_invalid_msg">La contrase\u00F1a debe tener al menos 8 caracteres, n\u00FAmeros y letras</string>
+
+    <string name="login_url"><![CDATA[http://foo.bar.com/login]]></string>
 
     <!-- SIGNUP *********************************************************************** -->
     <string name="signup_background_contentDescription">Fondo</string>

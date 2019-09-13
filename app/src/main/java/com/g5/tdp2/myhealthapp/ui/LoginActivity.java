@@ -18,6 +18,11 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
+import static com.g5.tdp2.myhealthapp.entity.MemberCredentials.EMPTY_PASSWORD;
+import static com.g5.tdp2.myhealthapp.entity.MemberCredentials.INVALID_ID;
+import static com.g5.tdp2.myhealthapp.entity.MemberCredentials.INVALID_PASSWORD;
+import static com.g5.tdp2.myhealthapp.entity.MemberCredentials.SHORT_PASSWORD;
+
 public class LoginActivity extends AppCompatActivity {
     private EditText idField;
     private EditText passField;
@@ -47,38 +52,37 @@ public class LoginActivity extends AppCompatActivity {
         String id = idField.getText().toString();
         String pass = passField.getText().toString();
 
-        AtomicReference<String> errMsg = new AtomicReference<>();
-        AtomicBoolean loginOk = new AtomicBoolean(false);
+        AtomicReference<String> idErrMsg = new AtomicReference<>();
+        AtomicReference<String> passErrMsg = new AtomicReference<>();
         try {
-            Member member = loginUsecase.loginMember(MemberCredentials.of(id, pass));
-            System.out.println(member);
-            loginOk.set(true);
+            MemberCredentials memberCredentials = MemberCredentials.of(id, pass);
+            Member member = loginUsecase.loginMember(memberCredentials);
+            handleLoginOk(member);
         } catch (NumberFormatException e) {
-            errMsg.set(getString(R.string.login_id_error_msg));
-            idField.setError(errMsg.get());
+            idErrMsg.set(getString(R.string.login_id_error_msg));
         } catch (IllegalStateException e) {
             switch (e.getMessage()) {
-                case MemberCredentials.EMPTY_PASSWORD:
-                    errMsg.set(getString(R.string.login_password_err_msg));
-                    passField.setError(errMsg.get());
+                case INVALID_ID:
+                    idErrMsg.set(getString(R.string.login_id_error_msg));
                     break;
-                case MemberCredentials.SHORT_PASSWORD:
-                    errMsg.set(getString(R.string.login_password_err_short_msg));
-                    passField.setError(errMsg.get());
+                case EMPTY_PASSWORD:
+                    passErrMsg.set(getString(R.string.login_password_err_msg));
+                    break;
+                case SHORT_PASSWORD:
+                case INVALID_PASSWORD:
+                    passErrMsg.set(getString(R.string.login_password_err_invalid_msg));
                     break;
                 default:
-                    errMsg.set("Error");
+                    passErrMsg.set("Error");
                     passField.setError("Error");
             }
         }
 
-        Optional.ofNullable(errMsg.get()).ifPresent(
-                e -> Toast.makeText(this, e, Toast.LENGTH_LONG).show()
-        );
-        Optional.of(loginOk).filter(AtomicBoolean::get).ifPresent(a -> handleLoginOk());
+        Optional.ofNullable(idErrMsg.get()).ifPresent(e -> idField.setError(e));
+        Optional.ofNullable(passErrMsg.get()).ifPresent(e -> passField.setError(e));
     }
 
-    private void handleLoginOk() {
+    private void handleLoginOk(Member member) {
         Intent signupIntent = new Intent(this, MapsActivity.class);
         startActivity(signupIntent);
     }
