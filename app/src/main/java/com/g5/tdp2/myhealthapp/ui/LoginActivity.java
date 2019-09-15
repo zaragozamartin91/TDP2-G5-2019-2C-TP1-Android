@@ -2,8 +2,11 @@ package com.g5.tdp2.myhealthapp.ui;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -12,6 +15,7 @@ import com.g5.tdp2.myhealthapp.R;
 import com.g5.tdp2.myhealthapp.entity.Member;
 import com.g5.tdp2.myhealthapp.entity.MemberCredentials;
 import com.g5.tdp2.myhealthapp.usecase.LoginMember;
+import com.g5.tdp2.myhealthapp.usecase.LoginMemberException;
 import com.g5.tdp2.myhealthapp.usecase.UsecaseFactory;
 
 import java.util.Optional;
@@ -22,6 +26,8 @@ import static com.g5.tdp2.myhealthapp.entity.MemberCredentials.EMPTY_PASSWORD;
 import static com.g5.tdp2.myhealthapp.entity.MemberCredentials.INVALID_ID;
 import static com.g5.tdp2.myhealthapp.entity.MemberCredentials.INVALID_PASSWORD;
 import static com.g5.tdp2.myhealthapp.entity.MemberCredentials.SHORT_PASSWORD;
+import static com.g5.tdp2.myhealthapp.usecase.LoginMember.UNKNOWN_ERROR;
+import static com.g5.tdp2.myhealthapp.usecase.LoginMember.WRONG_CREDENTIALS;
 
 public class LoginActivity extends AppCompatActivity {
     private EditText idField;
@@ -76,6 +82,16 @@ public class LoginActivity extends AppCompatActivity {
                     passErrMsg.set("Error");
                     passField.setError("Error");
             }
+        } catch (Exception e) {
+            switch (e.getMessage()) {
+                case WRONG_CREDENTIALS:
+                    showErrDialog(getString(R.string.login_dialog_title_err_msg), getString(R.string.login_err_403_msg));
+                    break;
+                case UNKNOWN_ERROR:
+                default:
+                    Log.e("login-error", e.getMessage(), e);
+                    showErrDialog(getString(R.string.login_dialog_title_err_msg), getString(R.string.std_unknown_err));
+            }
         }
 
         Optional.ofNullable(idErrMsg.get()).ifPresent(e -> idField.setError(e));
@@ -85,5 +101,15 @@ public class LoginActivity extends AppCompatActivity {
     private void handleLoginOk(Member member) {
         Intent signupIntent = new Intent(this, MapsActivity.class);
         startActivity(signupIntent);
+    }
+
+    private void showErrDialog(String title, String msg) {
+        new AlertDialog.Builder(this)
+                .setTitle(title)
+                .setMessage(msg)
+                .setPositiveButton(R.string.std_close, (dialog, which) -> { })
+                .setCancelable(false)
+                .create()
+                .show();
     }
 }

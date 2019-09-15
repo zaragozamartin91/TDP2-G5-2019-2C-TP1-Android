@@ -5,5 +5,9 @@ import com.g5.tdp2.myhealthapp.entity.MemberCredentials;
 
 
 public interface LoginMember {
-    Member loginMember(MemberCredentials memberCredentials);
+    String WRONG_CREDENTIALS = "WRONG_CREDENTIALS";
+    String UNKNOWN_ERROR = "UNKNOWN_ERROR";
+
+    Member loginMember(MemberCredentials memberCredentials)
+            throws IllegalStateException, LoginMemberException;
 }

@@ -2,6 +2,9 @@
     <string name="app_name">MyHealthApp</string>
     <string name="title_activity_maps">Map</string>
     <string name="action_intent_filter_label">MyHealthApp</string>
+    <string name="std_close">Cerrar</string>
+    <string name="std_unknown_err">Error desconocido</string>
+
 
     <!-- LOGIN *********************************************************************** -->
     <string name="login_title">Bienvenido</string>
@@ -18,6 +21,9 @@
     <string name="login_password_err_msg">Contrase\u00F1a invalida</string>
     <string name="login_password_err_short_msg">Contrase\u00F1a debe tener al menos 8 caracteres</string>
     <string name="login_password_err_invalid_msg">La contrase\u00F1a debe tener al menos 8 caracteres, n\u00FAmeros y letras</string>
+    <string name="login_err_403_msg">Verificar datos ingresados. Usuario o contrase\u00F1a ingresados inv\u00E1lidos</string>
+    <string name="login_dialog_title_err_msg">Error de inicio de sesi\u00F3n</string>
+
 
     <string name="login_url"><![CDATA[http://foo.bar.com/login]]></string>
 

@@ -22,9 +22,15 @@ public class MemberCredentials {
         return new MemberCredentials(Long.valueOf(sid), password);
     }
 
-    public void validate() {
+    /**
+     * Valida las credenciales del usuario.
+     *
+     * @throws IllegalStateException En caso que los campos sean erroneos
+     */
+    public void validate() throws IllegalStateException {
         Validate.validState(id > 0L, INVALID_ID);
         Validate.validState(StringUtils.isNotBlank(password), EMPTY_PASSWORD);
+        // TODO : mover validaciones de "fortaleza de password" a formulario de registro
         Validate.validState(password.length() > 8, SHORT_PASSWORD);
         Validate.validState(password.matches("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$"), INVALID_PASSWORD);
     }
