@@ -4,7 +4,13 @@
     <string name="action_intent_filter_label">MyHealthApp</string>
     <string name="std_close">Cerrar</string>
     <string name="std_unknown_err">Error desconocido</string>
+    <string name="premissions_req">Solicitud de permisos</string>
 
+
+    <!-- PERMISSIONS *********************************************************************** -->
+    <string name="internet_perm_reject">Se necesita acceso a internet</string>
+    <string name="network_perm_reject">Se necesita acceso a internet</string>
+    <string name="location_perm_reject">Se necesita acceso a geolocalizaci\u00F3n</string>
 
     <!-- LOGIN *********************************************************************** -->
     <string name="login_title">Bienvenido</string>
@@ -39,4 +45,7 @@
     <string name="signup_email_hint">Email</string>
     <string name="signup_password_hint">Contrase\u00F1a</string>
     <string name="signup_repeat_password_hint">Repetir contrase\u00F1a</string>
+
+    <!-- MAPS *********************************************************************** -->
+    <string name="maps_err_noloc_msg">No se tiene acceso a la localizaci\u00F3n</string>
 </resources>
