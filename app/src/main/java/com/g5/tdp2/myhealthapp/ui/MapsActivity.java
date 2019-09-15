@@ -16,6 +16,8 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
@@ -43,8 +45,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     /**
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
+     * This is where we can add markers or lines, add listeners or move the camera.
      * If Google Play services is not installed on the device, the user will be prompted to install
      * it inside the SupportMapFragment. This method will only be triggered once the user has
      * installed Google Play services and returned to the app.
@@ -81,6 +82,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 centerAndMarkLocation(loc);
             });
 
+            addStubMarker();
         } catch (SecurityException se) {
             Log.d("location-get", "SE CAUGHT");
             se.printStackTrace();
@@ -100,7 +102,26 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Log.d("CHANGED", "LOCATION UPDATED");
         currentLocation.set(location);
         Optional.ofNullable(location).ifPresent(this::centerAndMarkLocation);
+
+        addStubMarker();
     }
+
+    Marker stubMarker;
+
+    private void addStubMarker() {
+        Optional.ofNullable(stubMarker).ifPresent(Marker::remove);
+
+        Optional.ofNullable(currentLocation.get()).ifPresent(loc -> {
+            double stubLat = loc.getLatitude() + 0.000274d;
+            double stubLon = loc.getLongitude() - 0.003262d;
+
+            Optional.ofNullable(mMap).ifPresent(m -> {
+                LatLng latLngLocation = new LatLng(stubLat, stubLon);
+                stubMarker = m.addMarker(new MarkerOptions().position(latLngLocation).title("Pepe Argento" + "&" + "Calle falsa 123" + "&" + "Oncologia" + "&1533246698"));
+            });
+        });
+    }
+
 
     @Override
     public void onStatusChanged(String provider, int status, Bundle extras) { }
