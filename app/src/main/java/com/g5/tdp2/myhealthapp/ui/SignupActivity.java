@@ -1,4 +1,4 @@
-package com.g5.tdp2.myhealthapp;
+package com.g5.tdp2.myhealthapp.ui;
 
 import android.app.DatePickerDialog;
 import android.os.Bundle;
@@ -6,6 +6,8 @@ import android.view.MenuItem;
 import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.g5.tdp2.myhealthapp.R;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
