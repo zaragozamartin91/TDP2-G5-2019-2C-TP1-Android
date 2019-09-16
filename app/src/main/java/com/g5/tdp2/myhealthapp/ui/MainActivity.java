@@ -16,6 +16,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.Manifest.permission.ACCESS_NETWORK_STATE;
 import static android.Manifest.permission.INTERNET;
@@ -25,7 +26,7 @@ public abstract class MainActivity extends AppCompatActivity {
     private static final Integer PERMS_REQUEST_CODE = 1307;
 
     private static final String[] REQUIRED_PERMISSIONS = {
-            INTERNET, ACCESS_NETWORK_STATE, ACCESS_FINE_LOCATION
+            INTERNET, ACCESS_NETWORK_STATE, ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION
     };
 
 

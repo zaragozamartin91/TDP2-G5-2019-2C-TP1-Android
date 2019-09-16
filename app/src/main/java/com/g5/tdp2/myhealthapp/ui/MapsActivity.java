@@ -23,6 +23,9 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Stream;
 
+import static android.location.LocationManager.*;
+import static android.location.LocationManager.NETWORK_PROVIDER;
+
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, LocationListener {
 
     private GoogleMap mMap;
@@ -60,19 +63,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private void setUpMap() {
+        // TODO : QUEDARSE CON UNO DE LOS LOCATION PROVIDERS... POSIBLEMENTE EL DE NETWORK
         LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         try {
-
             Optional<Location> location = Stream.of(
-                    Optional.ofNullable(locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)),
-                    Optional.ofNullable(locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)))
+                    Optional.ofNullable(locationManager.getLastKnownLocation(NETWORK_PROVIDER)),
+                    Optional.ofNullable(locationManager.getLastKnownLocation(GPS_PROVIDER)))
                     .filter(Optional::isPresent)
                     .findFirst()
                     .orElseGet(() -> {
                         Toast.makeText(this, getString(R.string.maps_err_noloc_msg), Toast.LENGTH_LONG).show();
                         Log.d("location-get", "NULL");
-                        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 500, 5f, this);
-                        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 500, 5f, this);
                         return Optional.empty();
                     });
 
@@ -81,6 +82,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 currentLocation.set(loc);
                 centerAndMarkLocation(loc);
             });
+
+            locationManager.requestLocationUpdates(NETWORK_PROVIDER, 1000, 5f, this);
+            locationManager.requestLocationUpdates(GPS_PROVIDER, 1000, 5f, this);
 
             addStubMarker();
         } catch (SecurityException se) {
@@ -102,7 +106,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Log.d("CHANGED", "LOCATION UPDATED");
         currentLocation.set(location);
         Optional.ofNullable(location).ifPresent(this::centerAndMarkLocation);
-
         addStubMarker();
     }
 
