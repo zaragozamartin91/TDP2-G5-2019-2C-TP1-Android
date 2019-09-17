@@ -132,52 +132,50 @@ public class SignupActivity extends AppCompatActivity {
                 leDate.get().getTime(), password.getText().toString(), repPassword.getText().toString()
         );
 
-        new SignupTask(
-                usecase,
-                () -> {
-                    Toast.makeText(SignupActivity.this, "Registro exitoso", Toast.LENGTH_LONG).show();
-                },
-                e -> {
-                    switch (e.getMessage()) {
-                        case INVALID_PASSWORD:
-                            password.setError(getString(R.string.signup_password_err_invalid_msg));
-                            break;
-                        case EMPTY_FIRST_NAME:
-                            firstName.setError(getString(R.string.signup_fname_err));
-                            break;
-                        case EMPTY_LAST_NAME:
-                            lastName.setError(getString(R.string.signup_lname_err));
-                            break;
-                        case INVALID_EMAIL:
-                            email.setError(getString(R.string.signup_email_err));
-                            break;
-                        case INVALID_ID:
-                            id.setError(getString(R.string.signup_id_err));
-                            break;
-                        case INVALID_MEMBER_ID:
-                            member.setError(getString(R.string.signup_member_err));
-                            break;
-                        case PASSWORDS_DONT_MATCH:
-                            repPassword.setError(getString(R.string.signup_reppass_err));
-                            break;
-                        case INVALID_PLAN:
-                            plan.setError(getString(R.string.signup_plan_err));
-                            break;
-                        default:
-                            DialogHelper.INSTANCE.showNonCancelableDialog(
-                                    SignupActivity.this,
-                                    getString(R.string.signup_unkerr_dialog_title),
-                                    getString(R.string.signup_unkerr_dialog_msg)
-                            );
-                    }
+        SignupTask signupTask = new SignupTask(usecase, () -> {
+            Toast.makeText(SignupActivity.this, "Registro exitoso", Toast.LENGTH_LONG).show();
+        }, error -> {
+            switch (error.getMessage()) {
+                case INVALID_PASSWORD:
+                    password.setError(getString(R.string.signup_password_err_invalid_msg));
+                    break;
+                case EMPTY_FIRST_NAME:
+                    firstName.setError(getString(R.string.signup_fname_err));
+                    break;
+                case EMPTY_LAST_NAME:
+                    lastName.setError(getString(R.string.signup_lname_err));
+                    break;
+                case INVALID_EMAIL:
+                    email.setError(getString(R.string.signup_email_err));
+                    break;
+                case INVALID_ID:
+                    id.setError(getString(R.string.signup_id_err));
+                    break;
+                case INVALID_MEMBER_ID:
+                    member.setError(getString(R.string.signup_member_err));
+                    break;
+                case PASSWORDS_DONT_MATCH:
+                    repPassword.setError(getString(R.string.signup_reppass_err));
+                    break;
+                case INVALID_PLAN:
+                    plan.setError(getString(R.string.signup_plan_err));
+                    break;
+                default:
+                    DialogHelper.INSTANCE.showNonCancelableDialog(
+                            SignupActivity.this,
+                            getString(R.string.signup_unkerr_dialog_title),
+                            getString(R.string.signup_unkerr_dialog_msg)
+                    );
+            }
+            Log.e("signup-error", "Formulario invalido");
+        });
 
-                    Log.e("signup-error", "Formulario invalido");
-                }).doInBackground(memberSignupForm);
+        signupTask.execute(memberSignupForm);
     }
 }
 
 
-class SignupTask extends AsyncTask<MemberSignupForm, Void, Void> {
+class SignupTask extends AsyncTask<MemberSignupForm, Void, Boolean> {
     private SignupMember usecase;
     private Runnable successCallback;
     private Consumer<Exception> errorCallback;
@@ -189,13 +187,18 @@ class SignupTask extends AsyncTask<MemberSignupForm, Void, Void> {
     }
 
     @Override
-    protected Void doInBackground(MemberSignupForm... memberSignupForms) {
+    protected Boolean doInBackground(MemberSignupForm... memberSignupForms) {
         try {
             usecase.signup(memberSignupForms[0]);
-            successCallback.run();
+            return true;
         } catch (IllegalStateException | SignupMemberException e) {
             errorCallback.accept(e);
+            return false;
         }
-        return null;
+    }
+
+    @Override
+    protected void onPostExecute(Boolean success) {
+        if (success) successCallback.run();
     }
 }

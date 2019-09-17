@@ -30,9 +30,6 @@ public class MemberCredentials {
     public void validate() throws IllegalStateException {
         Validate.validState(id > 0L, INVALID_ID);
         Validate.validState(StringUtils.isNotBlank(password), EMPTY_PASSWORD);
-        // TODO : mover validaciones de "fortaleza de password" a formulario de registro
-        Validate.validState(password.length() > 8, SHORT_PASSWORD);
-        Validate.validState(password.matches("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$"), INVALID_PASSWORD);
     }
 
     public long getId() {

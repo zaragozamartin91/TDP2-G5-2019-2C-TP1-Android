@@ -1,6 +1,7 @@
 package com.g5.tdp2.myhealthapp.ui;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
@@ -10,16 +11,15 @@ import com.g5.tdp2.myhealthapp.R;
 import com.g5.tdp2.myhealthapp.entity.Member;
 import com.g5.tdp2.myhealthapp.entity.MemberCredentials;
 import com.g5.tdp2.myhealthapp.usecase.LoginMember;
+import com.g5.tdp2.myhealthapp.usecase.LoginMemberException;
 import com.g5.tdp2.myhealthapp.usecase.UsecaseFactory;
 import com.g5.tdp2.myhealthapp.util.DialogHelper;
 
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Consumer;
 
 import static com.g5.tdp2.myhealthapp.entity.MemberCredentials.EMPTY_PASSWORD;
 import static com.g5.tdp2.myhealthapp.entity.MemberCredentials.INVALID_ID;
-import static com.g5.tdp2.myhealthapp.entity.MemberCredentials.INVALID_PASSWORD;
-import static com.g5.tdp2.myhealthapp.entity.MemberCredentials.SHORT_PASSWORD;
 import static com.g5.tdp2.myhealthapp.usecase.LoginMember.UNKNOWN_ERROR;
 import static com.g5.tdp2.myhealthapp.usecase.LoginMember.WRONG_CREDENTIALS;
 
@@ -52,32 +52,22 @@ public class LoginActivity extends MainActivity {
         String id = idField.getText().toString();
         String pass = passField.getText().toString();
 
-        AtomicReference<String> idErrMsg = new AtomicReference<>();
-        AtomicReference<String> passErrMsg = new AtomicReference<>();
+        MemberCredentials memberCredentials;
         try {
-            MemberCredentials memberCredentials = MemberCredentials.of(id, pass);
-            Member member = loginUsecase.loginMember(memberCredentials);
-            handleLoginOk(member);
+            memberCredentials = MemberCredentials.of(id, pass);
         } catch (NumberFormatException e) {
-            idErrMsg.set(getString(R.string.login_id_error_msg));
-        } catch (IllegalStateException e) {
+            idField.setError(getString(R.string.login_id_error_msg));
+            return;
+        }
+
+        LoginTask loginTask = new LoginTask(loginUsecase, this::handleLoginOk, e -> {
             switch (e.getMessage()) {
                 case INVALID_ID:
-                    idErrMsg.set(getString(R.string.login_id_error_msg));
+                    idField.setError(getString(R.string.login_id_error_msg));
                     break;
                 case EMPTY_PASSWORD:
-                    passErrMsg.set(getString(R.string.login_password_err_msg));
+                    passField.setError(getString(R.string.login_password_err_msg));
                     break;
-                case SHORT_PASSWORD:
-                case INVALID_PASSWORD:
-                    passErrMsg.set(getString(R.string.login_password_err_invalid_msg));
-                    break;
-                default:
-                    passErrMsg.set("Error");
-                    passField.setError("Error");
-            }
-        } catch (Exception e) {
-            switch (e.getMessage()) {
                 case WRONG_CREDENTIALS:
                     showErrDialog(getString(R.string.login_dialog_title_err_msg), getString(R.string.login_err_403_msg));
                     break;
@@ -86,10 +76,9 @@ public class LoginActivity extends MainActivity {
                     Log.e("login-error", e.getMessage(), e);
                     showErrDialog(getString(R.string.login_dialog_title_err_msg), getString(R.string.std_unknown_err));
             }
-        }
+        });
 
-        Optional.ofNullable(idErrMsg.get()).ifPresent(e -> idField.setError(e));
-        Optional.ofNullable(passErrMsg.get()).ifPresent(e -> passField.setError(e));
+        loginTask.execute(memberCredentials);
     }
 
     private void handleLoginOk(Member member) {
@@ -99,5 +88,32 @@ public class LoginActivity extends MainActivity {
 
     private void showErrDialog(String title, String msg) {
         DialogHelper.INSTANCE.showNonCancelableDialog(this, title, msg);
+    }
+}
+
+class LoginTask extends AsyncTask<MemberCredentials, Void, Member> {
+    private LoginMember loginUsecase;
+    private Consumer<Member> successCallback;
+    private Consumer<Exception> errCallback;
+
+    LoginTask(LoginMember loginUsecase, Consumer<Member> successCallback, Consumer<Exception> errCallback) {
+        this.loginUsecase = loginUsecase;
+        this.successCallback = successCallback;
+        this.errCallback = errCallback;
+    }
+
+    @Override
+    protected Member doInBackground(MemberCredentials... memberCredentials) {
+        try {
+            return loginUsecase.loginMember(memberCredentials[0]);
+        } catch (IllegalStateException | LoginMemberException e) {
+            errCallback.accept(e);
+            return null;
+        }
+    }
+
+    @Override
+    protected void onPostExecute(Member member) {
+        Optional.ofNullable(member).ifPresent(successCallback);
     }
 }
