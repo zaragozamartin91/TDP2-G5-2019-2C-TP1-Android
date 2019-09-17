@@ -45,7 +45,10 @@
     <string name="signup_email_hint">Email</string>
     <string name="signup_password_hint">Contrase\u00F1a</string>
     <string name="signup_repeat_password_hint">Repetir contrase\u00F1a</string>
+    <string name="signup_id_error_msg">DNI invalido</string>
+
 
     <!-- MAPS *********************************************************************** -->
     <string name="maps_err_noloc_msg">No se tiene acceso a la localizaci\u00F3n</string>
+    <string name="signup_plan_hint">Plan</string>
 </resources>
