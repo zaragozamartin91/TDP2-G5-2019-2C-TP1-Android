@@ -46,9 +46,19 @@
     <string name="signup_password_hint">Contrase\u00F1a</string>
     <string name="signup_repeat_password_hint">Repetir contrase\u00F1a</string>
     <string name="signup_id_error_msg">DNI invalido</string>
-
+    <string name="signup_password_err_invalid_msg">La contrase\u00F1a debe tener al menos 8 caracteres, n\u00FAmeros y letras</string>
+    <string name="signup_plan_hint">Plan</string>
+    <string name="signup_fname_err">Ingrese su nombre</string>
+    <string name="signup_lname_err">Ingrese su apellido</string>
+    <string name="signup_email_err">Direccion de correo invalida</string>
+    <string name="signup_id_err">Id invalido</string>
+    <string name="signup_member_err">Credencial de afiliado invalida</string>
+    <string name="signup_reppass_err">Las contrasenas no coinciden</string>
+    <string name="signup_plan_err">Plan inexistente</string>
+    <string name="signup_unkerr_dialog_title">Error de registro</string>
+    <string name="signup_unkerr_dialog_msg">Ocurrio un error inesperado al registrar el afiliado. Espere unos instantes y reintentelo.</string>
+    <string name="signup_birth_err">Ingrese su fecha de nacimiento</string>
 
     <!-- MAPS *********************************************************************** -->
     <string name="maps_err_noloc_msg">No se tiene acceso a la localizaci\u00F3n</string>
-    <string name="signup_plan_hint">Plan</string>
 </resources>
