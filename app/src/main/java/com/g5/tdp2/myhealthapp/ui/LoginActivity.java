@@ -1,5 +1,6 @@
 package com.g5.tdp2.myhealthapp.ui;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -14,9 +15,21 @@ import com.g5.tdp2.myhealthapp.usecase.LoginMember;
 import com.g5.tdp2.myhealthapp.usecase.LoginMemberException;
 import com.g5.tdp2.myhealthapp.usecase.UsecaseFactory;
 import com.g5.tdp2.myhealthapp.util.DialogHelper;
+import com.g5.tdp2.myhealthapp.util.JsonParser;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.SyncHttpClient;
 
+import org.json.JSONObject;
+
+import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 import java.util.function.Consumer;
+
+import cz.msebera.android.httpclient.Header;
+import cz.msebera.android.httpclient.entity.ByteArrayEntity;
+import cz.msebera.android.httpclient.message.BasicHeader;
+import cz.msebera.android.httpclient.protocol.HTTP;
 
 import static com.g5.tdp2.myhealthapp.entity.MemberCredentials.EMPTY_PASSWORD;
 import static com.g5.tdp2.myhealthapp.entity.MemberCredentials.INVALID_ID;
@@ -78,7 +91,9 @@ public class LoginActivity extends MainActivity {
             }
         });
 
-        loginTask.execute(memberCredentials);
+        //loginTask.execute(memberCredentials);
+
+        new LoopjTask().execute(memberCredentials , this);
     }
 
     private void handleLoginOk(Member member) {
@@ -117,3 +132,44 @@ class LoginTask extends AsyncTask<MemberCredentials, Void, Member> {
         Optional.ofNullable(member).ifPresent(successCallback);
     }
 }
+
+class LoopjTask {
+    public void execute(MemberCredentials mc, Context appContext) {
+        MemberCredentials memberCredentials = new MemberCredentials(35317588L,"qwerty");
+
+        AsyncHttpClient client = new AsyncHttpClient();
+        String json = JsonParser.INSTANCE.writeValueAsString(memberCredentials);
+
+        ByteArrayEntity entity = new ByteArrayEntity(json.getBytes(StandardCharsets.UTF_8));
+        String contentType = "application/json";
+        entity.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, contentType));
+
+        String url = "https://tdp2-crmedical-api.herokuapp.com/auth/login";
+
+        JsonHttpResponseHandler responseHandler = new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                super.onSuccess(statusCode, headers, response);
+                Log.i("le-response", response.toString());
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                throwable.printStackTrace();
+                Log.e("le-fail", responseString);
+            }
+        };
+        client.post(appContext, url, entity, contentType, responseHandler);
+
+        System.out.println("waiting...");
+    }
+}
+
+/*
+https://tdp2-crmedical-api.herokuapp.com/auth/login
+{
+	"idn": 35317588,
+	"password": "qwerty",
+	"role": "affiliate"
+}
+ */
