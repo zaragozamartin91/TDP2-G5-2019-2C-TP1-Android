@@ -1,14 +1,14 @@
 package com.g5.tdp2.myhealthapp.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 
 public class MemberCredentials {
     public static final String INVALID_ID = "INVALID_ID";
     public static final String EMPTY_PASSWORD = "EMPTY_PASSWORD";
-    public static final String SHORT_PASSWORD = "SHORT_PASSWORD";
-    public static final String INVALID_PASSWORD = "INVALID_PASSWORD";
 
     private long id;
     private String password;
@@ -32,11 +32,16 @@ public class MemberCredentials {
         Validate.validState(StringUtils.isNotBlank(password), EMPTY_PASSWORD);
     }
 
+    @JsonProperty("idn")
     public long getId() {
         return id;
     }
 
+    @JsonProperty("password")
     public String getPassword() {
         return password;
     }
+
+    @JsonProperty("role")
+    public String getRole() { return "affiliate"; }
 }
