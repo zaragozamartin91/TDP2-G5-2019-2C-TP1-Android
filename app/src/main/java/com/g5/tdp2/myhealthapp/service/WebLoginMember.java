@@ -1,100 +1,82 @@
 package com.g5.tdp2.myhealthapp.service;
 
+import android.content.Context;
+import android.util.Log;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.g5.tdp2.myhealthapp.AppState;
 import com.g5.tdp2.myhealthapp.entity.Member;
 import com.g5.tdp2.myhealthapp.entity.MemberCredentials;
 import com.g5.tdp2.myhealthapp.usecase.LoginMember;
 import com.g5.tdp2.myhealthapp.usecase.LoginMemberException;
 import com.g5.tdp2.myhealthapp.util.JsonParser;
-import com.mz.client.http.SimpleHttpClient;
-import com.mz.client.http.SimpleHttpResponse;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpEntityEnclosingRequest;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
+import org.json.JSONObject;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.function.Consumer;
-
-import static org.apache.http.entity.ContentType.APPLICATION_JSON;
 
 public class WebLoginMember implements LoginMember {
     private String url;
-    private Consumer<LoginMemberJsonResponse> successCallback;
+    private Context context;
 
-    public WebLoginMember(String url, Consumer<LoginMemberJsonResponse> successCallback) {
+    public WebLoginMember(String url, Context context) {
         this.url = url;
-        this.successCallback = successCallback;
+        this.context = context;
     }
 
     @Override
-    public Member loginMember(MemberCredentials memberCredentials) {
-        memberCredentials.validate();
-
-        try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
-            HttpPost httpRequest = new HttpPost(url);
-            StringEntity stringEntity = new StringEntity(new ObjectMapper().writeValueAsString(memberCredentials));
-            stringEntity.setContentType(APPLICATION_JSON.getMimeType());
-            httpRequest.setEntity(stringEntity);
-            CloseableHttpResponse httpResponse = httpClient.execute(httpRequest);
-            HttpEntity entity = httpResponse.getEntity();
-            String body = entity == null ? null : EntityUtils.toString(entity);
-
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-
-        SimpleHttpResponse response = null;
+    public void loginMember(MemberCredentials memberCredentials, Consumer<Member> succCallback, Consumer<Exception> errCallback)
+            throws IllegalStateException, LoginMemberException {
         try {
-            response = SimpleHttpClient.newPost(url)
-                    .withJsonBody(new ObjectMapper().writeValueAsString(memberCredentials))
-                    .execute();
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
+            memberCredentials.validate();
 
-        switch (response.matchStatusCode()) {
-            case UNAUTHORIZED:
-            case S_4xx:
-                throw new LoginMemberException(WRONG_CREDENTIALS);
-            case S_2xx:
-                return handleOkResponse(response);
-        }
+            RequestQueue requestQueue = Volley.newRequestQueue(context);
+            String mRequestBody = new ObjectMapper().writeValueAsString(memberCredentials);
 
-        throw new LoginMemberException(UNKNOWN_ERROR);
+            JSONObject jsonObject = new JSONObject(mRequestBody);
+            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, jsonObject, response -> {
+                Log.i("WebLoginMember-onResponse", response.toString());
+                LoginMemberJsonResponse loginResponse = JsonParser.INSTANCE.readValue(response.toString(), LoginMemberJsonResponse.class);
+                succCallback.accept(loginResponse.member);
+                AppState.INSTANCE.putToken(loginResponse.token);
+            }, error -> {
+                Log.e("WebLoginMember-onErrorResponse", error.toString());
+                switch (error.networkResponse.statusCode) {
+                    case 400:
+                    case 403:
+                        errCallback.accept(new LoginMemberException(WRONG_CREDENTIALS));
+                        break;
+                    default:
+                        errCallback.accept(new LoginMemberException(UNKNOWN_ERROR));
+                }
+            });
+            requestQueue.add(jsonObjectRequest);
+        } catch (IllegalStateException e) {
+            throw new LoginMemberException(e.getMessage());
+        } catch (Exception e) {
+            throw new LoginMemberException(UNKNOWN_ERROR, e);
+        }
     }
 
-    private Member handleOkResponse(SimpleHttpResponse response) {
-        String bodyValue = response.getBodyValue();
-        LoginMemberJsonResponse jsonResponse = JsonParser.INSTANCE.readValue(bodyValue, LoginMemberJsonResponse.class);
-        successCallback.accept(jsonResponse);
-        return jsonResponse.member;
-    }
+}
 
-    public static class LoginMemberJsonResponse {
-        public final Member member;
-        public final String token;
+class LoginMemberJsonResponse {
+    final Member member;
+    final String token;
 
-        @JsonCreator
-        public LoginMemberJsonResponse(
-                @JsonProperty("afiliado") Member member,
-                @JsonProperty("token") String token) {
-            this.member = member;
-            this.token = token;
-        }
+    @JsonCreator
+    public LoginMemberJsonResponse(
+            @JsonProperty("afiliado") Member member,
+            @JsonProperty("token") String token) {
+        this.member = member;
+        this.token = token;
     }
 }

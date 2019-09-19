@@ -22,7 +22,7 @@ public class MyHealthApp extends Application {
     private LoginMember loginMember() {
         return new WebLoginMember(
                 "https://tdp2-crmedical-api.herokuapp.com/auth/login",
-                json -> AppState.INSTANCE.putToken(json.token));
+                getApplicationContext());
     }
 
     private SignupMember signupMember() {

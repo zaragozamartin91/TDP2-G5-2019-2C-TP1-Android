@@ -5,17 +5,20 @@ import com.g5.tdp2.myhealthapp.entity.MemberCredentials;
 import com.g5.tdp2.myhealthapp.usecase.LoginMember;
 import com.g5.tdp2.myhealthapp.usecase.LoginMemberException;
 
+import java.util.function.Consumer;
+
 public class LoginMemberStub implements LoginMember {
 
     @Override
-    public Member loginMember(MemberCredentials memberCredentials) throws LoginMemberException {
+    public void loginMember(MemberCredentials memberCredentials, Consumer<Member> succCallback, Consumer<Exception> errCallback)
+            throws IllegalStateException, LoginMemberException {
         memberCredentials.validate();
 
         if (memberCredentials.getId() != 1234L) {
             /* Usuario 1234 es el unico valido para hacer pruebas */
-            throw new LoginMemberException(WRONG_CREDENTIALS);
+            errCallback.accept(new LoginMemberException(WRONG_CREDENTIALS));
         }
 
-        return new Member();
+        succCallback.accept(new Member());
     }
 }

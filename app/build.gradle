@@ -34,15 +34,13 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'org.apache.httpcomponents:httpclient:4.5.6'
-    implementation 'org.apache.httpcomponents:httpcore:4.4.10'
+//    implementation 'org.apache.httpcomponents:httpclient:4.5.6'
+//    implementation 'org.apache.httpcomponents:httpcore:4.4.10'
     implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.8'
-    implementation 'com.loopj.android:android-async-http:1.4.9'
+//    implementation 'com.loopj.android:android-async-http:1.4.9'
 
     // https://mvnrepository.com/artifact/com.android.volley/volley
     implementation group: 'com.android.volley', name: 'volley', version: '1.1.1'
-
-
 
     implementation 'androidx.appcompat:appcompat:1.0.2'
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
