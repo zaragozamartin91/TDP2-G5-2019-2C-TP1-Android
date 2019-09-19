@@ -8,6 +8,13 @@ import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.g5.tdp2.myhealthapp.R;
 import com.g5.tdp2.myhealthapp.entity.Member;
 import com.g5.tdp2.myhealthapp.entity.MemberCredentials;
@@ -18,7 +25,6 @@ import com.g5.tdp2.myhealthapp.util.DialogHelper;
 import com.g5.tdp2.myhealthapp.util.JsonParser;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
-import com.loopj.android.http.SyncHttpClient;
 
 import org.json.JSONObject;
 
@@ -93,7 +99,33 @@ public class LoginActivity extends MainActivity {
 
         //loginTask.execute(memberCredentials);
 
-        new LoopjTask().execute(memberCredentials , this);
+        //new LoopjTask().execute(memberCredentials, this);
+
+        //new LoginTask2(this).execute(new MemberCredentials(35317588L,"qwerty"));
+
+        try {
+            RequestQueue requestQueue = Volley.newRequestQueue(this);
+            String url = "https://tdp2-crmedical-api.herokuapp.com/auth/login";
+            String mRequestBody = new ObjectMapper().writeValueAsString(new MemberCredentials(35317588L, "qwerty"));
+
+            JSONObject jsonObject = new JSONObject(mRequestBody);
+            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, jsonObject, new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    Log.i("response", response.toString());
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.e("error", error.toString());
+                }
+            });
+            requestQueue.add(jsonObjectRequest);
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void handleLoginOk(Member member) {
@@ -133,9 +165,10 @@ class LoginTask extends AsyncTask<MemberCredentials, Void, Member> {
     }
 }
 
+
 class LoopjTask {
     public void execute(MemberCredentials mc, Context appContext) {
-        MemberCredentials memberCredentials = new MemberCredentials(35317588L,"qwerty");
+        MemberCredentials memberCredentials = new MemberCredentials(35317588L, "qwerty");
 
         AsyncHttpClient client = new AsyncHttpClient();
         String json = JsonParser.INSTANCE.writeValueAsString(memberCredentials);
@@ -164,6 +197,8 @@ class LoopjTask {
         System.out.println("waiting...");
     }
 }
+
+
 
 /*
 https://tdp2-crmedical-api.herokuapp.com/auth/login
