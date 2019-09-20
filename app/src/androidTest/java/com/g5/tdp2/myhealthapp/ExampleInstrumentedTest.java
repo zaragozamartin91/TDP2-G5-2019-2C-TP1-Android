@@ -3,12 +3,16 @@ package com.g5.tdp2.myhealthapp;
 import android.content.Context;
 
 import androidx.test.platform.app.InstrumentationRegistry;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.runner.AndroidJUnit4;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static org.junit.Assert.*;
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * Instrumented test, which will execute on an Android device.
@@ -24,4 +28,28 @@ public class ExampleInstrumentedTest {
 
         assertEquals("com.g5.tdp2.myhealthapp", appContext.getPackageName());
     }
+
+
+    @Test
+    public void testHttpPost() throws IOException {
+
+        URL url = new URL("https://tdp2-crmedical-api.herokuapp.com/auth/login");
+        HttpURLConnection client = (HttpURLConnection) url.openConnection();
+
+        client.setRequestMethod("POST");
+        client.setDoOutput(true);
+
+
+    }
+
+
 }
+
+/*
+https://tdp2-crmedical-api.herokuapp.com/auth/login
+{
+	"idn": 35317588,
+	"password": "qwerty",
+	"role": "affiliate"
+}
+ */

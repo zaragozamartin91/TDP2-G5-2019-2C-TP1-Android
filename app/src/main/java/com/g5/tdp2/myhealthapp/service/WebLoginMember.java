@@ -1,65 +1,79 @@
 package com.g5.tdp2.myhealthapp.service;
 
+import android.util.Log;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.g5.tdp2.myhealthapp.entity.Member;
 import com.g5.tdp2.myhealthapp.entity.MemberCredentials;
 import com.g5.tdp2.myhealthapp.usecase.LoginMember;
 import com.g5.tdp2.myhealthapp.usecase.LoginMemberException;
 import com.g5.tdp2.myhealthapp.util.JsonParser;
-import com.mz.client.http.SimpleHttpClient;
-import com.mz.client.http.SimpleHttpResponse;
+
+import org.json.JSONObject;
 
 import java.util.function.Consumer;
 
 public class WebLoginMember implements LoginMember {
     private String url;
-    private Consumer<LoginMemberJsonResponse> successCallback;
+    private RequestQueue requestQueue;
+    private Consumer<String> tokenConsumer = t -> {};
 
-    public WebLoginMember(String url, Consumer<LoginMemberJsonResponse> successCallback) {
+    public WebLoginMember(String url, RequestQueue requestQueue) {
         this.url = url;
-        this.successCallback = successCallback;
+        this.requestQueue = requestQueue;
+    }
+
+    public void setTokenConsumer(Consumer<String> tokenConsumer) {
+        this.tokenConsumer = tokenConsumer;
     }
 
     @Override
-    public Member loginMember(MemberCredentials memberCredentials) {
-        memberCredentials.validate();
+    public void loginMember(MemberCredentials memberCredentials, Consumer<Member> succCallback, Consumer<Exception> errCallback) {
+        try {
+            memberCredentials.validate();
+            String mRequestBody = new ObjectMapper().writeValueAsString(memberCredentials);
 
-        String username = memberCredentials.getId() + "";
-        String password = memberCredentials.getPassword();
-
-        SimpleHttpResponse response = SimpleHttpClient.newGet(url)
-                .withBasicAuth(username, password)
-                .execute();
-
-        switch (response.matchStatusCode()) {
-            case UNAUTHORIZED:
-            case S_4xx:
-                throw new LoginMemberException(WRONG_CREDENTIALS);
-            case S_2xx:
-                return handleOkResponse(response);
+            JSONObject jsonObject = new JSONObject(mRequestBody);
+            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, jsonObject, response -> {
+                Log.i("WebLoginMember-onResponse", response.toString());
+                LoginMemberJsonResponse loginResponse = JsonParser.INSTANCE.readValue(response.toString(), LoginMemberJsonResponse.class);
+                succCallback.accept(loginResponse.member);
+                tokenConsumer.accept(loginResponse.token);
+            }, error -> {
+                Log.e("WebLoginMember-onErrorResponse", error.toString());
+                switch (error.networkResponse.statusCode) {
+                    case 400:
+                    case 403:
+                        errCallback.accept(new LoginMemberException(WRONG_CREDENTIALS));
+                        break;
+                    default:
+                        errCallback.accept(new LoginMemberException(UNKNOWN_ERROR));
+                }
+            });
+            requestQueue.add(jsonObjectRequest);
+        } catch (IllegalStateException e) {
+            throw new LoginMemberException(e.getMessage());
+        } catch (Exception e) {
+            throw new LoginMemberException(UNKNOWN_ERROR, e);
         }
-
-        throw new LoginMemberException(UNKNOWN_ERROR);
     }
 
-    private Member handleOkResponse(SimpleHttpResponse response) {
-        String bodyValue = response.getBodyValue();
-        LoginMemberJsonResponse jsonResponse = JsonParser.INSTANCE.readValue(bodyValue, LoginMemberJsonResponse.class);
-        successCallback.accept(jsonResponse);
-        return jsonResponse.member;
-    }
+}
 
-    public static class LoginMemberJsonResponse {
-        public final Member member;
-        public final String token;
+class LoginMemberJsonResponse {
+    final Member member;
+    final String token;
 
-        @JsonCreator
-        public LoginMemberJsonResponse(
-                @JsonProperty("afiliado") Member member,
-                @JsonProperty("token") String token) {
-            this.member = member;
-            this.token = token;
-        }
+    @JsonCreator
+    public LoginMemberJsonResponse(
+            @JsonProperty("afiliado") Member member,
+            @JsonProperty("token") String token) {
+        this.member = member;
+        this.token = token;
     }
 }

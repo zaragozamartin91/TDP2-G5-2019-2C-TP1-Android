@@ -13,13 +13,8 @@ import com.g5.tdp2.myhealthapp.usecase.LoginMember;
 import com.g5.tdp2.myhealthapp.usecase.UsecaseFactory;
 import com.g5.tdp2.myhealthapp.util.DialogHelper;
 
-import java.util.Optional;
-import java.util.concurrent.atomic.AtomicReference;
-
 import static com.g5.tdp2.myhealthapp.entity.MemberCredentials.EMPTY_PASSWORD;
 import static com.g5.tdp2.myhealthapp.entity.MemberCredentials.INVALID_ID;
-import static com.g5.tdp2.myhealthapp.entity.MemberCredentials.INVALID_PASSWORD;
-import static com.g5.tdp2.myhealthapp.entity.MemberCredentials.SHORT_PASSWORD;
 import static com.g5.tdp2.myhealthapp.usecase.LoginMember.UNKNOWN_ERROR;
 import static com.g5.tdp2.myhealthapp.usecase.LoginMember.WRONG_CREDENTIALS;
 
@@ -38,6 +33,10 @@ public class LoginActivity extends MainActivity {
         passField = findViewById(R.id.login_password);
         loginUsecase = UsecaseFactory.INSTANCE.getBean(LoginMember.class);
 
+        // TODO : remover estas credenciales por defecto
+        idField.setText("" + 35317588L);
+        passField.setText("qwerty");
+
         Button signupBtn = findViewById(R.id.login_signup_btn);
         signupBtn.setOnClickListener(v -> {
             Intent signupIntent = new Intent(self, SignupActivity.class);
@@ -52,44 +51,15 @@ public class LoginActivity extends MainActivity {
         String id = idField.getText().toString();
         String pass = passField.getText().toString();
 
-        AtomicReference<String> idErrMsg = new AtomicReference<>();
-        AtomicReference<String> passErrMsg = new AtomicReference<>();
+        MemberCredentials memberCredentials;
         try {
-            MemberCredentials memberCredentials = MemberCredentials.of(id, pass);
-            Member member = loginUsecase.loginMember(memberCredentials);
-            handleLoginOk(member);
+            memberCredentials = MemberCredentials.of(id, pass);
         } catch (NumberFormatException e) {
-            idErrMsg.set(getString(R.string.login_id_error_msg));
-        } catch (IllegalStateException e) {
-            switch (e.getMessage()) {
-                case INVALID_ID:
-                    idErrMsg.set(getString(R.string.login_id_error_msg));
-                    break;
-                case EMPTY_PASSWORD:
-                    passErrMsg.set(getString(R.string.login_password_err_msg));
-                    break;
-                case SHORT_PASSWORD:
-                case INVALID_PASSWORD:
-                    passErrMsg.set(getString(R.string.login_password_err_invalid_msg));
-                    break;
-                default:
-                    passErrMsg.set("Error");
-                    passField.setError("Error");
-            }
-        } catch (Exception e) {
-            switch (e.getMessage()) {
-                case WRONG_CREDENTIALS:
-                    showErrDialog(getString(R.string.login_dialog_title_err_msg), getString(R.string.login_err_403_msg));
-                    break;
-                case UNKNOWN_ERROR:
-                default:
-                    Log.e("login-error", e.getMessage(), e);
-                    showErrDialog(getString(R.string.login_dialog_title_err_msg), getString(R.string.std_unknown_err));
-            }
+            idField.setError(getString(R.string.login_id_error_msg));
+            return;
         }
 
-        Optional.ofNullable(idErrMsg.get()).ifPresent(e -> idField.setError(e));
-        Optional.ofNullable(passErrMsg.get()).ifPresent(e -> passField.setError(e));
+        loginUsecase.loginMember(memberCredentials, this::handleLoginOk, this::handleError);
     }
 
     private void handleLoginOk(Member member) {
@@ -100,4 +70,32 @@ public class LoginActivity extends MainActivity {
     private void showErrDialog(String title, String msg) {
         DialogHelper.INSTANCE.showNonCancelableDialog(this, title, msg);
     }
+
+    private void handleError(Exception e) {
+        switch (e.getMessage()) {
+            case INVALID_ID:
+                idField.setError(getString(R.string.login_id_error_msg));
+                break;
+            case EMPTY_PASSWORD:
+                passField.setError(getString(R.string.login_password_err_msg));
+                break;
+            case WRONG_CREDENTIALS:
+                showErrDialog(getString(R.string.login_dialog_title_err_msg), getString(R.string.login_err_403_msg));
+                break;
+            case UNKNOWN_ERROR:
+            default:
+                Log.e("login-error", e.getMessage(), e);
+                showErrDialog(getString(R.string.login_dialog_title_err_msg), getString(R.string.std_unknown_err));
+        }
+    }
 }
+
+
+/*
+https://tdp2-crmedical-api.herokuapp.com/auth/login
+{
+	"idn": 35317588,
+	"password": "qwerty",
+	"role": "affiliate"
+}
+ */
