@@ -10,8 +10,7 @@ import java.util.function.Consumer;
 public class LoginMemberStub implements LoginMember {
 
     @Override
-    public void loginMember(MemberCredentials memberCredentials, Consumer<Member> succCallback, Consumer<Exception> errCallback)
-            throws IllegalStateException, LoginMemberException {
+    public void loginMember(MemberCredentials memberCredentials, Consumer<Member> succCallback, Consumer<Exception> errCallback) {
         memberCredentials.validate();
 
         if (memberCredentials.getId() != 1234L) {

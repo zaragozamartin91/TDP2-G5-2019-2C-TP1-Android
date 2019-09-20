@@ -1,7 +1,6 @@
 package com.g5.tdp2.myhealthapp.ui;
 
 import android.app.DatePickerDialog;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -13,7 +12,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.g5.tdp2.myhealthapp.R;
 import com.g5.tdp2.myhealthapp.entity.MemberSignupForm;
 import com.g5.tdp2.myhealthapp.usecase.SignupMember;
-import com.g5.tdp2.myhealthapp.usecase.SignupMemberException;
 import com.g5.tdp2.myhealthapp.usecase.UsecaseFactory;
 import com.g5.tdp2.myhealthapp.util.DialogHelper;
 
@@ -24,7 +22,6 @@ import java.util.Calendar;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.function.Consumer;
 
 import static com.g5.tdp2.myhealthapp.entity.MemberSignupForm.EMPTY_FIRST_NAME;
 import static com.g5.tdp2.myhealthapp.entity.MemberSignupForm.EMPTY_LAST_NAME;
@@ -34,6 +31,7 @@ import static com.g5.tdp2.myhealthapp.entity.MemberSignupForm.INVALID_MEMBER_ID;
 import static com.g5.tdp2.myhealthapp.entity.MemberSignupForm.INVALID_PASSWORD;
 import static com.g5.tdp2.myhealthapp.entity.MemberSignupForm.INVALID_PLAN;
 import static com.g5.tdp2.myhealthapp.entity.MemberSignupForm.PASSWORDS_DONT_MATCH;
+import static com.g5.tdp2.myhealthapp.usecase.SignupMember.INVALID_FORM;
 
 public class SignupActivity extends AppCompatActivity {
     private EditText signupBirth;
@@ -63,6 +61,17 @@ public class SignupActivity extends AppCompatActivity {
         email = findViewById(R.id.signup_email);
         password = findViewById(R.id.signup_password);
         repPassword = findViewById(R.id.signup_repeat_password);
+
+        // TODO : eliminar precargado de campos
+        firstName.setText("Christian");
+        lastName.setText("Angelone");
+        member.setText("0987654321");
+        // BIRTH : 1990-08-31
+        id.setText("34317677");
+        plan.setText("A310");
+        email.setText("zaragozamartin91@outlook.com");
+        password.setText("qwerty123");
+        repPassword.setText("qwerty123");
 
         usecase = UsecaseFactory.INSTANCE.getBean(SignupMember.class);
 
@@ -132,10 +141,10 @@ public class SignupActivity extends AppCompatActivity {
                 leDate.get().getTime(), password.getText().toString(), repPassword.getText().toString()
         );
 
-        SignupTask signupTask = new SignupTask(usecase, () -> {
+        usecase.signup(memberSignupForm, () -> {
             Toast.makeText(SignupActivity.this, "Registro exitoso", Toast.LENGTH_LONG).show();
-        }, error -> {
-            switch (error.getMessage()) {
+        }, e -> {
+            switch (e.getMessage()) {
                 case INVALID_PASSWORD:
                     password.setError(getString(R.string.signup_password_err_invalid_msg));
                     break;
@@ -160,6 +169,12 @@ public class SignupActivity extends AppCompatActivity {
                 case INVALID_PLAN:
                     plan.setError(getString(R.string.signup_plan_err));
                     break;
+                case INVALID_FORM:
+                    DialogHelper.INSTANCE.showNonCancelableDialog(
+                            SignupActivity.this,
+                            getString(R.string.signup_unkerr_dialog_title),
+                            getString(R.string.signup_invalid_form_err)
+                    );
                 default:
                     DialogHelper.INSTANCE.showNonCancelableDialog(
                             SignupActivity.this,
@@ -169,36 +184,5 @@ public class SignupActivity extends AppCompatActivity {
             }
             Log.e("signup-error", "Formulario invalido");
         });
-
-        signupTask.execute(memberSignupForm);
-    }
-}
-
-
-class SignupTask extends AsyncTask<MemberSignupForm, Void, Boolean> {
-    private SignupMember usecase;
-    private Runnable successCallback;
-    private Consumer<Exception> errorCallback;
-
-    SignupTask(SignupMember usecase, Runnable successCallback, Consumer<Exception> errorCallback) {
-        this.usecase = usecase;
-        this.successCallback = successCallback;
-        this.errorCallback = errorCallback;
-    }
-
-    @Override
-    protected Boolean doInBackground(MemberSignupForm... memberSignupForms) {
-        try {
-            usecase.signup(memberSignupForms[0]);
-            return true;
-        } catch (IllegalStateException | SignupMemberException e) {
-            errorCallback.accept(e);
-            return false;
-        }
-    }
-
-    @Override
-    protected void onPostExecute(Boolean success) {
-        if (success) successCallback.run();
     }
 }

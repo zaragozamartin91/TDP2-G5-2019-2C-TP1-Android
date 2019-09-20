@@ -10,9 +10,5 @@ public interface LoginMember {
     String WRONG_CREDENTIALS = "WRONG_CREDENTIALS";
     String UNKNOWN_ERROR = "UNKNOWN_ERROR";
 
-    void loginMember(
-            MemberCredentials memberCredentials,
-            Consumer<Member> succCallback,
-            Consumer<Exception> errCallback
-    ) throws IllegalStateException, LoginMemberException;
+    void loginMember(MemberCredentials memberCredentials, Consumer<Member> succCallback, Consumer<Exception> errCallback);
 }

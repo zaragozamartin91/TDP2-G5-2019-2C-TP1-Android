@@ -44,7 +44,12 @@ public class MemberSignupForm {
         this.repPassword = repPassword;
     }
 
-    public void validate() {
+    /**
+     * Valida el formulario
+     *
+     * @throws IllegalStateException Si alguno de los campos no cumple con los constraints
+     */
+    public void validate() throws IllegalStateException {
         Validate.validState(StringUtils.isNotBlank(firstName), EMPTY_FIRST_NAME);
         Validate.validState(StringUtils.isNotBlank(lastName), EMPTY_LAST_NAME);
 

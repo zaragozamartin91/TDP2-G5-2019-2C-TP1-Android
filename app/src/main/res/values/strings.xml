@@ -58,6 +58,7 @@
     <string name="signup_unkerr_dialog_title">Error de registro</string>
     <string name="signup_unkerr_dialog_msg">Ocurrio un error inesperado al registrar el afiliado. Espere unos instantes y reintentelo.</string>
     <string name="signup_birth_err">Ingrese su fecha de nacimiento</string>
+    <string name="signup_invalid_form_err">No es posible registrarse. Valide los datos ingresados.</string>
 
     <!-- MAPS *********************************************************************** -->
     <string name="maps_err_noloc_msg">No se tiene acceso a la localizaci\u00F3n</string>
