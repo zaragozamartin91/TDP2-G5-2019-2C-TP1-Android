@@ -9,6 +9,8 @@ import java.util.function.Consumer;
 public interface LoginMember {
     String WRONG_CREDENTIALS = "WRONG_CREDENTIALS";
     String UNKNOWN_ERROR = "UNKNOWN_ERROR";
+    String INTERNAL_ERROR = "INTERNAL_ERROR";
+
 
     void loginMember(MemberCredentials memberCredentials, Consumer<Member> succCallback, Consumer<Exception> errCallback);
 }

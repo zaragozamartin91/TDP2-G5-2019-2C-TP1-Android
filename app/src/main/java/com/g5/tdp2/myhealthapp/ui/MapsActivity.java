@@ -5,6 +5,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.widget.Toast;
 
 import androidx.fragment.app.FragmentActivity;
@@ -57,9 +58,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.setMyLocationEnabled(true);
+        mMap.setInfoWindowAdapter(
+                new ProfessionalInfoWindow(LayoutInflater.from(this))
+        );
         setUpMap();
-
-
     }
 
     private void setUpMap() {
