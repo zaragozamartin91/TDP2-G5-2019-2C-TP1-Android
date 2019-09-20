@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="5dp">
+
+
+    <TextView
+        android:id="@+id/info_prof_window_special"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:paddingStart="5dp"
+        android:text="Oncologia" />
+
+    <TextView
+        android:id="@+id/info_prof_window_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/info_prof_window_special"
+        android:paddingLeft="5dp"
+        android:text="Pepe Argento"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/info_prof_window_addr"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/info_prof_window_name"
+        android:paddingLeft="5dp"
+        android:text="Calle falsa 123" />
+
+    <TextView
+        android:id="@+id/info_prof_window_phone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/info_prof_window_addr"
+        android:paddingLeft="5dp"
+        android:text="1533246698" />
+
+</RelativeLayout>

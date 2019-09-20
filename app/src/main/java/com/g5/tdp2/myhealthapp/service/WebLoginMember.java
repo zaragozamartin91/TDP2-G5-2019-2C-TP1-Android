@@ -16,6 +16,8 @@ import com.g5.tdp2.myhealthapp.util.JsonParser;
 
 import org.json.JSONObject;
 
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
 public class WebLoginMember implements LoginMember {
@@ -45,15 +47,21 @@ public class WebLoginMember implements LoginMember {
                 succCallback.accept(loginResponse.member);
                 tokenConsumer.accept(loginResponse.token);
             }, error -> {
-                Log.e("WebLoginMember-onErrorResponse", error.toString());
-                switch (error.networkResponse.statusCode) {
-                    case 400:
-                    case 403:
-                        errCallback.accept(new LoginMemberException(WRONG_CREDENTIALS));
-                        break;
-                    default:
-                        errCallback.accept(new LoginMemberException(UNKNOWN_ERROR));
-                }
+                Log.e("WebLoginMember-onErrorResponse", "" + error);
+                Exception ex = Optional.ofNullable(error)
+                        .map(e -> e.networkResponse)
+                        .map(n -> n.statusCode)
+                        .map(s -> {
+                                    switch (s) {
+                                        case 400:
+                                        case 403:
+                                            return new LoginMemberException(WRONG_CREDENTIALS);
+                                        default:
+                                            return new LoginMemberException(UNKNOWN_ERROR);
+                                    }
+                                }
+                        ).orElse(new LoginMemberException(INTERNAL_ERROR));
+                errCallback.accept(ex);
             });
             requestQueue.add(jsonObjectRequest);
         } catch (IllegalStateException e) {
