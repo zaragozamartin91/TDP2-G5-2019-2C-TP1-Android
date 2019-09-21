@@ -19,10 +19,10 @@ public class MyHealthApp extends Application {
 
 //        UsecaseFactory.INSTANCE.addBean(new LoginMemberStub());
 
-        requestQueue = Volley.newRequestQueue(getApplicationContext());
-
-        UsecaseFactory.INSTANCE.addBean(loginMember());
-        UsecaseFactory.INSTANCE.addBean(signupMember());
+//        requestQueue = Volley.newRequestQueue(getApplicationContext());
+//
+//        UsecaseFactory.INSTANCE.addBean(loginMember());
+//        UsecaseFactory.INSTANCE.addBean(signupMember());
     }
 
     private LoginMember loginMember() {

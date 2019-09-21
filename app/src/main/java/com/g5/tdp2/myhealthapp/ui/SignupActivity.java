@@ -3,6 +3,7 @@ package com.g5.tdp2.myhealthapp.ui;
 import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -45,8 +46,6 @@ public class SignupActivity extends AppCompatActivity {
     private EditText password;
     private EditText repPassword;
 
-    private SignupMember usecase;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,8 +71,6 @@ public class SignupActivity extends AppCompatActivity {
         email.setText("zaragozamartin91@outlook.com");
         password.setText("qwerty123");
         repPassword.setText("qwerty123");
-
-        usecase = UsecaseFactory.INSTANCE.getBean(SignupMember.class);
 
         /* Habilito el default action bar */
         Optional.ofNullable(getSupportActionBar()).ifPresent(actionBar -> {
@@ -101,6 +98,13 @@ public class SignupActivity extends AppCompatActivity {
         });
 
         findViewById(R.id.signup_btn).setOnClickListener(v -> submitSignupForm());
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return true;
     }
 
     @Override
@@ -141,9 +145,8 @@ public class SignupActivity extends AppCompatActivity {
                 leDate.get().getTime(), password.getText().toString(), repPassword.getText().toString()
         );
 
-        usecase.signup(memberSignupForm, () -> {
-            Toast.makeText(SignupActivity.this, "Registro exitoso", Toast.LENGTH_LONG).show();
-        }, e -> {
+        SignupMember usecase = UsecaseFactory.INSTANCE.getBean(SignupMember.class); // obtengo el caso de uso del registro
+        usecase.signup(memberSignupForm, () -> Toast.makeText(SignupActivity.this, "Registro exitoso", Toast.LENGTH_LONG).show(), e -> {
             switch (e.getMessage()) {
                 case INVALID_PASSWORD:
                     password.setError(getString(R.string.signup_password_err_invalid_msg));
@@ -185,4 +188,6 @@ public class SignupActivity extends AppCompatActivity {
             Log.e("signup-error", "Formulario invalido");
         });
     }
+
+
 }
