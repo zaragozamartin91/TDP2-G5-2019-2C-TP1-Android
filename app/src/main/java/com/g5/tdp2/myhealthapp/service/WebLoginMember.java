@@ -17,7 +17,6 @@ import com.g5.tdp2.myhealthapp.util.JsonParser;
 import org.json.JSONObject;
 
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
 public class WebLoginMember implements LoginMember {
@@ -65,9 +64,9 @@ public class WebLoginMember implements LoginMember {
             });
             requestQueue.add(jsonObjectRequest);
         } catch (IllegalStateException e) {
-            throw new LoginMemberException(e.getMessage());
+            errCallback.accept(new LoginMemberException(e.getMessage(), e));
         } catch (Exception e) {
-            throw new LoginMemberException(UNKNOWN_ERROR, e);
+            errCallback.accept(new LoginMemberException(UNKNOWN_ERROR, e));
         }
     }
 
