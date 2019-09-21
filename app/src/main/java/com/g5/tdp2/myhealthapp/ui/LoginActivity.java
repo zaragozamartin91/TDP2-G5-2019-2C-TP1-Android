@@ -21,7 +21,6 @@ import static com.g5.tdp2.myhealthapp.usecase.LoginMember.WRONG_CREDENTIALS;
 public class LoginActivity extends MainActivity {
     private EditText idField;
     private EditText passField;
-    private LoginMember loginUsecase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,11 +30,10 @@ public class LoginActivity extends MainActivity {
         final LoginActivity self = this;
         idField = findViewById(R.id.login_id);
         passField = findViewById(R.id.login_password);
-        loginUsecase = UsecaseFactory.INSTANCE.getBean(LoginMember.class);
 
         // TODO : remover estas credenciales por defecto
-        idField.setText("" + 35317588L);
-        passField.setText("qwerty");
+        idField.setText("" + 34317677L);
+        passField.setText("qwerty123");
 
         Button signupBtn = findViewById(R.id.login_signup_btn);
         signupBtn.setOnClickListener(v -> {
@@ -59,7 +57,8 @@ public class LoginActivity extends MainActivity {
             return;
         }
 
-        loginUsecase.loginMember(memberCredentials, this::handleLoginOk, this::handleError);
+        LoginMember usecase = UsecaseFactory.INSTANCE.getBean(LoginMember.class); // obtengo el caso de uso de inicio de sesion
+        usecase.loginMember(memberCredentials, this::handleLoginOk, this::handleError);
     }
 
     private void handleLoginOk(Member member) {
