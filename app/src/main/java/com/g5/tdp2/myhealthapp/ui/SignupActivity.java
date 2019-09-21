@@ -102,8 +102,8 @@ public class SignupActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main_menu, menu);
+        // TODO : habilitar cuando se quiera agregar opciones extra a la app
+//        getMenuInflater().inflate(R.menu.main_menu, menu);
         return true;
     }
 
