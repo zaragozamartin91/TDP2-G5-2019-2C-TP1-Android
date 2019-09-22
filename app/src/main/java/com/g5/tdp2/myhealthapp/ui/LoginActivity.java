@@ -62,8 +62,8 @@ public class LoginActivity extends MainActivity {
     }
 
     private void handleLoginOk(Member member) {
-        Intent signupIntent = new Intent(this, MapsActivity.class);
-        startActivity(signupIntent);
+        Intent mapsIntent = new Intent(this, MapsActivity.class);
+        startActivity(mapsIntent);
     }
 
     private void showErrDialog(String title, String msg) {
