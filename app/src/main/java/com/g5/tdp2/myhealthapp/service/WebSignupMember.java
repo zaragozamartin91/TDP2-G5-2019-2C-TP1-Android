@@ -40,17 +40,18 @@ public class WebSignupMember implements SignupMember {
                 succCallback.run();
             }, error -> {
                 Log.e("WebSignupMember-onErrorResponse", error.toString());
-                Optional.ofNullable(error.networkResponse).ifPresent(nr -> {
+                SignupMemberException ex = Optional.ofNullable(error.networkResponse).map(nr -> {
                     switch (nr.statusCode) {
                         case 400:
                         case 403:
-                            errCallback.accept(new SignupMemberException(INVALID_FORM));
-                            break;
+                            return new SignupMemberException(INVALID_FORM);
                         default:
-                            errCallback.accept(new SignupMemberException(UNKNOWN_ERROR));
+                            return new SignupMemberException(UNKNOWN_ERROR);
                     }
-                });
+                }).orElse(new SignupMemberException(INTERNAL_ERROR));
+                errCallback.accept(ex);
             });
+
             requestQueue.add(jsonObjectRequest);
 
         } catch (IllegalStateException e) {
