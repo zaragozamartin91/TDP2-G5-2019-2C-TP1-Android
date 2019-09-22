@@ -10,7 +10,7 @@
     <!-- PERMISSIONS *********************************************************************** -->
     <string name="internet_perm_reject">Se necesita acceso a internet</string>
     <string name="network_perm_reject">Se necesita acceso a internet</string>
-    <string name="location_perm_reject">Se necesita acceso a geolocalizaci\u00F3n</string>
+    <string name="location_perm_reject">Se necesita acceso a la geolocalizaci\u00F3n</string>
 
     <!-- LOGIN *********************************************************************** -->
     <string name="login_title">Bienvenido</string>
@@ -25,8 +25,8 @@
 
     <string name="login_id_error_msg">DNI inv\u00E1lido</string>
     <string name="login_password_err_msg">Contrase\u00F1a inv\u00E1lida</string>
-    <string name="login_password_err_short_msg">Contrase\u00F1a debe tener al menos 8 car\u00E1cteres</string>
-    <string name="login_password_err_invalid_msg">La contrase\u00F1a debe tener al menos 8 car\u00E1cteres. Tienen que tener al menos un n\u00FAmero y una letra</string>
+    <string name="login_password_err_short_msg">Contrase\u00F1a debe tener al menos 8 caracteres</string>
+    <string name="login_password_err_invalid_msg">La contrase\u00F1a debe tener al menos 8 caracteres. Tienen que tener al menos un n\u00FAmero y una letra</string>
     <string name="login_err_403_msg">Verificar datos ingresados. Usuario o contrase\u00F1a ingresados inv\u00E1lidos</string>
     <string name="login_dialog_title_err_msg">Error de inicio de sesi\u00F3n</string>
 
@@ -46,7 +46,7 @@
     <string name="signup_password_hint">Contrase\u00F1a</string>
     <string name="signup_repeat_password_hint">Repetir contrase\u00F1a</string>
     <string name="signup_id_error_msg">DNI inv\u00E1lido</string>
-    <string name="signup_password_err_invalid_msg">La contrase\u00F1a debe tener al menos 8 car\u00E1ccteres. Tienen que tener al menos un n\u00FAmero y una letra</string>
+    <string name="signup_password_err_invalid_msg">La contrase\u00F1a debe tener al menos 8 caraccteres. Tienen que tener al menos un n\u00FAmero y una letra</string>
     <string name="signup_plan_hint">Plan</string>
     <string name="signup_fname_err">Ingrese su nombre</string>
     <string name="signup_lname_err">Ingrese su apellido</string>
