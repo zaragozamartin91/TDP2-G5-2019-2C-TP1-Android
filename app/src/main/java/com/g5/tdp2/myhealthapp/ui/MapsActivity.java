@@ -8,7 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.Toast;
 
-import androidx.fragment.app.FragmentActivity;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.g5.tdp2.myhealthapp.R;
 import com.google.android.gms.maps.CameraUpdate;
@@ -27,7 +27,8 @@ import java.util.stream.Stream;
 import static android.location.LocationManager.*;
 import static android.location.LocationManager.NETWORK_PROVIDER;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, LocationListener {
+//Antes extendia de FragmentActivity pero lo cambie para agregar el titulo en la vista
+public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, LocationListener {
 
     private GoogleMap mMap;
     private AtomicReference<Location> currentLocation = new AtomicReference<>();
@@ -37,6 +38,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+
+        /* Habilito el default action bar */
+        Optional.ofNullable(getSupportActionBar()).ifPresent(actionBar -> {
+            actionBar.setDisplayShowHomeEnabled(true);
+            actionBar.setTitle("Profesionales");
+        });
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         Optional.ofNullable(getSupportFragmentManager())

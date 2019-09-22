@@ -46,7 +46,7 @@
     <string name="signup_password_hint">Contrase\u00F1a</string>
     <string name="signup_repeat_password_hint">Repetir contrase\u00F1a</string>
     <string name="signup_id_error_msg">DNI inv\u00E1lido</string>
-    <string name="signup_password_err_invalid_msg">La contrase\u00F1a debe tener al menos 8 caraccteres. Tienen que tener al menos un n\u00FAmero y una letra</string>
+    <string name="signup_password_err_invalid_msg">La contrase\u00F1a debe tener al menos 8 caraccteres y contener letras y n\u00FAmeros</string>
     <string name="signup_plan_hint">Plan</string>
     <string name="signup_fname_err">Ingrese su nombre</string>
     <string name="signup_lname_err">Ingrese su apellido</string>
