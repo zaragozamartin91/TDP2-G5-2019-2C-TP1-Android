@@ -98,7 +98,7 @@
                 android:importantForAutofill="no"
                 android:inputType="phone" />
 
-            <EditText
+            <Spinner
                 android:id="@+id/signup_plan"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -107,8 +107,20 @@
                 android:layout_marginEnd="32dp"
                 android:ems="10"
                 android:hint="@string/signup_plan_hint"
-                android:importantForAutofill="no"
-                android:inputType="text" />
+                android:spinnerMode="dropdown" />
+
+
+<!--            <EditText-->
+<!--                android:id="@+id/signup_plan"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginStart="32dp"-->
+<!--                android:layout_marginTop="16dp"-->
+<!--                android:layout_marginEnd="32dp"-->
+<!--                android:ems="10"-->
+<!--                android:hint="@string/signup_plan_hint"-->
+<!--                android:importantForAutofill="no"-->
+<!--                android:inputType="text" />-->
 
             <EditText
                 android:id="@+id/signup_email"

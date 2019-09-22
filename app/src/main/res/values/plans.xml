@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="available_plans">
+        <item>Seleccione su plan</item>
+        <item>A110</item>
+        <item>A210</item>
+        <item>A310</item>
+    </string-array>
+</resources>
+
+<!--    A110, A210, A310-->

@@ -1,11 +1,17 @@
 package com.g5.tdp2.myhealthapp.ui;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -41,7 +47,8 @@ public class SignupActivity extends AppCompatActivity {
     private EditText lastName;
     private EditText id;
     private EditText member;
-    private EditText plan;
+    private Spinner plan;
+    private String planValue;
     private EditText email;
     private EditText password;
     private EditText repPassword;
@@ -56,7 +63,14 @@ public class SignupActivity extends AppCompatActivity {
         signupBirth = findViewById(R.id.signup_birth);
         id = findViewById(R.id.signup_id);
         member = findViewById(R.id.signup_member);
+
         plan = findViewById(R.id.signup_plan);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+                this, R.array.available_plans, R.layout.crm_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        plan.setAdapter(adapter);
+        plan.setOnItemSelectedListener(this.planItemSelectedListener);
+
         email = findViewById(R.id.signup_email);
         password = findViewById(R.id.signup_password);
         repPassword = findViewById(R.id.signup_repeat_password);
@@ -67,7 +81,7 @@ public class SignupActivity extends AppCompatActivity {
         member.setText("0987654321");
         // BIRTH : 1990-08-31
         id.setText("34317677");
-        plan.setText("A310");
+//        plan.setText("A310");
         email.setText("zaragozamartin91@outlook.com");
         password.setText("qwerty123");
         repPassword.setText("qwerty123");
@@ -141,53 +155,72 @@ public class SignupActivity extends AppCompatActivity {
 
         MemberSignupForm memberSignupForm = new MemberSignupForm(
                 firstName.getText().toString(), lastName.getText().toString(), email.getText().toString(),
-                numId, member.getText().toString(), plan.getText().toString(),
+                numId, member.getText().toString(), planValue,
                 leDate.get().getTime(), password.getText().toString(), repPassword.getText().toString()
         );
 
         SignupMember usecase = UsecaseFactory.INSTANCE.getBean(SignupMember.class); // obtengo el caso de uso del registro
-        usecase.signup(memberSignupForm, () -> Toast.makeText(SignupActivity.this, "Registro exitoso", Toast.LENGTH_LONG).show(), e -> {
-            switch (e.getMessage()) {
-                case INVALID_PASSWORD:
-                    password.setError(getString(R.string.signup_password_err_invalid_msg));
-                    break;
-                case EMPTY_FIRST_NAME:
-                    firstName.setError(getString(R.string.signup_fname_err));
-                    break;
-                case EMPTY_LAST_NAME:
-                    lastName.setError(getString(R.string.signup_lname_err));
-                    break;
-                case INVALID_EMAIL:
-                    email.setError(getString(R.string.signup_email_err));
-                    break;
-                case INVALID_ID:
-                    id.setError(getString(R.string.signup_id_err));
-                    break;
-                case INVALID_MEMBER_ID:
-                    member.setError(getString(R.string.signup_member_err));
-                    break;
-                case PASSWORDS_DONT_MATCH:
-                    repPassword.setError(getString(R.string.signup_reppass_err));
-                    break;
-                case INVALID_PLAN:
-                    plan.setError(getString(R.string.signup_plan_err));
-                    break;
-                case INVALID_FORM:
-                    DialogHelper.INSTANCE.showNonCancelableDialog(
-                            SignupActivity.this,
-                            getString(R.string.signup_unkerr_dialog_title),
-                            getString(R.string.signup_invalid_form_err)
-                    );
-                default:
-                    DialogHelper.INSTANCE.showNonCancelableDialog(
-                            SignupActivity.this,
-                            getString(R.string.signup_unkerr_dialog_title),
-                            getString(R.string.signup_unkerr_dialog_msg)
-                    );
-            }
-            Log.e("signup-error", "Formulario invalido");
-        });
+        usecase.signup(memberSignupForm, this::handleSignupOk, this::handleSignupError);
     }
 
+    private void handleSignupOk() {
+        Toast.makeText(SignupActivity.this, "Registro exitoso", Toast.LENGTH_LONG).show();
+        Intent mapsIntent = new Intent(this, MapsActivity.class);
+        startActivity(mapsIntent);
+    }
 
+    private void handleSignupError(Exception e) {
+        switch (e.getMessage()) {
+            case INVALID_PASSWORD:
+                password.setError(getString(R.string.signup_password_err_invalid_msg));
+                break;
+            case EMPTY_FIRST_NAME:
+                firstName.setError(getString(R.string.signup_fname_err));
+                break;
+            case EMPTY_LAST_NAME:
+                lastName.setError(getString(R.string.signup_lname_err));
+                break;
+            case INVALID_EMAIL:
+                email.setError(getString(R.string.signup_email_err));
+                break;
+            case INVALID_ID:
+                id.setError(getString(R.string.signup_id_err));
+                break;
+            case INVALID_MEMBER_ID:
+                member.setError(getString(R.string.signup_member_err));
+                break;
+            case PASSWORDS_DONT_MATCH:
+                repPassword.setError(getString(R.string.signup_reppass_err));
+                break;
+            case INVALID_PLAN:
+                System.out.println("error?!");
+                ((TextView) plan.getSelectedView()).setError(getString(R.string.signup_plan_err));
+                break;
+            case INVALID_FORM:
+                DialogHelper.INSTANCE.showNonCancelableDialog(
+                        SignupActivity.this,
+                        getString(R.string.signup_unkerr_dialog_title),
+                        getString(R.string.signup_invalid_form_err)
+                );
+            default:
+                DialogHelper.INSTANCE.showNonCancelableDialog(
+                        SignupActivity.this,
+                        getString(R.string.signup_unkerr_dialog_title),
+                        getString(R.string.signup_unkerr_dialog_msg)
+                );
+        }
+    }
+
+    private AdapterView.OnItemSelectedListener planItemSelectedListener = new AdapterView.OnItemSelectedListener() {
+        @Override
+        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            ((TextView) plan.getSelectedView()).setError(null);
+            planValue = Optional.ofNullable(parent.getItemAtPosition(position))
+                    .map(Object::toString)
+                    .orElse("");
+        }
+
+        @Override
+        public void onNothingSelected(AdapterView<?> parent) { }
+    };
 }

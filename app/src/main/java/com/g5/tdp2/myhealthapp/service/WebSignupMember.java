@@ -15,6 +15,7 @@ import com.g5.tdp2.myhealthapp.usecase.SignupMemberException;
 import org.json.JSONObject;
 
 import java.nio.charset.Charset;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 public class WebSignupMember implements SignupMember {
@@ -39,16 +40,18 @@ public class WebSignupMember implements SignupMember {
                 succCallback.run();
             }, error -> {
                 Log.e("WebSignupMember-onErrorResponse", error.toString());
-                logError(error.networkResponse.data);
-                switch (error.networkResponse.statusCode) {
-                    case 400:
-                    case 403:
-                        errCallback.accept(new SignupMemberException(INVALID_FORM));
-                        break;
-                    default:
-                        errCallback.accept(new SignupMemberException(UNKNOWN_ERROR));
-                }
+                SignupMemberException ex = Optional.ofNullable(error.networkResponse).map(nr -> {
+                    switch (nr.statusCode) {
+                        case 400:
+                        case 403:
+                            return new SignupMemberException(INVALID_FORM);
+                        default:
+                            return new SignupMemberException(UNKNOWN_ERROR);
+                    }
+                }).orElse(new SignupMemberException(INTERNAL_ERROR));
+                errCallback.accept(ex);
             });
+
             requestQueue.add(jsonObjectRequest);
 
         } catch (IllegalStateException e) {
