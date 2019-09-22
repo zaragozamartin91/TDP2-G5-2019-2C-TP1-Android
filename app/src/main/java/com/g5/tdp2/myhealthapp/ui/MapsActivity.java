@@ -106,7 +106,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onLocationChanged(Location location) {
         Log.d("CHANGED", "LOCATION UPDATED");
-        currentLocation.set(location);
+        if (currentLocation.getAndSet(location) == null) {
+            Toast.makeText(this, getString(R.string.maps_loc_found_msg), Toast.LENGTH_LONG).show();
+        }
         Optional.ofNullable(location).ifPresent(this::centerAndMarkLocation);
         addStubMarker();
     }

@@ -53,9 +53,6 @@ public class MemberSignupForm {
         Validate.validState(StringUtils.isNotBlank(firstName), EMPTY_FIRST_NAME);
         Validate.validState(StringUtils.isNotBlank(lastName), EMPTY_LAST_NAME);
 
-        Validate.validState(StringUtils.isNotBlank(email), INVALID_EMAIL);
-        Validate.validState(email.matches("^\\w(\\w|\\.)+\\w@\\w(\\w|\\.)+\\w$"), INVALID_EMAIL);
-
         Validate.validState(id > 0L, INVALID_ID);
         Validate.validState(StringUtils.isNotBlank(memberId), INVALID_MEMBER_ID);
         Validate.validState(memberId.matches("^\\w+$"), INVALID_MEMBER_ID);
@@ -63,6 +60,8 @@ public class MemberSignupForm {
         Validate.validState(StringUtils.isNotBlank(plan), INVALID_PLAN);
         Validate.validState(plan.matches("^\\w+$"), INVALID_PLAN);
 
+        Validate.validState(StringUtils.isNotBlank(email), INVALID_EMAIL);
+        Validate.validState(email.matches("^\\w(\\w|\\.)+\\w@\\w(\\w|\\.)+\\w$"), INVALID_EMAIL);
 
         Validate.validState(password.matches("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$"), INVALID_PASSWORD);
         Validate.validState(password.equals(repPassword), PASSWORDS_DONT_MATCH);
