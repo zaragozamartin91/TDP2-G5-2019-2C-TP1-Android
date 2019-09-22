@@ -26,7 +26,7 @@
     <string name="login_id_error_msg">DNI inv\u00E1lido</string>
     <string name="login_password_err_msg">Contrase\u00F1a inv\u00E1lida</string>
     <string name="login_password_err_short_msg">Contrase\u00F1a debe tener al menos 8 car\u00E1cteres</string>
-    <string name="login_password_err_invalid_msg">La contrase\u00F1a debe tener al menos 8 car\u00E1cteres, n\u00FAmeros y letras</string>
+    <string name="login_password_err_invalid_msg">La contrase\u00F1a debe tener al menos 8 car\u00E1cteres. Tienen que tener al menos un n\u00FAmero y una letra</string>
     <string name="login_err_403_msg">Verificar datos ingresados. Usuario o contrase\u00F1a ingresados inv\u00E1lidos</string>
     <string name="login_dialog_title_err_msg">Error de inicio de sesi\u00F3n</string>
 
@@ -46,19 +46,19 @@
     <string name="signup_password_hint">Contrase\u00F1a</string>
     <string name="signup_repeat_password_hint">Repetir contrase\u00F1a</string>
     <string name="signup_id_error_msg">DNI inv\u00E1lido</string>
-    <string name="signup_password_err_invalid_msg">La contrase\u00F1a debe tener al menos 8 caracteres, n\u00FAmeros y letras</string>
+    <string name="signup_password_err_invalid_msg">La contrase\u00F1a debe tener al menos 8 car\u00E1ccteres. Tienen que tener al menos un n\u00FAmero y una letra</string>
     <string name="signup_plan_hint">Plan</string>
     <string name="signup_fname_err">Ingrese su nombre</string>
     <string name="signup_lname_err">Ingrese su apellido</string>
     <string name="signup_email_err">Direcci\u00F3n de correo inv\u00E1lida</string>
-    <string name="signup_id_err">Id inv\u00E1lido</string>
-    <string name="signup_member_err">N\u00FAmero de afiliado inv\u00E1lida</string>
+    <string name="signup_id_err">DNI inv\u00E1lido</string>
+    <string name="signup_member_err">N\u00FAmero de afiliado inv\u00E1lido</string>
     <string name="signup_reppass_err">Las contrase\u00F1as no coinciden</string>
     <string name="signup_plan_err">Plan inexistente</string>
     <string name="signup_unkerr_dialog_title">Error de registro</string>
     <string name="signup_unkerr_dialog_msg">Ocurri\u00F3 un error inesperado al registrar el afiliado. Espere unos instantes y reint\u00E9ntelo.</string>
     <string name="signup_birth_err">Ingrese su fecha de nacimiento</string>
-    <string name="signup_invalid_form_err">No es posible registrarse. Valide los datos ingresados.</string>
+    <string name="signup_invalid_form_err">No se encuentra afiliado a MyHealth. Por favor comuniquese a 0800-MYHEALTH</string>
 
     <!-- MAPS *********************************************************************** -->
     <string name="maps_err_noloc_msg">No se tiene acceso a la localizaci\u00F3n</string>
