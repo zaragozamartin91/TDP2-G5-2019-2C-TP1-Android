@@ -202,12 +202,14 @@ public class SignupActivity extends AppCompatActivity {
                         getString(R.string.signup_unkerr_dialog_title),
                         getString(R.string.signup_invalid_form_err)
                 );
+                break;
             default:
                 DialogHelper.INSTANCE.showNonCancelableDialog(
                         SignupActivity.this,
                         getString(R.string.signup_unkerr_dialog_title),
                         getString(R.string.signup_unkerr_dialog_msg)
                 );
+                break;
         }
     }
 
