@@ -2,6 +2,7 @@ package com.g5.tdp2.myhealthapp.ui;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -12,6 +13,8 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.g5.tdp2.myhealthapp.AppState;
 import com.g5.tdp2.myhealthapp.R;
+import com.g5.tdp2.myhealthapp.service.LoginMemberStub;
+import com.g5.tdp2.myhealthapp.service.SignupMemberStub;
 import com.g5.tdp2.myhealthapp.service.WebLoginMember;
 import com.g5.tdp2.myhealthapp.service.WebSignupMember;
 import com.g5.tdp2.myhealthapp.usecase.UsecaseFactory;
@@ -105,7 +108,7 @@ public abstract class MainActivity extends AppCompatActivity {
         Context appContext = this;
         final AlertDialog.Builder alert = new AlertDialog.Builder(appContext);
         final EditText input = new EditText(appContext);
-        input.setHint("Ip de prueba");
+        input.setHint("<host>:<puerto>");
         alert.setView(input);
 
         alert.setCancelable(false);
@@ -135,6 +138,12 @@ public abstract class MainActivity extends AppCompatActivity {
             WebSignupMember signupMember = new WebSignupMember("https://tdp2-crmedical-api.herokuapp.com/auth/register", requestQueue);
             UsecaseFactory.INSTANCE.addBean(signupMember);
 
+            dialog.cancel();
+        });
+
+        alert.setNeutralButton("Modo stub", (dialog, which) -> {
+            UsecaseFactory.INSTANCE.addBean(new LoginMemberStub());
+            UsecaseFactory.INSTANCE.addBean(new SignupMemberStub());
             dialog.cancel();
         });
 
