@@ -2,14 +2,9 @@ package com.g5.tdp2.myhealthapp.entity;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
-import com.g5.tdp2.myhealthapp.util.DateFormatter;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-import java.io.IOException;
 import java.util.Date;
 import java.util.Objects;
 
@@ -26,7 +21,7 @@ public class Member {
     public Member(
             @JsonProperty("firstname") String firstname,
             @JsonProperty("lastname") String lastname,
-            @JsonProperty("birthdate") @JsonDeserialize(using = MemberBirthdateDeserializer.class) Date birthdate,
+            @JsonProperty("birthdate") @JsonDeserialize(using = YyyymmddDeserializer.class) Date birthdate,
             @JsonProperty("affiliate_id") String memberId,
             @JsonProperty("plan") String plan,
             @JsonProperty("idn") long id,
@@ -48,7 +43,7 @@ public class Member {
         return lastname;
     }
 
-
+    @JsonSerialize(using = YyyymmddSerializer.class)
     public Date getBirthdate() {
         return birthdate;
     }
@@ -102,19 +97,3 @@ public class Member {
     }
 }
 
-class MemberBirthdateDeserializer extends StdDeserializer<Date> {
-    public MemberBirthdateDeserializer() {
-        this(null);
-    }
-
-    protected MemberBirthdateDeserializer(Class<?> vc) {
-        super(vc);
-    }
-
-    @Override
-    public Date deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException {
-        JsonNode node = jp.getCodec().readTree(jp);
-        String sbirth = node.asText();
-        return DateFormatter.YYYY_MM_DD.deserialize(sbirth);
-    }
-}
