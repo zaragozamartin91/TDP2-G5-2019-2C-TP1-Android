@@ -4,6 +4,7 @@ import com.g5.tdp2.myhealthapp.entity.Member;
 import com.g5.tdp2.myhealthapp.entity.MemberCredentials;
 import com.g5.tdp2.myhealthapp.usecase.LoginMember;
 import com.g5.tdp2.myhealthapp.usecase.LoginMemberException;
+import com.g5.tdp2.myhealthapp.util.DateFormatter;
 
 import java.util.function.Consumer;
 
@@ -16,8 +17,11 @@ public class LoginMemberStub implements LoginMember {
         if (memberCredentials.getId() != 1234L) {
             /* Usuario 1234 es el unico valido para hacer pruebas */
             errCallback.accept(new LoginMemberException(WRONG_CREDENTIALS));
+            return;
         }
 
-        succCallback.accept(new Member());
+        succCallback.accept(
+                new Member("Moni", "Argento", DateFormatter.YYYY_MM_DD.deserialize("1991-03-21"), "1234", "A110", 1234, "moni@argento.com")
+        );
     }
 }
