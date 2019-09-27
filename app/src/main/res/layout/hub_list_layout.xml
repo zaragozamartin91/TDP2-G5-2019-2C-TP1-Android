@@ -5,7 +5,7 @@
     android:padding="5dp" >
 
     <ImageView
-        android:id="@+id/logo"
+        android:id="@+id/hub_list_logo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -15,7 +15,7 @@
     </ImageView>
 
     <TextView
-        android:id="@+id/label"
+        android:id="@+id/hub_list_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Ver profesionales"
