@@ -14,6 +14,7 @@ import com.android.volley.toolbox.Volley;
 import com.g5.tdp2.myhealthapp.AppState;
 import com.g5.tdp2.myhealthapp.R;
 import com.g5.tdp2.myhealthapp.service.LoginMemberStub;
+import com.g5.tdp2.myhealthapp.service.SearchProfessionalsStub;
 import com.g5.tdp2.myhealthapp.service.SignupMemberStub;
 import com.g5.tdp2.myhealthapp.service.WebLoginMember;
 import com.g5.tdp2.myhealthapp.service.WebSignupMember;
@@ -146,6 +147,9 @@ public abstract class MainActivity extends AppCompatActivity {
             UsecaseFactory.INSTANCE.addBean(new SignupMemberStub());
             dialog.cancel();
         });
+
+        // TODO : Modificar esta linea dependiendo del ambiente
+        UsecaseFactory.INSTANCE.addBean(new SearchProfessionalsStub());
 
         alert.setTitle("Configuracion de API");
         alert.show();
