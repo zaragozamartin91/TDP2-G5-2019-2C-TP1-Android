@@ -3,6 +3,7 @@ package com.g5.tdp2.myhealthapp.ui;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,9 +17,13 @@ import android.widget.Toast;
 import com.g5.tdp2.myhealthapp.R;
 import com.g5.tdp2.myhealthapp.entity.Member;
 
+import java.util.Optional;
+
 public class HubActivity extends AppCompatActivity {
     public static final String MEMBER_EXTRA = "member";
-    static final String[] VIEWS = new String[]{"Listar profesionales", "Profesionales cercanos"};
+    public static final String PROF_SEARCH = "Listar profesionales";
+    public static final String PROF_NEARBY = "Profesionales cercanos";
+    static final String[] VIEWS = new String[]{PROF_SEARCH, PROF_NEARBY};
 
 //    @Override
 //    public void onCreate(Bundle savedInstanceState) {
@@ -54,8 +59,18 @@ public class HubActivity extends AppCompatActivity {
         ArrayAdapter<String> listAdapter = new HubArrayAdapter(this, VIEWS);
         listView.setAdapter(listAdapter);
         listView.setOnItemClickListener((parent, view, position, id) -> {
-            String selectedValue = listAdapter.getItem(position);
-            Toast.makeText(HubActivity.this, selectedValue, Toast.LENGTH_SHORT).show();
+            String selectedValue = Optional.ofNullable(listAdapter.getItem(position)).orElse("");
+
+            switch (selectedValue) {
+                case PROF_SEARCH:
+                    Intent intent = new Intent(this, ProfessionalSearchActivity.class);
+                    intent.putExtra(ProfessionalSearchActivity.MEMBER_EXTRA, member);
+                    startActivity(intent);
+                    return;
+                case PROF_NEARBY:
+                default:
+                    Toast.makeText(HubActivity.this, selectedValue, Toast.LENGTH_SHORT).show();
+            }
         });
     }
 }

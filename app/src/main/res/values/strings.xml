@@ -66,4 +66,11 @@
 
     <!-- HUB *********************************************************************** -->
     <string name="main_hub_title">Bienvenido %1$s</string>
+
+    <!-- SEARCH_PROFESSIONALS****************************************************************** -->
+    <string name="prof_search_title">Listar Profesionales</string>
+    <string name="prof_search_name_hint">Nombre</string>
+    <string name="prof_search_specialty_hint">Especialidad</string>
+    <string name="prof_search_zone_hint">Zona</string>
+    <string name="prof_search_btn_text">Buscar</string>
 </resources>
