@@ -5,10 +5,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 
-public class Member {
+public class Member implements Serializable {
     private String firstname;
     private String lastname;
     private Date birthdate;

@@ -63,4 +63,7 @@
     <!-- MAPS *********************************************************************** -->
     <string name="maps_err_noloc_msg">No se tiene acceso a la localizaci\u00F3n</string>
     <string name="maps_loc_found_msg">Localizaci\u00F3n obtenida</string>
+
+    <!-- HUB *********************************************************************** -->
+    <string name="main_hub_title">Bienvenido %1$s</string>
 </resources>
