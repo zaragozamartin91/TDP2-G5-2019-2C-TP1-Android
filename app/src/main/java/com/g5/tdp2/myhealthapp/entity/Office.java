@@ -1,6 +1,7 @@
 package com.g5.tdp2.myhealthapp.entity;
 
 import java.io.Serializable;
+import java.util.Optional;
 
 public class Office implements Serializable {
     private String address;
@@ -29,5 +30,9 @@ public class Office implements Serializable {
 
     public double getLon() {
         return lon;
+    }
+
+    public String addressWphone() {
+        return Optional.ofNullable(phone).filter(p -> !p.isEmpty()).map(p -> address + " - " + p).orElse(address);
     }
 }
