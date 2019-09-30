@@ -1,8 +1,9 @@
 package com.g5.tdp2.myhealthapp.entity;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Professional {
+public class Professional implements Serializable {
     private String name;
     private List<String> languages;
     private List<String> specialties;

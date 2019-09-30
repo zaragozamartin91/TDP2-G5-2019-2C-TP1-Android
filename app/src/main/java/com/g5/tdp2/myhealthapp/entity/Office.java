@@ -1,6 +1,8 @@
 package com.g5.tdp2.myhealthapp.entity;
 
-public class Office {
+import java.io.Serializable;
+
+public class Office implements Serializable {
     private String address;
     private String phone;
     private double lat;
