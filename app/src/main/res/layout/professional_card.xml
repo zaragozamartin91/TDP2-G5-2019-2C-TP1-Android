@@ -13,62 +13,82 @@
     app:layout_constraintTop_toBottomOf="@+id/hub_title">
 
 
-    <RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/prof_card_name"
+        <ImageView
+            android:id="@+id/prof_card_logo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:text="Nombre"
-            android:textStyle="bold" />
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:src="@drawable/md_logo"
+            android:layout_gravity="center_vertical"
+            android:contentDescription="Profesional" />
 
-        <TextView
-            android:id="@+id/prof_card_specialty"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/prof_card_name"
-            android:layout_marginTop="10dp"
-            android:text="Especialidades" />
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp">
 
-        <TextView
-            android:id="@+id/prof_card_langs"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/prof_card_specialty"
-            android:layout_marginTop="10dp"
-            android:text="Idiomas" />
+            <TextView
+                android:id="@+id/prof_card_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:text="Nombre"
+                android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/prof_card_plans"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/prof_card_langs"
-            android:layout_marginTop="10dp"
-            android:text="Planes" />
+            <TextView
+                android:id="@+id/prof_card_specialty"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/prof_card_name"
+                android:layout_marginTop="10dp"
+                android:text="Especialidades" />
 
-        <TextView
-            android:id="@+id/prof_card_emails"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/prof_card_plans"
-            android:layout_marginTop="10dp"
-            android:text="Emails" />
+            <TextView
+                android:id="@+id/prof_card_langs"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/prof_card_specialty"
+                android:layout_marginTop="10dp"
+                android:text="Idiomas" />
 
-        <TextView
-            android:id="@+id/prof_card_offices"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/prof_card_emails"
-            android:layout_marginTop="10dp"
-            android:text="Oficinas" />
-    </RelativeLayout>
+            <TextView
+                android:id="@+id/prof_card_plans"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/prof_card_langs"
+                android:layout_marginTop="10dp"
+                android:text="Planes" />
+
+            <TextView
+                android:id="@+id/prof_card_emails"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/prof_card_plans"
+                android:layout_marginTop="10dp"
+                android:text="Emails" />
+
+            <TextView
+                android:id="@+id/prof_card_offices"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/prof_card_emails"
+                android:layout_marginTop="10dp"
+                android:text="Oficinas" />
+        </RelativeLayout>
+
+    </LinearLayout>
+
+
 
 </androidx.cardview.widget.CardView>
 
