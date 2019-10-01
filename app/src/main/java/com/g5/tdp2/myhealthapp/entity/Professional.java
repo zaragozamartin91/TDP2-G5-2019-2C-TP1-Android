@@ -8,15 +8,15 @@ public class Professional implements Serializable {
     private List<String> languages;
     private List<String> specialties;
     private List<Office> offices;
-    private List<String> plans;
+    private String plan;
     private List<String> emails;
 
-    public Professional(String name, List<String> languages, List<String> specialties, List<Office> offices, List<String> plans, List<String> emails) {
+    public Professional(String name, List<String> languages, List<String> specialties, List<Office> offices, String plan, List<String> emails) {
         this.name = name;
         this.languages = languages;
         this.specialties = specialties;
         this.offices = offices;
-        this.plans = plans;
+        this.plan = plan;
         this.emails = emails;
     }
 
@@ -36,8 +36,8 @@ public class Professional implements Serializable {
         return offices;
     }
 
-    public List<String> getPlans() {
-        return plans;
+    public String getPlan() {
+        return plan;
     }
 
     public List<String> getEmails() {
