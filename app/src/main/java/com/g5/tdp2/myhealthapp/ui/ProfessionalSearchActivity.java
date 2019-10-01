@@ -113,7 +113,7 @@ public class ProfessionalSearchActivity extends AppCompatActivity {
 
     private void handleProfessionals(List<Professional> professionals) {
         if (professionals.isEmpty()) {
-            Toast.makeText(this, getString(R.string.prof_search_empty_results), Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.prof_search_empty_results, Toast.LENGTH_LONG).show();
         } else {
             // TODO : manejar resultados de busqueda
             Intent intent = new Intent(this, ProfessionalListActivity.class);
@@ -125,14 +125,14 @@ public class ProfessionalSearchActivity extends AppCompatActivity {
     private void handleSearchError(Exception ex) {
         switch (ex.getMessage()) {
             case INVALID_FORM:
-                Toast.makeText(this, "Debe completar al menos un filtro de busqueda", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, R.string.prof_search_no_filters, Toast.LENGTH_LONG).show();
                 break;
             case UNKNOWN_ERROR:
             default:
                 DialogHelper.INSTANCE.showNonCancelableDialog(
                         this,
-                        "Error de busqueda",
-                        "Ocurrio un error al buscar profesionales. Intentelo nuevamente mas tarde"
+                        getString(R.string.prof_search_err_dialog_title),
+                        getString(R.string.prof_search_err_dialog_msg)
                 );
         }
     }
