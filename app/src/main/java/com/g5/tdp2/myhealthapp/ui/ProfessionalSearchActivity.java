@@ -24,6 +24,10 @@ import com.g5.tdp2.myhealthapp.util.DialogHelper;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
+
+import static com.g5.tdp2.myhealthapp.usecase.SearchProfessionals.INVALID_FORM;
+import static com.g5.tdp2.myhealthapp.usecase.SearchProfessionals.UNKNOWN_ERROR;
 
 public class ProfessionalSearchActivity extends AppCompatActivity {
     public static final String MEMBER_EXTRA = "member";
@@ -69,7 +73,11 @@ public class ProfessionalSearchActivity extends AppCompatActivity {
     class SpecialtyItemSelectedListener implements AdapterView.OnItemSelectedListener {
         @Override
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-            specialtyVal = Optional.ofNullable(parent.getItemAtPosition(position)).map(Object::toString).orElse("");
+            specialtyVal = Optional.of(position)
+                    .filter(p -> p > 0)
+                    .map(parent::getItemAtPosition)
+                    .map(Object::toString)
+                    .orElse("");
         }
 
         @Override
@@ -81,7 +89,11 @@ public class ProfessionalSearchActivity extends AppCompatActivity {
     class ZoneItemSelectedListener implements AdapterView.OnItemSelectedListener {
         @Override
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-            zoneVal = Optional.ofNullable(parent.getItemAtPosition(position)).map(Object::toString).orElse("");
+            zoneVal = Optional.of(position)
+                    .filter(p -> p > 0)
+                    .map(parent::getItemAtPosition)
+                    .map(Object::toString)
+                    .orElse("");
         }
 
         @Override
@@ -100,18 +112,29 @@ public class ProfessionalSearchActivity extends AppCompatActivity {
     }
 
     private void handleProfessionals(List<Professional> professionals) {
-        // TODO : manejar resultados de busqueda
-        Intent intent = new Intent(this, ProfessionalListActivity.class);
-        intent.putExtra(ProfessionalListActivity.PROFESSIONALS_KEY, (Serializable) professionals);
-        startActivity(intent);
+        if (professionals.isEmpty()) {
+            Toast.makeText(this, getString(R.string.prof_search_empty_results), Toast.LENGTH_LONG).show();
+        } else {
+            // TODO : manejar resultados de busqueda
+            Intent intent = new Intent(this, ProfessionalListActivity.class);
+            intent.putExtra(ProfessionalListActivity.PROFESSIONALS_KEY, (Serializable) professionals);
+            startActivity(intent);
+        }
     }
 
     private void handleSearchError(Exception ex) {
-        DialogHelper.INSTANCE.showNonCancelableDialog(
-                this,
-                "Error de busqueda",
-                "Ocurrio un error al buscar profesionales. Intentelo nuevamente mas tarde"
-        );
+        switch (ex.getMessage()) {
+            case INVALID_FORM:
+                Toast.makeText(this, "Debe completar al menos un filtro de busqueda", Toast.LENGTH_LONG).show();
+                break;
+            case UNKNOWN_ERROR:
+            default:
+                DialogHelper.INSTANCE.showNonCancelableDialog(
+                        this,
+                        "Error de busqueda",
+                        "Ocurrio un error al buscar profesionales. Intentelo nuevamente mas tarde"
+                );
+        }
     }
 
     @Override

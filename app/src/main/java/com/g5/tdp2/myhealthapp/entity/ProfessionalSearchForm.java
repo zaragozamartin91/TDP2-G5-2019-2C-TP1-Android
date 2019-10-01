@@ -6,6 +6,7 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 public class ProfessionalSearchForm {
     public static final String ALL_BLANK_FIELDS = "ALL_BLANK_FIELDS";
+    public static final String INVALID_PLAN = "INVALID_PLAN";
 
     private String specialty;
     private String zone;
@@ -53,9 +54,10 @@ public class ProfessionalSearchForm {
 
     public void validate() throws IllegalStateException {
         Validate.validState(
-                isNotBlank(specialty) || isNotBlank(zone) || isNotBlank(name) || isNotBlank(plan),
+                isNotBlank(specialty) || isNotBlank(zone) || isNotBlank(name),
                 ALL_BLANK_FIELDS
         );
+        Validate.validState(isNotBlank(plan), INVALID_PLAN);
     }
 
     @Override

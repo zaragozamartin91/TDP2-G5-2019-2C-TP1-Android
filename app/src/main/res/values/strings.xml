@@ -73,7 +73,9 @@
     <string name="prof_search_specialty_hint">Especialidad</string>
     <string name="prof_search_zone_hint">Zona</string>
     <string name="prof_search_btn_text">Buscar</string>
+    <string name="prof_search_empty_results">No se encontraron profesionales con los parametros indicados</string>
 
+    <!-- PROF_CARD****************************************************************** -->
     <string name="prof_card_specialty">Especialidades: %1$s</string>
     <string name="prof_card_langs">Idiomas: %1$s</string>
     <string name="prof_card_plans">Plan: %1$s</string>

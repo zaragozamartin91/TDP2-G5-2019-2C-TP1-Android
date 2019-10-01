@@ -8,6 +8,7 @@ import java.util.function.Consumer;
 
 public interface SearchProfessionals {
     String INVALID_FORM = "INVALID_FORM";
+    String UNKNOWN_ERROR = "UNKNOWN_ERROR";
 
     /**
      * Dispara una busqueda de profesionales
