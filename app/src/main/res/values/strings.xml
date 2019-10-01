@@ -76,7 +76,7 @@
 
     <string name="prof_card_specialty">Especialidades: %1$s</string>
     <string name="prof_card_langs">Idiomas: %1$s</string>
-    <string name="prof_card_plans">Planes: %1$s</string>
+    <string name="prof_card_plans">Plan: %1$s</string>
     <string name="prof_card_emails">Emails: %1$s</string>
     <string name="prof_card_offices">Oficinas: %1$s</string>
 </resources>

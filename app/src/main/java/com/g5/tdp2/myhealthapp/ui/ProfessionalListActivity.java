@@ -126,7 +126,7 @@ class ProfessionalListViewHolder extends RecyclerView.ViewHolder {
                 .setText(ctx.getString(R.string.prof_card_langs, buildString(p.getLanguages())));
 
         ((TextView) cardView.findViewById(R.id.prof_card_plans))
-                .setText(ctx.getString(R.string.prof_card_plans, buildString(p.getPlans())));
+                .setText(ctx.getString(R.string.prof_card_plans, p.getPlan()));
 
         ((TextView) cardView.findViewById(R.id.prof_card_emails))
                 .setText(ctx.getString(R.string.prof_card_emails, buildString(p.getEmails())));
