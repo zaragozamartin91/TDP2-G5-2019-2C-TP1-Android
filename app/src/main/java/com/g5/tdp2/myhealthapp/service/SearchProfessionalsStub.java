@@ -23,6 +23,13 @@ public class SearchProfessionalsStub implements SearchProfessionals {
             form.validate();
         } catch (IllegalStateException e) {
             errCallback.accept(new SearchProfessionalsException(INVALID_FORM, e));
+            return;
+        }
+
+        // a modo de pruebas, la especialidad renal no tiene profesionales
+        if ("renal".equalsIgnoreCase(form.getSpecialty())) {
+            succCallback.accept(Collections.emptyList());
+            return;
         }
 
         List<Professional> professionals = new ArrayList<>();

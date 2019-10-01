@@ -73,7 +73,12 @@
     <string name="prof_search_specialty_hint">Especialidad</string>
     <string name="prof_search_zone_hint">Zona</string>
     <string name="prof_search_btn_text">Buscar</string>
+    <string name="prof_search_empty_results">No se encontraron profesionales con los parametros indicados</string>
+    <string name="prof_search_no_filters">Debe completar al menos un filtro de busqueda</string>
+    <string name="prof_search_err_dialog_title">Error de busqueda</string>
+    <string name="prof_search_err_dialog_msg">Ocurrio un error al buscar profesionales. Intentelo nuevamente mas tarde</string>
 
+    <!-- PROF_CARD****************************************************************** -->
     <string name="prof_card_specialty">Especialidades: %1$s</string>
     <string name="prof_card_langs">Idiomas: %1$s</string>
     <string name="prof_card_plans">Plan: %1$s</string>

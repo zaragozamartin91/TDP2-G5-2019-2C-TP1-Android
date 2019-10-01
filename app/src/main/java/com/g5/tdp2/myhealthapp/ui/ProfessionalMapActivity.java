@@ -6,6 +6,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -41,6 +42,7 @@ public class ProfessionalMapActivity extends AppCompatActivity implements OnMapR
 
         /* Habilito el default action bar */
         Optional.ofNullable(getSupportActionBar()).ifPresent(actionBar -> {
+            actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setDisplayShowHomeEnabled(true);
             actionBar.setTitle("Profesionales");
         });
@@ -145,4 +147,14 @@ public class ProfessionalMapActivity extends AppCompatActivity implements OnMapR
 
     @Override
     public void onProviderDisabled(String provider) { }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        /* Si se clickeo la flecha "atras" -> se mata el activity y se vuelve al login */
+        Optional.ofNullable(item)
+                .filter(i -> i.getItemId() == android.R.id.home)
+                .ifPresent(i -> finish());
+
+        return super.onOptionsItemSelected(item);
+    }
 }
