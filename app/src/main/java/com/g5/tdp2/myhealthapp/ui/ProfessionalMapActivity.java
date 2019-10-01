@@ -28,7 +28,7 @@ import static android.location.LocationManager.*;
 import static android.location.LocationManager.NETWORK_PROVIDER;
 
 //Antes extendia de FragmentActivity pero lo cambie para agregar el titulo en la vista
-public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, LocationListener {
+public class ProfessionalMapActivity extends AppCompatActivity implements OnMapReadyCallback, LocationListener {
 
     private GoogleMap mMap;
     private AtomicReference<Location> currentLocation = new AtomicReference<>();
@@ -37,7 +37,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_maps);
+        setContentView(R.layout.activity_professional_map);
 
         /* Habilito el default action bar */
         Optional.ofNullable(getSupportActionBar()).ifPresent(actionBar -> {

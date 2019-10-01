@@ -19,7 +19,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.ProfessionalSearchActivity"></activity>
+        <activity android:name=".ui.ProfessionalListActivity"></activity>
+        <activity android:name=".ui.ProfessionalSearchActivity" />
         <activity android:name=".ui.HubActivity" />
         <activity android:name=".ui.SignupActivity" />
         <activity android:name=".ui.LoginActivity">
@@ -52,7 +53,7 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".ui.MapsActivity"
+            android:name=".ui.ProfessionalMapActivity"
             android:label="@string/title_activity_maps" />
     </application>
 

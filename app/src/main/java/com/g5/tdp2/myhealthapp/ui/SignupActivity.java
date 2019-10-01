@@ -3,7 +3,6 @@ package com.g5.tdp2.myhealthapp.ui;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -165,7 +164,7 @@ public class SignupActivity extends AppCompatActivity {
 
     private void handleSignupOk() {
         Toast.makeText(SignupActivity.this, "Registro exitoso", Toast.LENGTH_LONG).show();
-        Intent mapsIntent = new Intent(this, MapsActivity.class);
+        Intent mapsIntent = new Intent(this, ProfessionalMapActivity.class);
         startActivity(mapsIntent);
     }
 

@@ -1,5 +1,6 @@
 package com.g5.tdp2.myhealthapp.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,6 +21,7 @@ import com.g5.tdp2.myhealthapp.usecase.SearchProfessionals;
 import com.g5.tdp2.myhealthapp.usecase.UsecaseFactory;
 import com.g5.tdp2.myhealthapp.util.DialogHelper;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;
 
@@ -71,7 +73,9 @@ public class ProfessionalSearchActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onNothingSelected(AdapterView<?> parent) { specialtyVal = ""; }
+        public void onNothingSelected(AdapterView<?> parent) {
+            specialtyVal = "";
+        }
     }
 
     class ZoneItemSelectedListener implements AdapterView.OnItemSelectedListener {
@@ -81,7 +85,9 @@ public class ProfessionalSearchActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onNothingSelected(AdapterView<?> parent) { zoneVal = ""; }
+        public void onNothingSelected(AdapterView<?> parent) {
+            zoneVal = "";
+        }
     }
 
     void searchProfessionals(View view) {
@@ -95,6 +101,9 @@ public class ProfessionalSearchActivity extends AppCompatActivity {
 
     private void handleProfessionals(List<Professional> professionals) {
         // TODO : manejar resultados de busqueda
+        Intent intent = new Intent(this, ProfessionalListActivity.class);
+        intent.putExtra(ProfessionalListActivity.PROFESSIONALS_KEY, (Serializable) professionals);
+        startActivity(intent);
     }
 
     private void handleSearchError(Exception ex) {

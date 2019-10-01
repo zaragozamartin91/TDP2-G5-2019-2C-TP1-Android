@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,7 +57,8 @@ public class HubActivity extends AppCompatActivity {
         title.setText(getString(R.string.main_hub_title, member.getFirstname()));
 
         ListView listView = findViewById(R.id.main_hub_list_view);
-        ArrayAdapter<String> listAdapter = new HubArrayAdapter(this, VIEWS);
+        int[] logos = new int[]{R.drawable.professional_logo, R.drawable.map_logo};
+        ArrayAdapter<String> listAdapter = new HubArrayAdapter(this, VIEWS, logos);
         listView.setAdapter(listAdapter);
         listView.setOnItemClickListener((parent, view, position, id) -> {
             String selectedValue = Optional.ofNullable(listAdapter.getItem(position)).orElse("");
@@ -68,21 +70,33 @@ public class HubActivity extends AppCompatActivity {
                     startActivity(intent);
                     return;
                 case PROF_NEARBY:
+                    Intent mintent = new Intent(this, ProfessionalMapActivity.class);
+                    mintent.putExtra(ProfessionalSearchActivity.MEMBER_EXTRA, member);
+                    startActivity(mintent);
+                    return;
                 default:
                     Toast.makeText(HubActivity.this, selectedValue, Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        /* Apago el boton 'atras' */
+        Log.d("CDA", "onBackPressed Called");
     }
 }
 
 class HubArrayAdapter extends ArrayAdapter<String> {
     private final Context context;
     private final String[] values;
+    private final int[] logos;
 
-    public HubArrayAdapter(Context context, String[] values) {
+    public HubArrayAdapter(Context context, String[] values, int[] logos) {
         super(context, R.layout.hub_list_layout, values);
         this.context = context;
         this.values = values;
+        this.logos = logos;
     }
 
     @Override
@@ -90,8 +104,8 @@ class HubArrayAdapter extends ArrayAdapter<String> {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         View rowView = inflater.inflate(R.layout.hub_list_layout, parent, false);
-        TextView textView = (TextView) rowView.findViewById(R.id.hub_list_label);
-        ImageView imageView = (ImageView) rowView.findViewById(R.id.hub_list_logo);
+        TextView textView = rowView.findViewById(R.id.hub_list_label);
+        ImageView imageView = rowView.findViewById(R.id.hub_list_logo);
         textView.setText(values[position]);
 
         // Change icon based on name
@@ -99,15 +113,7 @@ class HubArrayAdapter extends ArrayAdapter<String> {
 
         System.out.println(s);
 
-//        if (s.equals("WindowsMobile")) {
-//            imageView.setImageResource(R.drawable.windowsmobile_logo);
-//        } else if (s.equals("iOS")) {
-//            imageView.setImageResource(R.drawable.ios_logo);
-//        } else if (s.equals("Blackberry")) {
-//            imageView.setImageResource(R.drawable.blackberry_logo);
-//        } else {
-//            imageView.setImageResource(R.drawable.android_logo);
-//        }
+        imageView.setImageResource(logos[position]);
 
         return rowView;
     }
