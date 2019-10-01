@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -77,6 +78,12 @@ public class HubActivity extends AppCompatActivity {
                     Toast.makeText(HubActivity.this, selectedValue, Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        /* Apago el boton 'atras' */
+        Log.d("CDA", "onBackPressed Called");
     }
 }
 

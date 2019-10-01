@@ -28,6 +28,12 @@ public class ProfessionalTest {
             String jp = JsonParser.INSTANCE.writeValueAsString(professional);
             assertNotNull(jp);
             System.out.println(jp);
+
+            Professional prof1 = JsonParser.INSTANCE.readValue(
+                    "{\"type\":\"PROFESSIONAL\",\"name\":\"Pepe Argento\",\"languages\":[\"Ingles\",\"Espanol\"],\"specialties\":[\"Oncologia\"],\"offices\":[{\"address\":\"Av falsa 123\",\"phone\":\"47238511\",\"lat\":-34.5956,\"lon\":-58.4406},{\"address\":\"Av moni 456\",\"phone\":\"\",\"lat\":-34.5999,\"lon\":-58.4507}],\"plan\":\"A110\",\"emails\":[\"pepe@argento.com\"]}\n",
+                    Professional.class
+            );
+            System.out.println(prof1.getEmails());
         }
     }
 }
