@@ -2,7 +2,6 @@ package com.g5.tdp2.myhealthapp.ui;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -13,6 +12,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.g5.tdp2.myhealthapp.AppState;
 import com.g5.tdp2.myhealthapp.R;
+import com.g5.tdp2.myhealthapp.gateway.impl.WebZoneGateway;
 import com.g5.tdp2.myhealthapp.service.LoginMemberStub;
 import com.g5.tdp2.myhealthapp.service.SearchProfessionalsStub;
 import com.g5.tdp2.myhealthapp.service.SignupMemberStub;
@@ -114,6 +114,8 @@ public abstract class MainActivity extends AppCompatActivity {
 
         alert.setCancelable(false);
 
+        String apiBaseUrl = appContext.getString(R.string.api_base_url);
+
         alert.setPositiveButton("Usar IP", (dialog, whichButton) -> {
             String value = input.getText().toString().trim();
 
@@ -132,11 +134,11 @@ public abstract class MainActivity extends AppCompatActivity {
         });
 
         alert.setNegativeButton("Usar Heroku", (dialog, whichButton) -> {
-            WebLoginMember webLoginMember = new WebLoginMember("https://tdp2-crmedical-api.herokuapp.com/auth/login", requestQueue);
+            WebLoginMember webLoginMember = new WebLoginMember(apiBaseUrl + "/auth/login", requestQueue);
             webLoginMember.setTokenConsumer(AppState.INSTANCE::putToken);
             UsecaseFactory.INSTANCE.addBean(webLoginMember);
 
-            WebSignupMember signupMember = new WebSignupMember("https://tdp2-crmedical-api.herokuapp.com/auth/register", requestQueue);
+            WebSignupMember signupMember = new WebSignupMember(apiBaseUrl + "/auth/register", requestQueue);
             UsecaseFactory.INSTANCE.addBean(signupMember);
 
             dialog.cancel();
@@ -150,6 +152,8 @@ public abstract class MainActivity extends AppCompatActivity {
 
         // TODO : Modificar esta linea dependiendo del ambiente
         UsecaseFactory.INSTANCE.addBean(new SearchProfessionalsStub());
+
+        UsecaseFactory.INSTANCE.addBean(new WebZoneGateway(apiBaseUrl + "/zones", requestQueue));
 
         alert.setTitle("Configuracion de API");
         alert.show();

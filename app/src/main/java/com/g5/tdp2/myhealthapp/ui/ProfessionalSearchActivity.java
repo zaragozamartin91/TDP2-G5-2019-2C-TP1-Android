@@ -17,11 +17,13 @@ import com.g5.tdp2.myhealthapp.R;
 import com.g5.tdp2.myhealthapp.entity.Member;
 import com.g5.tdp2.myhealthapp.entity.Professional;
 import com.g5.tdp2.myhealthapp.entity.ProfessionalSearchForm;
+import com.g5.tdp2.myhealthapp.gateway.ZoneGateway;
 import com.g5.tdp2.myhealthapp.usecase.SearchProfessionals;
 import com.g5.tdp2.myhealthapp.usecase.UsecaseFactory;
 import com.g5.tdp2.myhealthapp.util.DialogHelper;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -60,14 +62,30 @@ public class ProfessionalSearchActivity extends AppCompatActivity {
         specialty.setAdapter(specAdapter);
         specialty.setOnItemSelectedListener(new SpecialtyItemSelectedListener());
 
-        Spinner zone = findViewById(R.id.prof_search_zone);
-        ArrayAdapter<CharSequence> zoneAdapter = ArrayAdapter.createFromResource(this, R.array.available_zones, R.layout.crm_spinner_item);
-        zoneAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        zone.setAdapter(zoneAdapter);
-        zone.setOnItemSelectedListener(new ZoneItemSelectedListener());
+        setupZones();
 
         Button button = findViewById(R.id.prof_search_btn);
         button.setOnClickListener(this::searchProfessionals);
+    }
+
+    private void setupZones() {
+        Spinner zone = findViewById(R.id.prof_search_zone);
+        ZoneGateway zoneGateway = UsecaseFactory.INSTANCE.getBean(ZoneGateway.class);
+        zoneGateway.getZones(zones -> {
+            List<String> values = new ArrayList<>();
+            values.add("Seleccione una zona");
+            values.addAll(zones);
+            ArrayAdapter<String> zoneAdapter = new ArrayAdapter<>(ProfessionalSearchActivity.this, android.R.layout.simple_spinner_dropdown_item, values);
+            zoneAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            zone.setAdapter(zoneAdapter);
+        }, e -> {
+            Toast.makeText(ProfessionalSearchActivity.this, "Ocurrio un error al obtener las zonas. Cargando valores por defecto", Toast.LENGTH_LONG).show();
+            // ANTE UN ERROR SE CARGAN LAS ZONAS 'POR DEFECTO'
+            ArrayAdapter<CharSequence> zoneAdapter = ArrayAdapter.createFromResource(this, R.array.available_zones, R.layout.crm_spinner_item);
+            zoneAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            zone.setAdapter(zoneAdapter);
+        });
+        zone.setOnItemSelectedListener(new ZoneItemSelectedListener());
     }
 
     class SpecialtyItemSelectedListener implements AdapterView.OnItemSelectedListener {

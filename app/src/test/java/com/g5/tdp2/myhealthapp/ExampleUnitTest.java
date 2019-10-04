@@ -42,4 +42,5 @@ public class ExampleUnitTest {
 
         System.out.println(new ObjectMapper().writeValueAsString(memberSignupForm));
     }
+
 }
