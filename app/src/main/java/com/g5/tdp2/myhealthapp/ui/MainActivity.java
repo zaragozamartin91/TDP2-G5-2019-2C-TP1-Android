@@ -3,6 +3,7 @@ package com.g5.tdp2.myhealthapp.ui;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -12,6 +13,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.g5.tdp2.myhealthapp.AppState;
 import com.g5.tdp2.myhealthapp.R;
+import com.g5.tdp2.myhealthapp.gateway.ZoneGateway;
 import com.g5.tdp2.myhealthapp.gateway.impl.WebZoneGateway;
 import com.g5.tdp2.myhealthapp.service.LoginMemberStub;
 import com.g5.tdp2.myhealthapp.service.SearchProfessionalsStub;
@@ -23,13 +25,18 @@ import com.g5.tdp2.myhealthapp.util.DialogHelper;
 
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
@@ -154,8 +161,25 @@ public abstract class MainActivity extends AppCompatActivity {
         CrmBeanFactory.INSTANCE.addBean(new SearchProfessionalsStub());
 
         CrmBeanFactory.INSTANCE.addBean(new WebZoneGateway(apiBaseUrl + "/zones", requestQueue));
+        setupZones();
 
         alert.setTitle("Configuracion de API");
         alert.show();
+    }
+
+    // FIXME : NO PODEMOS HACER UN REQUEST AL API ANTES DE CHEQUEAR LOS PERMISOS!
+    private void setupZones() {
+        CrmBeanFactory.INSTANCE.getBean(ZoneGateway.class).getZones(zones -> {
+            List<String> values = Stream.of(Collections.singletonList("Seleccione una zona"), zones)
+                    .flatMap(Collection::stream)
+                    .collect(Collectors.toList());
+            AppState.INSTANCE.put(AppState.ZONES_KEY, values);
+        }, e -> {
+            Toast.makeText(this, "Ocurrio un error al obtener las zonas. Cargando valores por defecto", Toast.LENGTH_LONG).show();
+            // ANTE UN ERROR SE CARGAN LAS ZONAS 'POR DEFECTO'
+            String[] values = getResources().getStringArray(R.array.available_zones);
+            List<String> ss = Arrays.asList(values);
+            AppState.INSTANCE.put(AppState.ZONES_KEY, ss);
+        });
     }
 }

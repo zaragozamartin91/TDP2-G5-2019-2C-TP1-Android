@@ -8,7 +8,12 @@ import com.g5.tdp2.myhealthapp.usecase.LoginMember;
 
 import org.junit.Test;
 
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.junit.Assert.*;
 
@@ -43,4 +48,11 @@ public class ExampleUnitTest {
         System.out.println(new ObjectMapper().writeValueAsString(memberSignupForm));
     }
 
+    @Test
+    public void joinLists() {
+        List<String> s1 = Arrays.asList("uno", "dos");
+        List<String> s2 = Arrays.asList("tres", "cuatro");
+        List<String> collect = Stream.of(s1, s2).flatMap(Collection::stream).collect(Collectors.toList());
+        System.out.println(collect);
+    }
 }
