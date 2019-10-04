@@ -19,14 +19,13 @@ import com.g5.tdp2.myhealthapp.entity.Professional;
 import com.g5.tdp2.myhealthapp.entity.ProfessionalSearchForm;
 import com.g5.tdp2.myhealthapp.gateway.ZoneGateway;
 import com.g5.tdp2.myhealthapp.usecase.SearchProfessionals;
-import com.g5.tdp2.myhealthapp.usecase.UsecaseFactory;
+import com.g5.tdp2.myhealthapp.CrmBeanFactory;
 import com.g5.tdp2.myhealthapp.util.DialogHelper;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Consumer;
 
 import static com.g5.tdp2.myhealthapp.usecase.SearchProfessionals.INVALID_FORM;
 import static com.g5.tdp2.myhealthapp.usecase.SearchProfessionals.UNKNOWN_ERROR;
@@ -70,7 +69,7 @@ public class ProfessionalSearchActivity extends AppCompatActivity {
 
     private void setupZones() {
         Spinner zone = findViewById(R.id.prof_search_zone);
-        ZoneGateway zoneGateway = UsecaseFactory.INSTANCE.getBean(ZoneGateway.class);
+        ZoneGateway zoneGateway = CrmBeanFactory.INSTANCE.getBean(ZoneGateway.class);
         zoneGateway.getZones(zones -> {
             List<String> values = new ArrayList<>();
             values.add("Seleccione una zona");
@@ -125,7 +124,7 @@ public class ProfessionalSearchActivity extends AppCompatActivity {
                 new ProfessionalSearchForm(specialtyVal, zoneVal, name.getText().toString(), member.getPlan());
         Toast.makeText(this, form.toString(), Toast.LENGTH_LONG).show();
 
-        UsecaseFactory.INSTANCE.getBean(SearchProfessionals.class)
+        CrmBeanFactory.INSTANCE.getBean(SearchProfessionals.class)
                 .searchProfessionals(form, this::handleProfessionals, this::handleSearchError);
     }
 

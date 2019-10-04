@@ -1,9 +1,9 @@
 package com.g5.tdp2.myhealthapp;
 
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Representa el estado de la aplicacion
@@ -13,7 +13,7 @@ public enum AppState {
 
     public static final String TOKEN_KEY = "TOKEN";
 
-    private Map<String, Object> state = new HashMap<>();
+    private Map<String, Object> state = new ConcurrentHashMap<>();
 
     public void putToken(String token) {
         this.put(TOKEN_KEY, token);

@@ -18,7 +18,7 @@ import com.g5.tdp2.myhealthapp.service.SearchProfessionalsStub;
 import com.g5.tdp2.myhealthapp.service.SignupMemberStub;
 import com.g5.tdp2.myhealthapp.service.WebLoginMember;
 import com.g5.tdp2.myhealthapp.service.WebSignupMember;
-import com.g5.tdp2.myhealthapp.usecase.UsecaseFactory;
+import com.g5.tdp2.myhealthapp.CrmBeanFactory;
 import com.g5.tdp2.myhealthapp.util.DialogHelper;
 
 import org.apache.commons.lang3.StringUtils;
@@ -127,33 +127,33 @@ public abstract class MainActivity extends AppCompatActivity {
 
             WebLoginMember webLoginMember = new WebLoginMember("http://" + value + "/auth/login", requestQueue);
             webLoginMember.setTokenConsumer(AppState.INSTANCE::putToken);
-            UsecaseFactory.INSTANCE.addBean(webLoginMember);
+            CrmBeanFactory.INSTANCE.addBean(webLoginMember);
 
             WebSignupMember signupMember = new WebSignupMember("http://" + value + "/auth/register", requestQueue);
-            UsecaseFactory.INSTANCE.addBean(signupMember);
+            CrmBeanFactory.INSTANCE.addBean(signupMember);
         });
 
         alert.setNegativeButton("Usar Heroku", (dialog, whichButton) -> {
             WebLoginMember webLoginMember = new WebLoginMember(apiBaseUrl + "/auth/login", requestQueue);
             webLoginMember.setTokenConsumer(AppState.INSTANCE::putToken);
-            UsecaseFactory.INSTANCE.addBean(webLoginMember);
+            CrmBeanFactory.INSTANCE.addBean(webLoginMember);
 
             WebSignupMember signupMember = new WebSignupMember(apiBaseUrl + "/auth/register", requestQueue);
-            UsecaseFactory.INSTANCE.addBean(signupMember);
+            CrmBeanFactory.INSTANCE.addBean(signupMember);
 
             dialog.cancel();
         });
 
         alert.setNeutralButton("Modo stub", (dialog, which) -> {
-            UsecaseFactory.INSTANCE.addBean(new LoginMemberStub());
-            UsecaseFactory.INSTANCE.addBean(new SignupMemberStub());
+            CrmBeanFactory.INSTANCE.addBean(new LoginMemberStub());
+            CrmBeanFactory.INSTANCE.addBean(new SignupMemberStub());
             dialog.cancel();
         });
 
         // TODO : Modificar esta linea dependiendo del ambiente
-        UsecaseFactory.INSTANCE.addBean(new SearchProfessionalsStub());
+        CrmBeanFactory.INSTANCE.addBean(new SearchProfessionalsStub());
 
-        UsecaseFactory.INSTANCE.addBean(new WebZoneGateway(apiBaseUrl + "/zones", requestQueue));
+        CrmBeanFactory.INSTANCE.addBean(new WebZoneGateway(apiBaseUrl + "/zones", requestQueue));
 
         alert.setTitle("Configuracion de API");
         alert.show();

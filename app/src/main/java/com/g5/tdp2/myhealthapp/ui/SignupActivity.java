@@ -18,7 +18,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.g5.tdp2.myhealthapp.R;
 import com.g5.tdp2.myhealthapp.entity.MemberSignupForm;
 import com.g5.tdp2.myhealthapp.usecase.SignupMember;
-import com.g5.tdp2.myhealthapp.usecase.UsecaseFactory;
+import com.g5.tdp2.myhealthapp.CrmBeanFactory;
 import com.g5.tdp2.myhealthapp.util.DialogHelper;
 
 import org.apache.commons.lang3.Validate;
@@ -158,7 +158,7 @@ public class SignupActivity extends AppCompatActivity {
                 leDate.get().getTime(), password.getText().toString(), repPassword.getText().toString()
         );
 
-        SignupMember usecase = UsecaseFactory.INSTANCE.getBean(SignupMember.class); // obtengo el caso de uso del registro
+        SignupMember usecase = CrmBeanFactory.INSTANCE.getBean(SignupMember.class); // obtengo el caso de uso del registro
         usecase.signup(memberSignupForm, this::handleSignupOk, this::handleSignupError);
     }
 
