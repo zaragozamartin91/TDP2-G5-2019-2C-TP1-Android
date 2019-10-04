@@ -75,7 +75,7 @@ public class ProfessionalSearchActivity extends AppCompatActivity {
     private void setupZones() {
         Spinner zone = findViewById(R.id.prof_search_zone);
         List<String> values = AppState.INSTANCE.getZones();
-        ArrayAdapter<String> zoneAdapter = new ArrayAdapter<>(ProfessionalSearchActivity.this, android.R.layout.simple_spinner_dropdown_item, values);
+        ArrayAdapter<String> zoneAdapter = new ArrayAdapter<>(ProfessionalSearchActivity.this, R.layout.crm_spinner_item, values);
         zoneAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         zone.setAdapter(zoneAdapter);
         zone.setOnItemSelectedListener(new ZoneItemSelectedListener());

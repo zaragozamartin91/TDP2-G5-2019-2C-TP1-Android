@@ -53,16 +53,6 @@ public abstract class MainActivity extends AppCompatActivity {
     };
 
 
-    private void checkPermissions() {
-        String[] missingPermissions = Arrays.stream(REQUIRED_PERMISSIONS)
-                .filter(p -> checkSelfPermission(p) == PERMISSION_DENIED)
-                .toArray(String[]::new);
-
-        Optional.of(Arrays.asList(missingPermissions))
-                .filter(mp -> !mp.isEmpty())
-                .ifPresent(mp -> requestPermissions(missingPermissions, PERMS_REQUEST_CODE));
-    }
-
     private Map<String, Integer> permissionMsgMap = new HashMap<>();
 
     @Override
@@ -74,26 +64,39 @@ public abstract class MainActivity extends AppCompatActivity {
         permissionMsgMap.put(ACCESS_FINE_LOCATION, R.string.location_perm_reject);
 
         checkPermissions();
+    }
 
-        initialize();
+    private void checkPermissions() {
+        String[] missingPermissions = Arrays.stream(REQUIRED_PERMISSIONS)
+                .filter(p -> checkSelfPermission(p) == PERMISSION_DENIED)
+                .toArray(String[]::new);
+
+        boolean permissionsGranted = missingPermissions.length == 0;
+        if (permissionsGranted) {
+            initialize();
+        } else {
+            requestPermissions(missingPermissions, PERMS_REQUEST_CODE);
+        }
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         Optional.of(requestCode).filter(PERMS_REQUEST_CODE::equals).ifPresent(i -> {
-            String rejectionMsg = IntStream.range(0, grantResults.length)
-                    .filter(ii -> grantResults[ii] == PERMISSION_DENIED)
-                    .mapToObj(ii -> REQUIRED_PERMISSIONS[ii])
-                    .map(permissionMsgMap::get)
-                    .map(this::getString)
-                    .distinct()
-                    .collect(Collectors.joining("\n"));
-
-            Optional.of(rejectionMsg).filter(StringUtils::isNotBlank).ifPresent(
-                    s -> DialogHelper.INSTANCE.showNonCancelableDialogWaction(
-                            this, getString(R.string.premissions_req), s, this::closeApp
-                    )
-            );
+            boolean permissionsGranted = Arrays.stream(grantResults).noneMatch(gr -> gr == PERMISSION_DENIED);
+            if (permissionsGranted) {
+                initialize();
+            } else {
+                String rejectionMsg = IntStream.range(0, grantResults.length)
+                        .filter(ii -> grantResults[ii] == PERMISSION_DENIED)
+                        .mapToObj(ii -> REQUIRED_PERMISSIONS[ii])
+                        .map(permissionMsgMap::get)
+                        .map(this::getString)
+                        .distinct()
+                        .collect(Collectors.joining("\n"));
+                DialogHelper.INSTANCE.showNonCancelableDialogWaction(
+                        this, getString(R.string.premissions_req), rejectionMsg, this::closeApp
+                );
+            }
         });
     }
 
@@ -160,16 +163,15 @@ public abstract class MainActivity extends AppCompatActivity {
         // TODO : Modificar esta linea dependiendo del ambiente
         CrmBeanFactory.INSTANCE.addBean(new SearchProfessionalsStub());
 
-        CrmBeanFactory.INSTANCE.addBean(new WebZoneGateway(apiBaseUrl + "/zones", requestQueue));
-        setupZones();
+        setupZones(new WebZoneGateway(apiBaseUrl + "/zones", requestQueue));
 
         alert.setTitle("Configuracion de API");
         alert.show();
     }
 
-    // FIXME : NO PODEMOS HACER UN REQUEST AL API ANTES DE CHEQUEAR LOS PERMISOS!
-    private void setupZones() {
-        CrmBeanFactory.INSTANCE.getBean(ZoneGateway.class).getZones(zones -> {
+    private void setupZones(ZoneGateway zoneGateway) {
+        CrmBeanFactory.INSTANCE.addBean(zoneGateway);
+        zoneGateway.getZones(zones -> {
             List<String> values = Stream.of(Collections.singletonList("Seleccione una zona"), zones)
                     .flatMap(Collection::stream)
                     .collect(Collectors.toList());

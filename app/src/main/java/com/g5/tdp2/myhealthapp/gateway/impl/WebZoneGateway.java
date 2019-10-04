@@ -2,6 +2,7 @@ package com.g5.tdp2.myhealthapp.gateway.impl;
 
 import android.util.Log;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
@@ -37,6 +38,10 @@ public class WebZoneGateway implements ZoneGateway {
                         .orElse(new GatewayException(INTERNAL_ERROR));
                 errCallback.accept(ex);
             });
+            request.setRetryPolicy(new DefaultRetryPolicy(
+                    10 * 1000,
+                    DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
             requestQueue.add(request);
         } catch (Exception e) {
             Log.e("WebZoneGateway-error", e.toString());
