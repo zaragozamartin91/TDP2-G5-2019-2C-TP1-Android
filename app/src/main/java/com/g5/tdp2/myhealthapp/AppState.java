@@ -1,8 +1,10 @@
 package com.g5.tdp2.myhealthapp;
 
 
+import com.g5.tdp2.myhealthapp.entity.Specialty;
 import com.g5.tdp2.myhealthapp.entity.Zone;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -16,6 +18,7 @@ public enum AppState {
 
     public static final String TOKEN_KEY = "TOKEN";
     public static final String ZONES_KEY = "ZONES";
+    public static final String SPECIALTIES_KEY = "SPECIALTIES";
 
     private Map<String, Object> state = new ConcurrentHashMap<>();
 
@@ -41,8 +44,15 @@ public enum AppState {
      * @return catalogo de zonas
      */
     public List<Zone> getZones() {
-        return (List<Zone>) get(ZONES_KEY);
+        return (List<Zone>) getOrDefault(ZONES_KEY, Collections.emptyList());
     }
+
+    /**
+     * Obtiene el catalogo de especialidades
+     *
+     * @return catalogo de especialidades
+     */
+    public List<Specialty> getSpecialties() { return (List<Specialty>) getOrDefault(SPECIALTIES_KEY, Collections.emptyList()); }
 
     public Object getOrDefault(String key, Object defaultValue) {
         return state.getOrDefault(key, defaultValue);

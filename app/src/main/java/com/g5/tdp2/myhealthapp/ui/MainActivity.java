@@ -3,7 +3,6 @@ package com.g5.tdp2.myhealthapp.ui;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.os.Bundle;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -13,8 +12,12 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.g5.tdp2.myhealthapp.AppState;
 import com.g5.tdp2.myhealthapp.R;
+import com.g5.tdp2.myhealthapp.entity.SimpleEntity;
+import com.g5.tdp2.myhealthapp.entity.Specialty;
 import com.g5.tdp2.myhealthapp.entity.Zone;
+import com.g5.tdp2.myhealthapp.gateway.SpecialtyGateway;
 import com.g5.tdp2.myhealthapp.gateway.ZoneGateway;
+import com.g5.tdp2.myhealthapp.gateway.impl.WebSpecialtyGateway;
 import com.g5.tdp2.myhealthapp.gateway.impl.WebZoneGateway;
 import com.g5.tdp2.myhealthapp.service.LoginMemberStub;
 import com.g5.tdp2.myhealthapp.service.SearchProfessionalsStub;
@@ -26,7 +29,6 @@ import com.g5.tdp2.myhealthapp.util.DialogHelper;
 
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -165,6 +167,7 @@ public abstract class MainActivity extends AppCompatActivity {
         CrmBeanFactory.INSTANCE.addBean(new SearchProfessionalsStub());
 
         setupZones(new WebZoneGateway(apiBaseUrl + "/zones", requestQueue));
+        setupSpecialties(new WebSpecialtyGateway(apiBaseUrl + "/specialties", requestQueue));
 
         alert.setTitle("Configuracion de API");
         alert.show();
@@ -172,6 +175,7 @@ public abstract class MainActivity extends AppCompatActivity {
 
     private void setupZones(ZoneGateway zoneGateway) {
         CrmBeanFactory.INSTANCE.addBean(zoneGateway);
+
         zoneGateway.getZones(zones -> {
             List<Zone> values = Stream.of(Collections.singletonList(Zone.DEFAULT_ZONE), zones)
                     .flatMap(Collection::stream)
@@ -183,7 +187,24 @@ public abstract class MainActivity extends AppCompatActivity {
             // ANTE UN ERROR SE CARGAN LAS ZONAS 'POR DEFECTO'
             String[] values = getResources().getStringArray(R.array.available_zones);
             List<String> ss = Arrays.asList(values);
-            AppState.INSTANCE.put(AppState.ZONES_KEY, ss);
+            AppState.INSTANCE.put(AppState.ZONES_KEY, SimpleEntity.fromNames(ss, Zone.class));
+        });
+    }
+
+    private void setupSpecialties(SpecialtyGateway specialtyGateway) {
+        CrmBeanFactory.INSTANCE.addBean(specialtyGateway);
+
+        specialtyGateway.getSpecialties(specialties -> {
+            List<Specialty> values = Stream.of(Collections.singletonList(Specialty.DEFAULT_SPECIALTY), specialties)
+                    .flatMap(Collection::stream)
+                    .collect(Collectors.toList());
+            AppState.INSTANCE.put(AppState.SPECIALTIES_KEY, values);
+            Toast.makeText(this, "Especialidades cargadas", Toast.LENGTH_SHORT).show();
+        }, e -> {
+            Toast.makeText(this, "Ocurrio un error al obtener las especialidades. Cargando valores por defecto", Toast.LENGTH_LONG).show();
+            String[] values = getResources().getStringArray(R.array.available_specialties);
+            List<String> ss = Arrays.asList(values);
+            AppState.INSTANCE.put(AppState.SPECIALTIES_KEY, SimpleEntity.fromNames(ss, Specialty.class));
         });
     }
 }

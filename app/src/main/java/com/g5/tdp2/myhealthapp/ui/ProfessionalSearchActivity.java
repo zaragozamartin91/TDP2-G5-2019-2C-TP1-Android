@@ -18,6 +18,7 @@ import com.g5.tdp2.myhealthapp.R;
 import com.g5.tdp2.myhealthapp.entity.Member;
 import com.g5.tdp2.myhealthapp.entity.Professional;
 import com.g5.tdp2.myhealthapp.entity.ProfessionalSearchForm;
+import com.g5.tdp2.myhealthapp.entity.Specialty;
 import com.g5.tdp2.myhealthapp.entity.Zone;
 import com.g5.tdp2.myhealthapp.usecase.SearchProfessionals;
 import com.g5.tdp2.myhealthapp.CrmBeanFactory;
@@ -55,16 +56,21 @@ public class ProfessionalSearchActivity extends AppCompatActivity {
 
         name = findViewById(R.id.prof_search_name);
 
-        Spinner specialty = findViewById(R.id.prof_search_specialty);
-        ArrayAdapter<CharSequence> specAdapter = ArrayAdapter.createFromResource(this, R.array.available_specialties, R.layout.crm_spinner_item);
-        specAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        specialty.setAdapter(specAdapter);
-        specialty.setOnItemSelectedListener(new SpecialtyItemSelectedListener());
+        setupSpecialties();
 
         setupZones();
 
         Button button = findViewById(R.id.prof_search_btn);
         button.setOnClickListener(this::searchProfessionals);
+    }
+
+    private void setupSpecialties() {
+        Spinner specialty = findViewById(R.id.prof_search_specialty);
+        List<Specialty> values = AppState.INSTANCE.getSpecialties();
+        ArrayAdapter<Specialty> specAdapter = new ArrayAdapter<>(ProfessionalSearchActivity.this, R.layout.crm_spinner_item, values);
+        specAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        specialty.setAdapter(specAdapter);
+        specialty.setOnItemSelectedListener(new SpecialtyItemSelectedListener());
     }
 
     private void setupZones() {
