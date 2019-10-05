@@ -13,6 +13,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.g5.tdp2.myhealthapp.AppState;
 import com.g5.tdp2.myhealthapp.R;
+import com.g5.tdp2.myhealthapp.entity.Zone;
 import com.g5.tdp2.myhealthapp.gateway.ZoneGateway;
 import com.g5.tdp2.myhealthapp.gateway.impl.WebZoneGateway;
 import com.g5.tdp2.myhealthapp.service.LoginMemberStub;
@@ -172,10 +173,11 @@ public abstract class MainActivity extends AppCompatActivity {
     private void setupZones(ZoneGateway zoneGateway) {
         CrmBeanFactory.INSTANCE.addBean(zoneGateway);
         zoneGateway.getZones(zones -> {
-            List<String> values = Stream.of(Collections.singletonList("Seleccione una zona"), zones)
+            List<Zone> values = Stream.of(Collections.singletonList(Zone.DEFAULT_ZONE), zones)
                     .flatMap(Collection::stream)
                     .collect(Collectors.toList());
             AppState.INSTANCE.put(AppState.ZONES_KEY, values);
+            Toast.makeText(this, "Zonas cargadas", Toast.LENGTH_SHORT).show();
         }, e -> {
             Toast.makeText(this, "Ocurrio un error al obtener las zonas. Cargando valores por defecto", Toast.LENGTH_LONG).show();
             // ANTE UN ERROR SE CARGAN LAS ZONAS 'POR DEFECTO'

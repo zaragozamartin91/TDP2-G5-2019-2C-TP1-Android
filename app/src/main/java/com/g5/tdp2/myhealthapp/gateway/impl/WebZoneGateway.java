@@ -6,6 +6,7 @@ import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.g5.tdp2.myhealthapp.entity.Zone;
 import com.g5.tdp2.myhealthapp.gateway.GatewayException;
 import com.g5.tdp2.myhealthapp.gateway.ZoneGateway;
 import com.g5.tdp2.myhealthapp.util.JsonParser;
@@ -25,11 +26,11 @@ public class WebZoneGateway implements ZoneGateway {
     }
 
     @Override
-    public void getZones(Consumer<List<String>> succCallback, Consumer<Exception> errCallback) {
+    public void getZones(Consumer<List<Zone>> succCallback, Consumer<Exception> errCallback) {
         try {
             JsonArrayRequest request = new JsonArrayRequest(url, response -> {
                 Log.i("WebZoneGateway-onResponse", response.toString());
-                String[] ss = JsonParser.INSTANCE.readValue(response.toString(), String[].class);
+                Zone[] ss = JsonParser.INSTANCE.readValue(response.toString(), Zone[].class);
                 succCallback.accept(Arrays.asList(ss));
             }, error -> {
                 Log.e("WebZoneGateway-onErrorResponse", "" + error);
@@ -39,8 +40,8 @@ public class WebZoneGateway implements ZoneGateway {
                 errCallback.accept(ex);
             });
             request.setRetryPolicy(new DefaultRetryPolicy(
-                    10 * 1000,
-                    DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                    DefaultRetryPolicy.DEFAULT_TIMEOUT_MS,
+                    3,
                     DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
             requestQueue.add(request);
         } catch (Exception e) {

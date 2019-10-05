@@ -1,6 +1,8 @@
 package com.g5.tdp2.myhealthapp;
 
 
+import com.g5.tdp2.myhealthapp.entity.Zone;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -38,8 +40,8 @@ public enum AppState {
      *
      * @return catalogo de zonas
      */
-    public List<String> getZones() {
-        return (List<String>) get(ZONES_KEY);
+    public List<Zone> getZones() {
+        return (List<Zone>) get(ZONES_KEY);
     }
 
     public Object getOrDefault(String key, Object defaultValue) {

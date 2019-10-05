@@ -164,8 +164,9 @@ public class SignupActivity extends AppCompatActivity {
 
     private void handleSignupOk() {
         Toast.makeText(SignupActivity.this, "Registro exitoso", Toast.LENGTH_LONG).show();
-        Intent mapsIntent = new Intent(this, ProfessionalMapActivity.class);
-        startActivity(mapsIntent);
+//        Intent mapsIntent = new Intent(this, ProfessionalMapActivity.class);
+//        startActivity(mapsIntent);
+        finish();
     }
 
     private void handleSignupError(Exception e) {
