@@ -10,13 +10,13 @@ import com.g5.tdp2.myhealthapp.R;
 import com.g5.tdp2.myhealthapp.entity.Member;
 import com.g5.tdp2.myhealthapp.entity.MemberCredentials;
 import com.g5.tdp2.myhealthapp.usecase.LoginMember;
-import com.g5.tdp2.myhealthapp.usecase.UsecaseFactory;
+import com.g5.tdp2.myhealthapp.CrmBeanFactory;
 import com.g5.tdp2.myhealthapp.util.DialogHelper;
 
 import static com.g5.tdp2.myhealthapp.entity.MemberCredentials.EMPTY_PASSWORD;
 import static com.g5.tdp2.myhealthapp.entity.MemberCredentials.INVALID_ID;
-import static com.g5.tdp2.myhealthapp.usecase.LoginMember.UNKNOWN_ERROR;
-import static com.g5.tdp2.myhealthapp.usecase.LoginMember.WRONG_CREDENTIALS;
+import static com.g5.tdp2.myhealthapp.usecase.Usecase.UNKNOWN_ERROR;
+import static com.g5.tdp2.myhealthapp.usecase.Usecase.WRONG_CREDENTIALS;
 
 public class LoginActivity extends MainActivity {
     private EditText idField;
@@ -57,7 +57,7 @@ public class LoginActivity extends MainActivity {
             return;
         }
 
-        LoginMember usecase = UsecaseFactory.INSTANCE.getBean(LoginMember.class); // obtengo el caso de uso de inicio de sesion
+        LoginMember usecase = CrmBeanFactory.INSTANCE.getBean(LoginMember.class); // obtengo el caso de uso de inicio de sesion
         usecase.loginMember(memberCredentials, this::handleLoginOk, this::handleError);
     }
 

@@ -6,6 +6,8 @@
     <string name="std_unknown_err">Error desconocido</string>
     <string name="premissions_req">Solicitud de permisos</string>
 
+    <string name="api_base_url"><![CDATA[https://tdp2-crmedical-api.herokuapp.com]]></string>
+
 
     <!-- PERMISSIONS *********************************************************************** -->
     <string name="internet_perm_reject">Se necesita acceso a internet</string>

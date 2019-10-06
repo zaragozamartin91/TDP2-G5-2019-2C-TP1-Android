@@ -12,7 +12,7 @@ import java.util.List;
  * Entidad prestador
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
-@JsonSubTypes({@JsonSubTypes.Type(value = Professional.class, name = "PROFESSIONAL")})
+@JsonSubTypes({@JsonSubTypes.Type(value = Professional.class, name = "PROFESIONAL")})
 public class Provider implements Serializable {
     private String name;
     private List<String> languages;

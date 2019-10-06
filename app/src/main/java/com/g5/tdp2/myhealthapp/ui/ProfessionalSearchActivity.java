@@ -13,20 +13,23 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.g5.tdp2.myhealthapp.AppState;
 import com.g5.tdp2.myhealthapp.R;
 import com.g5.tdp2.myhealthapp.entity.Member;
 import com.g5.tdp2.myhealthapp.entity.Professional;
 import com.g5.tdp2.myhealthapp.entity.ProfessionalSearchForm;
+import com.g5.tdp2.myhealthapp.entity.Specialty;
+import com.g5.tdp2.myhealthapp.entity.Zone;
 import com.g5.tdp2.myhealthapp.usecase.SearchProfessionals;
-import com.g5.tdp2.myhealthapp.usecase.UsecaseFactory;
+import com.g5.tdp2.myhealthapp.CrmBeanFactory;
 import com.g5.tdp2.myhealthapp.util.DialogHelper;
 
 import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Consumer;
 
-import static com.g5.tdp2.myhealthapp.usecase.SearchProfessionals.INVALID_FORM;
+import static com.g5.tdp2.myhealthapp.usecase.Usecase.INTERNAL_ERROR;
+import static com.g5.tdp2.myhealthapp.usecase.Usecase.INVALID_FORM;
 import static com.g5.tdp2.myhealthapp.usecase.SearchProfessionals.UNKNOWN_ERROR;
 
 public class ProfessionalSearchActivity extends AppCompatActivity {
@@ -35,8 +38,8 @@ public class ProfessionalSearchActivity extends AppCompatActivity {
     private Member member;
 
     private TextView name;
-    private String specialtyVal;
-    private String zoneVal;
+    private Specialty specialtyVal;
+    private Zone zoneVal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,20 +57,30 @@ public class ProfessionalSearchActivity extends AppCompatActivity {
 
         name = findViewById(R.id.prof_search_name);
 
-        Spinner specialty = findViewById(R.id.prof_search_specialty);
-        ArrayAdapter<CharSequence> specAdapter = ArrayAdapter.createFromResource(this, R.array.available_specialties, R.layout.crm_spinner_item);
-        specAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        specialty.setAdapter(specAdapter);
-        specialty.setOnItemSelectedListener(new SpecialtyItemSelectedListener());
+        setupSpecialties();
 
-        Spinner zone = findViewById(R.id.prof_search_zone);
-        ArrayAdapter<CharSequence> zoneAdapter = ArrayAdapter.createFromResource(this, R.array.available_zones, R.layout.crm_spinner_item);
-        zoneAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        zone.setAdapter(zoneAdapter);
-        zone.setOnItemSelectedListener(new ZoneItemSelectedListener());
+        setupZones();
 
         Button button = findViewById(R.id.prof_search_btn);
         button.setOnClickListener(this::searchProfessionals);
+    }
+
+    private void setupSpecialties() {
+        Spinner specialty = findViewById(R.id.prof_search_specialty);
+        List<Specialty> values = AppState.INSTANCE.getSpecialties();
+        ArrayAdapter<Specialty> specAdapter = new ArrayAdapter<>(ProfessionalSearchActivity.this, R.layout.crm_spinner_item, values);
+        specAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        specialty.setAdapter(specAdapter);
+        specialty.setOnItemSelectedListener(new SpecialtyItemSelectedListener());
+    }
+
+    private void setupZones() {
+        Spinner zone = findViewById(R.id.prof_search_zone);
+        List<Zone> values = AppState.INSTANCE.getZones();
+        ArrayAdapter<Zone> zoneAdapter = new ArrayAdapter<>(ProfessionalSearchActivity.this, R.layout.crm_spinner_item, values);
+        zoneAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        zone.setAdapter(zoneAdapter);
+        zone.setOnItemSelectedListener(new ZoneItemSelectedListener());
     }
 
     class SpecialtyItemSelectedListener implements AdapterView.OnItemSelectedListener {
@@ -76,13 +89,13 @@ public class ProfessionalSearchActivity extends AppCompatActivity {
             specialtyVal = Optional.of(position)
                     .filter(p -> p > 0)
                     .map(parent::getItemAtPosition)
-                    .map(Object::toString)
-                    .orElse("");
+                    .map(Specialty.class::cast)
+                    .orElse(Specialty.DEFAULT_SPECIALTY);
         }
 
         @Override
         public void onNothingSelected(AdapterView<?> parent) {
-            specialtyVal = "";
+            specialtyVal = Specialty.DEFAULT_SPECIALTY;
         }
     }
 
@@ -92,22 +105,22 @@ public class ProfessionalSearchActivity extends AppCompatActivity {
             zoneVal = Optional.of(position)
                     .filter(p -> p > 0)
                     .map(parent::getItemAtPosition)
-                    .map(Object::toString)
-                    .orElse("");
+                    .map(Zone.class::cast)
+                    .orElse(Zone.DEFAULT_ZONE);
         }
 
         @Override
         public void onNothingSelected(AdapterView<?> parent) {
-            zoneVal = "";
+            zoneVal = Zone.DEFAULT_ZONE;
         }
     }
 
     void searchProfessionals(View view) {
         ProfessionalSearchForm form =
                 new ProfessionalSearchForm(specialtyVal, zoneVal, name.getText().toString(), member.getPlan());
-        Toast.makeText(this, form.toString(), Toast.LENGTH_LONG).show();
+//        Toast.makeText(this, form.toString(), Toast.LENGTH_LONG).show();
 
-        UsecaseFactory.INSTANCE.getBean(SearchProfessionals.class)
+        CrmBeanFactory.INSTANCE.getBean(SearchProfessionals.class)
                 .searchProfessionals(form, this::handleProfessionals, this::handleSearchError);
     }
 
@@ -115,7 +128,6 @@ public class ProfessionalSearchActivity extends AppCompatActivity {
         if (professionals.isEmpty()) {
             Toast.makeText(this, R.string.prof_search_empty_results, Toast.LENGTH_LONG).show();
         } else {
-            // TODO : manejar resultados de busqueda
             Intent intent = new Intent(this, ProfessionalListActivity.class);
             intent.putExtra(ProfessionalListActivity.PROFESSIONALS_KEY, (Serializable) professionals);
             startActivity(intent);
@@ -127,6 +139,7 @@ public class ProfessionalSearchActivity extends AppCompatActivity {
             case INVALID_FORM:
                 Toast.makeText(this, R.string.prof_search_no_filters, Toast.LENGTH_LONG).show();
                 break;
+            case INTERNAL_ERROR:
             case UNKNOWN_ERROR:
             default:
                 DialogHelper.INSTANCE.showNonCancelableDialog(
