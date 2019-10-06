@@ -37,7 +37,7 @@ import static com.g5.tdp2.myhealthapp.entity.MemberSignupForm.INVALID_MEMBER_ID;
 import static com.g5.tdp2.myhealthapp.entity.MemberSignupForm.INVALID_PASSWORD;
 import static com.g5.tdp2.myhealthapp.entity.MemberSignupForm.INVALID_PLAN;
 import static com.g5.tdp2.myhealthapp.entity.MemberSignupForm.PASSWORDS_DONT_MATCH;
-import static com.g5.tdp2.myhealthapp.usecase.SignupMember.INVALID_FORM;
+import static com.g5.tdp2.myhealthapp.usecase.Usecase.INVALID_FORM;
 
 public class SignupActivity extends AppCompatActivity {
     private EditText signupBirth;

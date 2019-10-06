@@ -4,11 +4,9 @@ import com.g5.tdp2.myhealthapp.entity.MemberSignupForm;
 
 import java.util.function.Consumer;
 
+/**
+ * Caso de uso de registro de usuario
+ */
 public interface SignupMember {
-    String INTERNAL_ERROR = "INTERNAL_ERROR";
-    String INVALID_FORM = "INVALID_FORM";
-    String UNKNOWN_ERROR = "UNKNOWN_ERROR";
-
-
     void signup(MemberSignupForm signupForm, Runnable succCallback, Consumer<Exception> errCallback);
 }

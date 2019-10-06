@@ -23,8 +23,10 @@ import com.g5.tdp2.myhealthapp.service.LoginMemberStub;
 import com.g5.tdp2.myhealthapp.service.SearchProfessionalsStub;
 import com.g5.tdp2.myhealthapp.service.SignupMemberStub;
 import com.g5.tdp2.myhealthapp.service.WebLoginMember;
+import com.g5.tdp2.myhealthapp.service.WebSearchProfessionals;
 import com.g5.tdp2.myhealthapp.service.WebSignupMember;
 import com.g5.tdp2.myhealthapp.CrmBeanFactory;
+import com.g5.tdp2.myhealthapp.usecase.SearchProfessionals;
 import com.g5.tdp2.myhealthapp.util.DialogHelper;
 
 import org.apache.commons.lang3.StringUtils;
@@ -142,8 +144,8 @@ public abstract class MainActivity extends AppCompatActivity {
             webLoginMember.setTokenConsumer(AppState.INSTANCE::putToken);
             CrmBeanFactory.INSTANCE.addBean(webLoginMember);
 
-            WebSignupMember signupMember = new WebSignupMember("http://" + value + "/auth/register", requestQueue);
-            CrmBeanFactory.INSTANCE.addBean(signupMember);
+            CrmBeanFactory.INSTANCE.addBean(new WebSignupMember("http://" + value + "/auth/register", requestQueue));
+            CrmBeanFactory.INSTANCE.addBean(new WebSearchProfessionals("http://" + value + "/lenders", requestQueue));
         });
 
         alert.setNegativeButton("Usar Heroku", (dialog, whichButton) -> {
@@ -151,8 +153,8 @@ public abstract class MainActivity extends AppCompatActivity {
             webLoginMember.setTokenConsumer(AppState.INSTANCE::putToken);
             CrmBeanFactory.INSTANCE.addBean(webLoginMember);
 
-            WebSignupMember signupMember = new WebSignupMember(apiBaseUrl + "/auth/register", requestQueue);
-            CrmBeanFactory.INSTANCE.addBean(signupMember);
+            CrmBeanFactory.INSTANCE.addBean(new WebSignupMember(apiBaseUrl + "/auth/register", requestQueue));
+            CrmBeanFactory.INSTANCE.addBean(new WebSearchProfessionals(apiBaseUrl + "/lenders", requestQueue));
 
             dialog.cancel();
         });
@@ -160,11 +162,10 @@ public abstract class MainActivity extends AppCompatActivity {
         alert.setNeutralButton("Modo stub", (dialog, which) -> {
             CrmBeanFactory.INSTANCE.addBean(new LoginMemberStub());
             CrmBeanFactory.INSTANCE.addBean(new SignupMemberStub());
+            CrmBeanFactory.INSTANCE.addBean(new SearchProfessionalsStub());
             dialog.cancel();
         });
 
-        // TODO : Modificar esta linea dependiendo del ambiente
-        CrmBeanFactory.INSTANCE.addBean(new SearchProfessionalsStub());
 
         setupZones(new WebZoneGateway(apiBaseUrl + "/zones", requestQueue));
         setupSpecialties(new WebSpecialtyGateway(apiBaseUrl + "/specialties", requestQueue));

@@ -6,10 +6,10 @@ import com.g5.tdp2.myhealthapp.entity.ProfessionalSearchForm;
 import java.util.List;
 import java.util.function.Consumer;
 
-public interface SearchProfessionals {
-    String INVALID_FORM = "INVALID_FORM";
-    String UNKNOWN_ERROR = "UNKNOWN_ERROR";
-
+/**
+ * Caso de uso de busqueda de profesionales
+ */
+public interface SearchProfessionals extends Usecase {
     /**
      * Dispara una busqueda de profesionales
      *

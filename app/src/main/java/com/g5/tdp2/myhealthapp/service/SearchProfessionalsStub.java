@@ -27,7 +27,7 @@ public class SearchProfessionalsStub implements SearchProfessionals {
         }
 
         // a modo de pruebas, la especialidad renal no tiene profesionales
-        if ("renal".equalsIgnoreCase(form.getSpecialty())) {
+        if ("renal".equalsIgnoreCase(form.getSpecialty().getName())) {
             succCallback.accept(Collections.emptyList());
             return;
         }

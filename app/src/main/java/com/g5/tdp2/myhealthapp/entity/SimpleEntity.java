@@ -1,7 +1,6 @@
 package com.g5.tdp2.myhealthapp.entity;
 
 import java.lang.reflect.Constructor;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;

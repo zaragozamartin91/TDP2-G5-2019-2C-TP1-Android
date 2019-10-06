@@ -18,6 +18,10 @@ import java.nio.charset.Charset;
 import java.util.Optional;
 import java.util.function.Consumer;
 
+import static com.g5.tdp2.myhealthapp.usecase.Usecase.INTERNAL_ERROR;
+import static com.g5.tdp2.myhealthapp.usecase.Usecase.INVALID_FORM;
+import static com.g5.tdp2.myhealthapp.usecase.Usecase.UNKNOWN_ERROR;
+
 public class WebSignupMember implements SignupMember {
     private String url;
     private RequestQueue requestQueue;

@@ -15,8 +15,8 @@ import com.g5.tdp2.myhealthapp.util.DialogHelper;
 
 import static com.g5.tdp2.myhealthapp.entity.MemberCredentials.EMPTY_PASSWORD;
 import static com.g5.tdp2.myhealthapp.entity.MemberCredentials.INVALID_ID;
-import static com.g5.tdp2.myhealthapp.usecase.LoginMember.UNKNOWN_ERROR;
-import static com.g5.tdp2.myhealthapp.usecase.LoginMember.WRONG_CREDENTIALS;
+import static com.g5.tdp2.myhealthapp.usecase.Usecase.UNKNOWN_ERROR;
+import static com.g5.tdp2.myhealthapp.usecase.Usecase.WRONG_CREDENTIALS;
 
 public class LoginActivity extends MainActivity {
     private EditText idField;
