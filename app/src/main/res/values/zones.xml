@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="available_zones">
-        <item>Seleccione una zona</item>
+        <item>Seleccione una localidad</item>
         <item>Agronomía</item>
         <item>Almagro</item>
         <item>Balvanera</item>

@@ -38,7 +38,7 @@ public class SearchProfessionalsStub implements SearchProfessionals {
             String name = "Pepe Argento";
             List<String> languages = Arrays.asList("Ingles", "Espanol");
             List<String> specialties = Collections.singletonList("Oncologia");
-            List<Office> offices = Collections.singletonList(new Office("Av falsa 123", "47238511", 35.2d, 33.3d));
+            List<Office> offices = Collections.singletonList(new Office("Av falsa 123", "47238511", 35.2d, 33.3d, "Villa crespo"));
             String plan = "A110";
             List<String> emails = Collections.singletonList("pepe@argento.com");
             professionals.add(new Professional(name, languages, specialties, offices, plan, emails));
@@ -48,7 +48,7 @@ public class SearchProfessionalsStub implements SearchProfessionals {
             String name = "Jotaro Kujo";
             List<String> languages = Arrays.asList("Japones", "Ingles");
             List<String> specialties = Arrays.asList("Clinica", "Pediatria");
-            List<Office> offices = Collections.singletonList(new Office("Av bar 456", "", 36.2d, 34.3d));
+            List<Office> offices = Collections.singletonList(new Office("Av bar 456", "", 36.2d, 34.3d, "Villa crespo"));
             String plan = "A210";
             List<String> emails = Collections.singletonList("jotaro@kujo.com");
             professionals.add(new Professional(name, languages, specialties, offices, plan, emails));

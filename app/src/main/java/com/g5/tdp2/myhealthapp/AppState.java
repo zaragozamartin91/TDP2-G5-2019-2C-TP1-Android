@@ -39,9 +39,9 @@ public enum AppState {
     }
 
     /**
-     * Obtiene el catalogo de zonas
+     * Obtiene el catalogo de localidades
      *
-     * @return catalogo de zonas
+     * @return catalogo de localidades
      */
     public List<Zone> getZones() {
         return (List<Zone>) getOrDefault(ZONES_KEY, Collections.emptyList());

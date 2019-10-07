@@ -11,17 +11,20 @@ public class Office implements Serializable {
     private String phone;
     private double lat;
     private double lon;
+    private String zone;
 
     @JsonCreator
     public Office(
             @JsonProperty("address") String address,
             @JsonProperty("phone") String phone,
             @JsonProperty("lat") double lat,
-            @JsonProperty("lon") double lon) {
+            @JsonProperty("lon") double lon,
+            @JsonProperty("zone") String zone) {
         this.address = address;
         this.phone = phone;
         this.lat = lat;
         this.lon = lon;
+        this.zone = zone;
     }
 
     public String getAddress() {
@@ -40,7 +43,12 @@ public class Office implements Serializable {
         return lon;
     }
 
+    public String getZone() {
+        return zone;
+    }
+
     public String addressWphone() {
-        return Optional.ofNullable(phone).filter(p -> !p.isEmpty()).map(p -> address + " - " + p).orElse(address);
+        String fullAddress = address + ", " + zone;
+        return Optional.ofNullable(phone).filter(p -> !p.isEmpty()).map(p -> fullAddress + " - " + p).orElse(fullAddress);
     }
 }
