@@ -73,12 +73,12 @@
     <string name="prof_search_title">Listar Profesionales</string>
     <string name="prof_search_name_hint">Nombre</string>
     <string name="prof_search_specialty_hint">Especialidad</string>
-    <string name="prof_search_zone_hint">Zona</string>
+    <string name="prof_search_zone_hint">Localidad</string>
     <string name="prof_search_btn_text">Buscar</string>
-    <string name="prof_search_empty_results">No se encontraron profesionales con los parametros indicados</string>
-    <string name="prof_search_no_filters">Debe completar al menos un filtro de busqueda</string>
-    <string name="prof_search_err_dialog_title">Error de busqueda</string>
-    <string name="prof_search_err_dialog_msg">Ocurrio un error al buscar profesionales. Intentelo nuevamente mas tarde</string>
+    <string name="prof_search_empty_results">No se encontraron resultados para la b\u00FAsqueda realizada. Puede ampliar su b\u00FAsqueda llamando a 0800-MYHEALTH</string>
+    <string name="prof_search_no_filters">Por favor ingrese al menos un filtro para realizar la b\u00FAsqueda</string>
+    <string name="prof_search_err_dialog_title">Error en la b\u00FAsqueda</string>
+    <string name="prof_search_err_dialog_msg">Ocurri\u00F3 un error al buscar profesionales. Int\u00E9ntelo nuevamente m\u00E1s tarde</string>
 
     <!-- PROF_CARD****************************************************************** -->
     <string name="prof_card_specialty">Especialidades: %1$s</string>

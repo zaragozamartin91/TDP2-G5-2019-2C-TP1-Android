@@ -182,9 +182,9 @@ public abstract class MainActivity extends AppCompatActivity {
                     .flatMap(Collection::stream)
                     .collect(Collectors.toList());
             AppState.INSTANCE.put(AppState.ZONES_KEY, values);
-            Toast.makeText(this, "Zonas cargadas", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Localidades cargadas", Toast.LENGTH_SHORT).show();
         }, e -> {
-            Toast.makeText(this, "Ocurrio un error al obtener las zonas. Cargando valores por defecto", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Ocurrio un error al obtener las localidades. Cargando valores por defecto", Toast.LENGTH_LONG).show();
             // ANTE UN ERROR SE CARGAN LAS ZONAS 'POR DEFECTO'
             String[] values = getResources().getStringArray(R.array.available_zones);
             List<String> ss = Arrays.asList(values);
