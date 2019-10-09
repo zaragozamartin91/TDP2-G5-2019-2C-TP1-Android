@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="available_specialties">
+        <item>Seleccione la especialidad</item>
+        <item>Clinica</item>
+        <item>Oncologia</item>
+        <item>Oftalmologia</item>
+        <item>Renal</item>
+    </string-array>
+</resources>
+
+<!--    A110, A210, A310-->

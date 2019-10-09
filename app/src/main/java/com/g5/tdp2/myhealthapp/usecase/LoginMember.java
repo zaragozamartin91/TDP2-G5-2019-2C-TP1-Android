@@ -5,12 +5,9 @@ import com.g5.tdp2.myhealthapp.entity.MemberCredentials;
 
 import java.util.function.Consumer;
 
-
-public interface LoginMember {
-    String WRONG_CREDENTIALS = "WRONG_CREDENTIALS";
-    String UNKNOWN_ERROR = "UNKNOWN_ERROR";
-    String INTERNAL_ERROR = "INTERNAL_ERROR";
-
-
+/**
+ * Caso de uso de inicio de sesion de usuario
+ */
+public interface LoginMember extends Usecase {
     void loginMember(MemberCredentials memberCredentials, Consumer<Member> succCallback, Consumer<Exception> errCallback);
 }

@@ -3,12 +3,10 @@ package com.g5.tdp2.myhealthapp;
 import android.app.Application;
 
 import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.Volley;
 import com.g5.tdp2.myhealthapp.service.WebLoginMember;
 import com.g5.tdp2.myhealthapp.service.WebSignupMember;
 import com.g5.tdp2.myhealthapp.usecase.LoginMember;
 import com.g5.tdp2.myhealthapp.usecase.SignupMember;
-import com.g5.tdp2.myhealthapp.usecase.UsecaseFactory;
 
 public class MyHealthApp extends Application {
     private RequestQueue requestQueue;
@@ -17,12 +15,12 @@ public class MyHealthApp extends Application {
     public void onCreate() {
         super.onCreate();
 
-//        UsecaseFactory.INSTANCE.addBean(new LoginMemberStub());
+//        CrmBeanFactory.INSTANCE.addBean(new LoginMemberStub());
 
 //        requestQueue = Volley.newRequestQueue(getApplicationContext());
 //
-//        UsecaseFactory.INSTANCE.addBean(loginMember());
-//        UsecaseFactory.INSTANCE.addBean(signupMember());
+//        CrmBeanFactory.INSTANCE.addBean(loginMember());
+//        CrmBeanFactory.INSTANCE.addBean(signupMember());
     }
 
     private LoginMember loginMember() {

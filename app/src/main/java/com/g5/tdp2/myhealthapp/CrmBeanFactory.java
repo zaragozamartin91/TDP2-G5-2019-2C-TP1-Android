@@ -1,10 +1,10 @@
-package com.g5.tdp2.myhealthapp.usecase;
+package com.g5.tdp2.myhealthapp;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-public enum UsecaseFactory {
+public enum CrmBeanFactory {
     INSTANCE;
 
     private List<Object> beans = new ArrayList<>();

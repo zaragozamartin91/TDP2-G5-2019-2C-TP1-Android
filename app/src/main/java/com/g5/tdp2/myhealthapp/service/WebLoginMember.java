@@ -78,7 +78,7 @@ class LoginMemberJsonResponse {
 
     @JsonCreator
     public LoginMemberJsonResponse(
-            @JsonProperty("afiliado") Member member,
+            @JsonProperty("user") Member member,
             @JsonProperty("token") String token) {
         this.member = member;
         this.token = token;
