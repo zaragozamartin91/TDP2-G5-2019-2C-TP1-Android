@@ -88,4 +88,5 @@
     <string name="prof_card_offices">Oficinas: %1$s</string>
     <string name="newcheck_img_contentDesc">Receta de estudio</string>
     <string name="newcheck_title_text">Nuevo Estudio</string>
+    <string name="newcheck_btn_text">Solicitar estudio</string>
 </resources>

@@ -36,12 +36,15 @@
 
     <ImageView
         android:id="@+id/newcheck_img"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:layout_marginStart="16dp"
+        android:layout_marginTop="64dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="64dp"
+        android:adjustViewBounds="true"
         android:contentDescription="@string/newcheck_img_contentDesc"
+        android:scaleType="fitXY"
         app:layout_constraintBottom_toTopOf="@+id/newcheck_btn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -55,8 +58,9 @@
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
-        android:text="Button"
+        android:text="@string/newcheck_btn_text"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        style="@style/Widget.AppCompat.Button.Colored" />
 </androidx.constraintlayout.widget.ConstraintLayout>
