@@ -86,4 +86,6 @@
     <string name="prof_card_plans">Plan: %1$s</string>
     <string name="prof_card_emails">Emails: %1$s</string>
     <string name="prof_card_offices">Oficinas: %1$s</string>
+    <string name="newcheck_img_contentDesc">Receta de estudio</string>
+    <string name="newcheck_title_text">Nuevo Estudio</string>
 </resources>

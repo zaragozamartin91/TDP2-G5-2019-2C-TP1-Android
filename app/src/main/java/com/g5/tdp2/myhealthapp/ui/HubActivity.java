@@ -18,13 +18,16 @@ import android.widget.Toast;
 import com.g5.tdp2.myhealthapp.R;
 import com.g5.tdp2.myhealthapp.entity.Member;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Optional;
 
 public class HubActivity extends AppCompatActivity {
     public static final String MEMBER_EXTRA = "member";
     public static final String PROF_SEARCH = "Listar profesionales";
     public static final String PROF_NEARBY = "Profesionales cercanos";
-    static final String[] VIEWS = new String[]{PROF_SEARCH, PROF_NEARBY};
+    private static final String NEW_CHECK = "Solicitar estudio";
+    static final String[] VIEWS = new String[]{PROF_SEARCH, PROF_NEARBY, NEW_CHECK};
 
 //    @Override
 //    public void onCreate(Bundle savedInstanceState) {
@@ -57,12 +60,13 @@ public class HubActivity extends AppCompatActivity {
         title.setText(getString(R.string.main_hub_title, member.getFirstname()));
 
         ListView listView = findViewById(R.id.main_hub_list_view);
-        int[] logos = new int[]{R.drawable.professional_logo, R.drawable.map_logo};
+        int[] logos = new int[]{R.drawable.professional_logo, R.drawable.map_logo, R.drawable.newcheck_logo};
         ArrayAdapter<String> listAdapter = new HubArrayAdapter(this, VIEWS, logos);
         listView.setAdapter(listAdapter);
         listView.setOnItemClickListener((parent, view, position, id) -> {
             String selectedValue = Optional.ofNullable(listAdapter.getItem(position)).orElse("");
 
+            // TODO : REEMPLAZAR ESTO POR UNA LISTA DE RUNNABLES INDEXADOS POR position
             switch (selectedValue) {
                 case PROF_SEARCH:
                     Intent intent = new Intent(this, ProfessionalSearchActivity.class);
@@ -74,6 +78,10 @@ public class HubActivity extends AppCompatActivity {
                     mintent.putExtra(ProfessionalSearchActivity.MEMBER_EXTRA, member);
                     startActivity(mintent);
                     return;
+                case NEW_CHECK:
+                    Intent ncintent = new Intent(this, NewCheckActivity.class);
+                    ncintent.putExtra(ProfessionalSearchActivity.MEMBER_EXTRA, member);
+                    startActivity(ncintent);
                 default:
                     Toast.makeText(HubActivity.this, selectedValue, Toast.LENGTH_SHORT).show();
             }
