@@ -89,4 +89,5 @@
     <string name="newcheck_img_contentDesc">Receta de estudio</string>
     <string name="newcheck_title_text">Nuevo Estudio</string>
     <string name="newcheck_btn_text">Solicitar estudio</string>
+    <string name="main_menu_logout_title">Cerrar sesion</string>
 </resources>
