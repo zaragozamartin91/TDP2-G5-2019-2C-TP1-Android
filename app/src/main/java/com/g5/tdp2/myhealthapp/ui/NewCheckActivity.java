@@ -4,17 +4,25 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.g5.tdp2.myhealthapp.AppState;
 import com.g5.tdp2.myhealthapp.R;
+import com.g5.tdp2.myhealthapp.entity.Specialty;
 import com.g5.tdp2.myhealthapp.util.DialogHelper;
 import com.g5.tdp2.myhealthapp.util.MimeTypeResolver;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
@@ -39,7 +47,7 @@ public class NewCheckActivity extends AppCompatActivity {
     private ImageView imageView;
     private byte[] imgData;
     private String imgType;
-    private Button btn;
+    private Specialty specialtyVal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,8 +62,42 @@ public class NewCheckActivity extends AppCompatActivity {
             startActivityForResult(photoPickerIntent, NEWCHECK_IMG_REQUEST_CODE);
         });
 
-        btn = findViewById(R.id.newcheck_btn);
+        Button btn = findViewById(R.id.newcheck_btn);
         btn.setOnClickListener(this::uploadImage);
+
+        setupSpecialties();
+
+        /* Habilito el default action bar */
+        Optional.ofNullable(getSupportActionBar()).ifPresent(actionBar -> {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setDisplayShowHomeEnabled(true);
+            actionBar.setTitle("Estudios");
+        });
+    }
+
+    private void setupSpecialties() {
+        Spinner specialty = findViewById(R.id.newcheck_specialty);
+        List<Specialty> values = AppState.INSTANCE.getSpecialties();
+        ArrayAdapter<Specialty> specAdapter = new ArrayAdapter<>(NewCheckActivity.this, R.layout.crm_spinner_item, values);
+        specAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        specialty.setAdapter(specAdapter);
+        specialty.setOnItemSelectedListener(new SpecialtyItemSelectedListener());
+    }
+
+    class SpecialtyItemSelectedListener implements AdapterView.OnItemSelectedListener {
+        @Override
+        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            specialtyVal = Optional.of(position)
+                    .filter(p -> p > 0)
+                    .map(parent::getItemAtPosition)
+                    .map(Specialty.class::cast)
+                    .orElse(Specialty.DEFAULT_SPECIALTY);
+        }
+
+        @Override
+        public void onNothingSelected(AdapterView<?> parent) {
+            specialtyVal = Specialty.DEFAULT_SPECIALTY;
+        }
     }
 
     @Override
@@ -91,7 +133,9 @@ public class NewCheckActivity extends AppCompatActivity {
     private byte[] getData(Uri data) {
         try {
             return getData(getContentResolver().openInputStream(data), new ByteArrayOutputStream());
-        } catch (IOException e) {
+        } catch (IllegalArgumentException e) {
+            throw e;
+        } catch (Exception e) {
             throw new IllegalArgumentException("Error al obtener datos de la imagen", e);
         }
     }
@@ -120,17 +164,44 @@ public class NewCheckActivity extends AppCompatActivity {
 
         StorageReference storageRef = storage.getReference();
         StorageReference imgRef = storageRef.child("myhealthapp").child("checks").child("pending").child(UUID.randomUUID() + "." + imgType);
-        UploadTask uploadTask = imgRef.putBytes(imgData);
+        StorageMetadata metadata = new StorageMetadata.Builder()
+                .setContentType("image/" + imgType.toLowerCase()).build();
+        UploadTask uploadTask = imgRef.putBytes(imgData, metadata);
 
-        uploadTask.addOnFailureListener(exception -> {
-            Toast.makeText(NewCheckActivity.this, "Fail to upload image", Toast.LENGTH_SHORT).show();
-        }).addOnSuccessListener(taskSnapshot -> {
-            // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
-            // ...
-            String msg = "Image uploaded - Size: " + taskSnapshot.getTotalByteCount();
+        uploadTask.continueWithTask(task -> {
+            if (task.isSuccessful()) {
+                return imgRef.getDownloadUrl();
+            } else {
+                throw (task.getException() == null ? new Exception("Error desconocido") : task.getException());
+            }
+        }).addOnFailureListener(exception -> {
+            Log.e("NewCheckActivity::uploadImage", "Error al subir imagen de estudio", exception);
+            Toast.makeText(NewCheckActivity.this, "Error al subir imagen de estudio", Toast.LENGTH_SHORT).show();
+        }).addOnSuccessListener(uri -> {
+            String msg = "Image uploaded - " + uri;
             Toast.makeText(NewCheckActivity.this, msg, Toast.LENGTH_SHORT).show();
-        }).addOnCompleteListener(t -> {
-            v.setEnabled(true);
-        });
+        }).addOnCompleteListener(t -> v.setEnabled(true));
+
+//        uploadTask.addOnFailureListener(exception -> {
+//            Toast.makeText(NewCheckActivity.this, "Fail to upload image", Toast.LENGTH_SHORT).show();
+//        }).addOnSuccessListener(taskSnapshot -> {
+//            // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
+//            // ...
+//            String msg = "Image uploaded - Size: " + taskSnapshot.getTotalByteCount();
+//            Toast.makeText(NewCheckActivity.this, msg, Toast.LENGTH_SHORT).show();
+//
+//        }).addOnCompleteListener(t -> {
+//            v.setEnabled(true);
+//        });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        /* Si se clickeo la flecha "atras" -> se mata el activity y se vuelve al login */
+        Optional.ofNullable(item)
+                .filter(i -> i.getItemId() == android.R.id.home)
+                .ifPresent(i -> finish());
+
+        return super.onOptionsItemSelected(item);
     }
 }
