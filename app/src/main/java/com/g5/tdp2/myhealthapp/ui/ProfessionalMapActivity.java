@@ -29,23 +29,21 @@ import static android.location.LocationManager.*;
 import static android.location.LocationManager.NETWORK_PROVIDER;
 
 //Antes extendia de FragmentActivity pero lo cambie para agregar el titulo en la vista
-public class ProfessionalMapActivity extends AppCompatActivity implements OnMapReadyCallback, LocationListener {
+public class ProfessionalMapActivity extends ActivityWnavigation implements OnMapReadyCallback, LocationListener {
 
     private GoogleMap mMap;
     private AtomicReference<Location> currentLocation = new AtomicReference<>();
 
 
     @Override
+    protected String actionBarTitle() {
+        return "Profesionales";
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_professional_map);
-
-        /* Habilito el default action bar */
-        Optional.ofNullable(getSupportActionBar()).ifPresent(actionBar -> {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setDisplayShowHomeEnabled(true);
-            actionBar.setTitle("Profesionales");
-        });
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         Optional.ofNullable(getSupportFragmentManager())
@@ -147,14 +145,4 @@ public class ProfessionalMapActivity extends AppCompatActivity implements OnMapR
 
     @Override
     public void onProviderDisabled(String provider) { }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        /* Si se clickeo la flecha "atras" -> se mata el activity y se vuelve al login */
-        Optional.ofNullable(item)
-                .filter(i -> i.getItemId() == android.R.id.home)
-                .ifPresent(i -> finish());
-
-        return super.onOptionsItemSelected(item);
-    }
 }

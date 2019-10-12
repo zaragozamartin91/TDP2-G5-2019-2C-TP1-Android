@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.StringJoiner;
 
-public class ProfessionalListActivity extends AppCompatActivity {
+public class ProfessionalListActivity extends ActivityWnavigation {
     public static final String PROFESSIONALS_KEY = "PROFESSIONALS";
 
     private List<Professional> professionals;
@@ -30,15 +30,12 @@ public class ProfessionalListActivity extends AppCompatActivity {
     private ProfessionalListAdapter mAdapter;
 
     @Override
+    protected String actionBarTitle() { return "Profesionales"; }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_professional_list);
-
-        Optional.ofNullable(getSupportActionBar()).ifPresent(actionBar -> {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setDisplayShowHomeEnabled(true);
-            actionBar.setTitle("Profesionales");
-        });
 
         professionals = (List<Professional>) getIntent().getSerializableExtra(PROFESSIONALS_KEY);
 
@@ -56,16 +53,6 @@ public class ProfessionalListActivity extends AppCompatActivity {
         mAdapter = new ProfessionalListAdapter(professionals);
         recyclerView.setAdapter(mAdapter);
 
-    }
-
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        Optional.ofNullable(item)
-                .filter(i -> i.getItemId() == android.R.id.home)
-                .ifPresent(i -> finish());
-
-        return super.onOptionsItemSelected(item);
     }
 }
 

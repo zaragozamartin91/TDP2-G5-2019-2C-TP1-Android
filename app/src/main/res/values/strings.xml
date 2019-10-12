@@ -90,4 +90,5 @@
     <string name="newcheck_title_text">Nuevo Estudio</string>
     <string name="newcheck_btn_text">Solicitar estudio</string>
     <string name="main_menu_logout_title">Cerrar sesion</string>
+    <string name="main_menu_profile_title">Mi perfil</string>
 </resources>

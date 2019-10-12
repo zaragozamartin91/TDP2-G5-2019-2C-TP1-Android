@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.g5.tdp2.myhealthapp.AppState;
@@ -36,7 +38,8 @@ import java.util.UUID;
 
 import static com.g5.tdp2.myhealthapp.ui.UiReqCode.NEWCHECK_IMG_REQUEST_CODE;
 
-public class NewCheckActivity extends AppCompatActivity {
+
+public class NewCheckActivity extends ActivityWnavigation {
     private static final int KB = 1024;
     private static final int MB = KB * 1024;
     private static final int MAX_SIZE = 4 * MB; // el tamano maximo permitido es 4MB
@@ -48,6 +51,9 @@ public class NewCheckActivity extends AppCompatActivity {
     private byte[] imgData;
     private String imgType;
     private Specialty specialtyVal;
+
+    @Override
+    protected String actionBarTitle() { return "Estudios"; }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,13 +72,6 @@ public class NewCheckActivity extends AppCompatActivity {
         btn.setOnClickListener(this::uploadImage);
 
         setupSpecialties();
-
-        /* Habilito el default action bar */
-        Optional.ofNullable(getSupportActionBar()).ifPresent(actionBar -> {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setDisplayShowHomeEnabled(true);
-            actionBar.setTitle("Estudios");
-        });
     }
 
     private void setupSpecialties() {
@@ -193,15 +192,5 @@ public class NewCheckActivity extends AppCompatActivity {
 //        }).addOnCompleteListener(t -> {
 //            v.setEnabled(true);
 //        });
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        /* Si se clickeo la flecha "atras" -> se mata el activity y se vuelve al login */
-        Optional.ofNullable(item)
-                .filter(i -> i.getItemId() == android.R.id.home)
-                .ifPresent(i -> finish());
-
-        return super.onOptionsItemSelected(item);
     }
 }
