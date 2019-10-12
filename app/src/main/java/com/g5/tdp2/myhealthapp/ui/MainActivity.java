@@ -48,9 +48,9 @@ import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.Manifest.permission.ACCESS_NETWORK_STATE;
 import static android.Manifest.permission.INTERNET;
 import static android.content.pm.PackageManager.PERMISSION_DENIED;
+import static com.g5.tdp2.myhealthapp.ui.UiReqCode.PERMS_REQUEST_CODE;
 
 public abstract class MainActivity extends AppCompatActivity {
-    private static final Integer PERMS_REQUEST_CODE = 1307;
     private static final AtomicBoolean initialized = new AtomicBoolean(false);
 
     private static final String[] REQUIRED_PERMISSIONS = {

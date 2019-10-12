@@ -3,8 +3,10 @@ package com.g5.tdp2.myhealthapp.ui;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 
 import com.g5.tdp2.myhealthapp.R;
 import com.g5.tdp2.myhealthapp.entity.Member;
@@ -21,6 +23,8 @@ import static com.g5.tdp2.myhealthapp.usecase.Usecase.WRONG_CREDENTIALS;
 public class LoginActivity extends MainActivity {
     private EditText idField;
     private EditText passField;
+    private Button loginBtn;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,11 +45,17 @@ public class LoginActivity extends MainActivity {
             self.startActivity(signupIntent);
         });
 
-        Button loginBtn = findViewById(R.id.login_login_btn);
+        loginBtn = findViewById(R.id.login_login_btn);
         loginBtn.setOnClickListener(v -> handleLogin());
+
+        progressBar = findViewById(R.id.login_progress);
+        progressBar.setVisibility(View.INVISIBLE);
     }
 
     private void handleLogin() {
+        loginBtn.setEnabled(false);
+        progressBar.setVisibility(View.VISIBLE);
+
         String id = idField.getText().toString();
         String pass = passField.getText().toString();
 
@@ -64,16 +74,18 @@ public class LoginActivity extends MainActivity {
     private void handleLoginOk(Member member) {
 //        Intent mapsIntent = new Intent(this, ProfessionalMapActivity.class);
 //        startActivity(mapsIntent);
+        loginBtn.setEnabled(true);
+        progressBar.setVisibility(View.INVISIBLE);
+
         Intent intent = new Intent(this, HubActivity.class);
         intent.putExtra(HubActivity.MEMBER_EXTRA, member);
         startActivity(intent);
     }
 
-    private void showErrDialog(String title, String msg) {
-        DialogHelper.INSTANCE.showNonCancelableDialog(this, title, msg);
-    }
-
     private void handleError(Exception e) {
+        loginBtn.setEnabled(true);
+        progressBar.setVisibility(View.INVISIBLE);
+
         switch (e.getMessage()) {
             case INVALID_ID:
                 idField.setError(getString(R.string.login_id_error_msg));
@@ -89,6 +101,10 @@ public class LoginActivity extends MainActivity {
                 Log.e("login-error", e.getMessage(), e);
                 showErrDialog(getString(R.string.login_dialog_title_err_msg), getString(R.string.std_unknown_err));
         }
+    }
+
+    private void showErrDialog(String title, String msg) {
+        DialogHelper.INSTANCE.showNonCancelableDialog(this, title, msg);
     }
 }
 
