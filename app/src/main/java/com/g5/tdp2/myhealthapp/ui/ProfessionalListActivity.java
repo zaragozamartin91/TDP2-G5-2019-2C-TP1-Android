@@ -2,6 +2,7 @@ package com.g5.tdp2.myhealthapp.ui;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.ViewGroup;
@@ -53,6 +54,12 @@ public class ProfessionalListActivity extends ActivityWnavigation {
         mAdapter = new ProfessionalListAdapter(professionals);
         recyclerView.setAdapter(mAdapter);
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.i("On-destroy", "eliminating activity");
     }
 }
 

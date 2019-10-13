@@ -1,7 +1,7 @@
 package com.g5.tdp2.myhealthapp.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -54,7 +54,7 @@ abstract public class ActivityWnavigation extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                finish();
+                onBackPressed(true);
                 break;
             case R.id.main_menu_logout:
                 logout();
@@ -67,8 +67,11 @@ abstract public class ActivityWnavigation extends AppCompatActivity {
     }
 
     private void logout() {
-        // TODO
-        Toast.makeText(this, "Cierre de sesion pendiente", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(this, LoginActivity.class);
+        /* Limpiamos el stack previo de actividades y volvemos al menu de inicio de sesion */
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        finish();
+        startActivity(intent);
     }
 
     @Override
@@ -82,12 +85,7 @@ abstract public class ActivityWnavigation extends AppCompatActivity {
     }
 
     @Override
-    public void onBackPressed() {
-        /* Apago el boton 'atras' */
-        if (wBack()) {
-            super.onBackPressed();
-        } else {
-            Log.d("CDA", "onBackPressed Called");
-        }
-    }
+    public void onBackPressed() { onBackPressed(wBack()); }
+
+    private void onBackPressed(boolean goBack) { if (goBack) super.onBackPressed(); }
 }
