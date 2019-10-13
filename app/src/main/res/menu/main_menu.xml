@@ -2,18 +2,27 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <item
-        android:id="@+id/action_settings"
-        android:icon="@drawable/login_logo"
-        android:orderInCategory="100"
-        android:title="settings"
-        app:showAsAction="always" />
+    <!--    <item-->
+    <!--        android:id="@+id/action_settings"-->
+    <!--        android:icon="@drawable/three_dots"-->
+    <!--        android:orderInCategory="100"-->
+    <!--        android:title="settings"-->
+    <!--        app:showAsAction="always" />-->
 
-<!--    <item-->
-<!--        android:id="@+id/action_mainMenu2"-->
-<!--        android:icon="@drawable/login_logo"-->
-<!--        android:orderInCategory="10"-->
-<!--        android:title="Main Menu"-->
-<!--        app:showAsAction="ifRoom|withText" />-->
+    <!--    <item-->
+    <!--        android:id="@+id/action_mainMenu2"-->
+    <!--        android:icon="@drawable/login_logo"-->
+    <!--        android:orderInCategory="10"-->
+    <!--        android:title="Main Menu"-->
+    <!--        app:showAsAction="ifRoom|withText" />-->
+
+
+    <item
+        android:id="@+id/main_menu_logout"
+        android:title="@string/main_menu_logout_title" />
+
+    <item
+        android:id="@+id/main_menu_profile"
+        android:title="@string/main_menu_profile_title" />
 
 </menu>

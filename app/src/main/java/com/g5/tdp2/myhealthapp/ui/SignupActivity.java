@@ -39,7 +39,7 @@ import static com.g5.tdp2.myhealthapp.entity.MemberSignupForm.INVALID_PLAN;
 import static com.g5.tdp2.myhealthapp.entity.MemberSignupForm.PASSWORDS_DONT_MATCH;
 import static com.g5.tdp2.myhealthapp.usecase.Usecase.INVALID_FORM;
 
-public class SignupActivity extends AppCompatActivity {
+public class SignupActivity extends ActivityWnavigation {
     private EditText signupBirth;
     private final AtomicReference<Calendar> leDate = new AtomicReference<>();
     private EditText firstName;
@@ -51,6 +51,11 @@ public class SignupActivity extends AppCompatActivity {
     private EditText email;
     private EditText password;
     private EditText repPassword;
+
+    @Override
+    protected String actionBarTitle() {
+        return "Registro";
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,12 +90,6 @@ public class SignupActivity extends AppCompatActivity {
         password.setText("qwerty123");
         repPassword.setText("qwerty123");
 
-        /* Habilito el default action bar */
-        Optional.ofNullable(getSupportActionBar()).ifPresent(actionBar -> {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setDisplayShowHomeEnabled(true);
-        });
-
         DatePickerDialog.OnDateSetListener dateSetListener = (view, year, monthOfYear, dayOfMonth) -> {
             leDate.get().set(Calendar.YEAR, year);
             leDate.get().set(Calendar.MONTH, monthOfYear);
@@ -111,23 +110,6 @@ public class SignupActivity extends AppCompatActivity {
         });
 
         findViewById(R.id.signup_btn).setOnClickListener(v -> submitSignupForm());
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // TODO : habilitar cuando se quiera agregar opciones extra a la app
-//        getMenuInflater().inflate(R.menu.main_menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        /* Si se clickeo la flecha "atras" -> se mata el activity y se vuelve al login */
-        Optional.ofNullable(item)
-                .filter(i -> i.getItemId() == android.R.id.home)
-                .ifPresent(i -> finish());
-
-        return super.onOptionsItemSelected(item);
     }
 
     private void updateLabel() {

@@ -1,7 +1,5 @@
 package com.g5.tdp2.myhealthapp.ui;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,36 +16,22 @@ import android.widget.Toast;
 import com.g5.tdp2.myhealthapp.R;
 import com.g5.tdp2.myhealthapp.entity.Member;
 
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Optional;
 
-public class HubActivity extends AppCompatActivity {
+public class HubActivity extends ActivityWnavigation {
     public static final String MEMBER_EXTRA = "member";
     public static final String PROF_SEARCH = "Listar profesionales";
     public static final String PROF_NEARBY = "Profesionales cercanos";
     private static final String NEW_CHECK = "Solicitar estudio";
     static final String[] VIEWS = new String[]{PROF_SEARCH, PROF_NEARBY, NEW_CHECK};
 
-//    @Override
-//    public void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//
-//        setListAdapter(new MobileArrayAdapter(this, VIEWS));
-//
-//    }
-//
-//    @Override
-//    protected void onListItemClick(ListView l, View v, int position, long id) {
-//
-//        //get selected items
-//        String selectedValue = (String) getListAdapter().getItem(position);
-//        Toast.makeText(this, selectedValue, Toast.LENGTH_SHORT).show();
-//
-//    }
-
-
     private Member member;
+
+    @Override
+    protected boolean wMenu() { return true; }
+
+    @Override
+    protected boolean wBack() { return false; }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,12 +70,6 @@ public class HubActivity extends AppCompatActivity {
                     Toast.makeText(HubActivity.this, selectedValue, Toast.LENGTH_SHORT).show();
             }
         });
-    }
-
-    @Override
-    public void onBackPressed() {
-        /* Apago el boton 'atras' */
-        Log.d("CDA", "onBackPressed Called");
     }
 }
 

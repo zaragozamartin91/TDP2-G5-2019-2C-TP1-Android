@@ -32,7 +32,7 @@ import static com.g5.tdp2.myhealthapp.usecase.Usecase.INTERNAL_ERROR;
 import static com.g5.tdp2.myhealthapp.usecase.Usecase.INVALID_FORM;
 import static com.g5.tdp2.myhealthapp.usecase.SearchProfessionals.UNKNOWN_ERROR;
 
-public class ProfessionalSearchActivity extends AppCompatActivity {
+public class ProfessionalSearchActivity extends ActivityWnavigation {
     public static final String MEMBER_EXTRA = "member";
 
     private Member member;
@@ -42,18 +42,14 @@ public class ProfessionalSearchActivity extends AppCompatActivity {
     private Zone zoneVal;
 
     @Override
+    protected String actionBarTitle() { return "Profesionales"; }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_professional_search);
 
         member = (Member) getIntent().getSerializableExtra(MEMBER_EXTRA);
-
-        /* Habilito el default action bar */
-        Optional.ofNullable(getSupportActionBar()).ifPresent(actionBar -> {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setDisplayShowHomeEnabled(true);
-            actionBar.setTitle("Profesionales");
-        });
 
         name = findViewById(R.id.prof_search_name);
 
@@ -148,16 +144,6 @@ public class ProfessionalSearchActivity extends AppCompatActivity {
                         getString(R.string.prof_search_err_dialog_msg)
                 );
         }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        /* Si se clickeo la flecha "atras" -> se mata el activity y se vuelve al login */
-        Optional.ofNullable(item)
-                .filter(i -> i.getItemId() == android.R.id.home)
-                .ifPresent(i -> finish());
-
-        return super.onOptionsItemSelected(item);
     }
 }
 
