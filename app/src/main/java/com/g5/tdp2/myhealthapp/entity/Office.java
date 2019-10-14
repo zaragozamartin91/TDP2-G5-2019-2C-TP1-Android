@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serializable;
 import java.util.Optional;
 
-public class Office implements Serializable {
+public class Office implements Serializable, Place {
     private String address;
     private String phone;
     private double lat;
@@ -35,10 +35,12 @@ public class Office implements Serializable {
         return phone;
     }
 
+    @Override
     public double getLat() {
         return lat;
     }
 
+    @Override
     public double getLon() {
         return lon;
     }

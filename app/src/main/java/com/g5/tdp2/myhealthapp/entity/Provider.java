@@ -1,6 +1,7 @@
 package com.g5.tdp2.myhealthapp.entity;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
@@ -49,9 +50,7 @@ public class Provider implements Serializable {
         return specialties;
     }
 
-    public List<Office> getOffices() {
-        return offices;
-    }
+    public List<Office> getOffices() { return offices; }
 
     public String getPlan() {
         return plan;
@@ -60,6 +59,14 @@ public class Provider implements Serializable {
     public List<String> getEmails() {
         return emails;
     }
+
+    @JsonIgnore
+    public boolean hasOffice() { return offices.size() > 0; }
+
+    @JsonIgnore
+    public Office getMainOffice() { return offices.get(0); }
+
+
 }
 
 /* Por lo que sabemos, un prestador va a tener: Nombre, Tipo(profesional, clinica, sanatorio),Idiomas, Especialidades, Direcciones, Plan, telefono, Emails
