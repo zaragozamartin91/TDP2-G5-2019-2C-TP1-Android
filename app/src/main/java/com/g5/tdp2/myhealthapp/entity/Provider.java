@@ -7,7 +7,11 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 import java.io.Serializable;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * Entidad prestador
@@ -66,7 +70,33 @@ public class Provider implements Serializable {
     @JsonIgnore
     public Office getMainOffice() { return offices.get(0); }
 
+    //name + "&" + addr + "&" + spec + "&" + phone
+    @JsonIgnore
+    public String zip() {
+        String langs = languages.stream().collect(Collectors.joining(","));
+        String specs = specialties.stream().collect(Collectors.joining(","));
+        String ems = emails.stream().collect(Collectors.joining(","));
+        return Arrays.asList(name, langs, specs, getMainOffice().addressWphone(), plan, ems)
+                .stream().collect(Collectors.joining("&"));
+    }
 
+    @JsonIgnore
+    public static Provider unzip(String zipped) {
+        String[] rawData = zipped.split(Pattern.quote("&"));
+        int i = 0;
+        String name = rawData[i++];
+        String langs = rawData[i++];
+        String specs = rawData[i++];
+        String addrWphone = rawData[i++];
+        String plan = rawData[i++];
+        String ems = rawData[i];
+        List<String> languages = Arrays.asList(langs.split(Pattern.quote(",")));
+        List<String> specialties = Arrays.asList(specs.split(Pattern.quote(",")));
+        Office office = Office.unzip(addrWphone);
+        List<String> emails = Arrays.asList(ems.split(Pattern.quote(",")));
+
+        return new Provider(name, languages, specialties, Collections.singletonList(office), plan, emails);
+    }
 }
 
 /* Por lo que sabemos, un prestador va a tener: Nombre, Tipo(profesional, clinica, sanatorio),Idiomas, Especialidades, Direcciones, Plan, telefono, Emails

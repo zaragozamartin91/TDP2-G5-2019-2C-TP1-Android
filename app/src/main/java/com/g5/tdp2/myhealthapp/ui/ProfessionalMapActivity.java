@@ -26,6 +26,7 @@ import com.g5.tdp2.myhealthapp.entity.ProfessionalWdistForm;
 import com.g5.tdp2.myhealthapp.entity.Provider;
 import com.g5.tdp2.myhealthapp.entity.Specialty;
 import com.g5.tdp2.myhealthapp.usecase.SearchProfessionals;
+import com.g5.tdp2.myhealthapp.util.DialogHelper;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -97,9 +98,11 @@ public class ProfessionalMapActivity extends ActivityWnavigation implements OnMa
         SearchProfessionals usecase = CrmBeanFactory.INSTANCE.getBean(SearchProfessionals.class);
         ProfessionalWdistForm form = new ProfessionalWdistForm(specialtyVal, member.getPlan(), radioVal, p);
         usecase.searchProfessionals(form, profs -> {
-
+            v.setEnabled(true);
+            profs.forEach(this::addMarker);
         }, err -> {
-
+            v.setEnabled(true);
+            DialogHelper.INSTANCE.showNonCancelableDialog(this, "Error al buscar profesionales", "Ocurrio un error al obtener profesionales cercanos");
         });
     }
 
@@ -107,11 +110,9 @@ public class ProfessionalMapActivity extends ActivityWnavigation implements OnMa
         Optional.ofNullable(mMap).ifPresent(m -> {
             Office mainOffice = provider.getMainOffice();
             LatLng latLngLocation = new LatLng(mainOffice.getLat(), mainOffice.getLon());
-            String name = "Pepe Argento";
-            String addr = "Calle falsa 123";
-            String spec = "Oncologia";
-            String phone = "1533246698";
-            stubMarker = m.addMarker(new MarkerOptions().position(latLngLocation).title(name + "&" + addr + "&" + spec + "&" + phone));
+            stubMarker = m.addMarker(
+                    new MarkerOptions().position(latLngLocation).title(provider.zip())
+            );
         });
     }
 
