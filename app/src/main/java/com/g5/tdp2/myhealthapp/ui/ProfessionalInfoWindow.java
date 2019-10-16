@@ -28,10 +28,10 @@ public class ProfessionalInfoWindow implements GoogleMap.InfoWindowAdapter {
         //"Pepe Argento" + "&" + "Calle falsa 123" + "&" + "Oncologia" + "&1533246698"
 
         ((TextView) v.findViewById(R.id.info_prof_window_name)).setText(p.getName());
-        ((TextView) v.findViewById(R.id.info_prof_window_special)).setText(p.getSpecialties().toString());
+        ((TextView) v.findViewById(R.id.info_prof_window_special)).setText(Provider.formatField(p.getSpecialties()));
         ((TextView) v.findViewById(R.id.info_prof_window_addrWphone)).setText(p.getMainOffice().addressWphone());
         ((TextView) v.findViewById(R.id.info_prof_window_plan)).setText(p.getPlan());
-        ((TextView) v.findViewById(R.id.info_prof_window_email)).setText(p.getEmails().toString());
+        ((TextView) v.findViewById(R.id.info_prof_window_email)).setText(Provider.formatField(p.getEmails()));
         return v;
     }
 

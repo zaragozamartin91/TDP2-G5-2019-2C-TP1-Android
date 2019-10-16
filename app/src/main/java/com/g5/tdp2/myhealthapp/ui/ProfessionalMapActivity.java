@@ -43,6 +43,9 @@ import java.util.stream.Stream;
 
 import static android.location.LocationManager.*;
 import static android.location.LocationManager.NETWORK_PROVIDER;
+import static com.g5.tdp2.myhealthapp.usecase.Usecase.INTERNAL_ERROR;
+import static com.g5.tdp2.myhealthapp.usecase.Usecase.INVALID_FORM;
+import static com.g5.tdp2.myhealthapp.usecase.Usecase.UNKNOWN_ERROR;
 
 //Antes extendia de FragmentActivity pero lo cambie para agregar el titulo en la vista
 public class ProfessionalMapActivity extends ActivityWnavigation implements OnMapReadyCallback, LocationListener {
@@ -89,9 +92,13 @@ public class ProfessionalMapActivity extends ActivityWnavigation implements OnMa
         }
 
         Place p = new Place() {
-            public double getLat() { return currentLocation.get().getLatitude(); }
+            public double getLat() {
+                return currentLocation.get().getLatitude();
+            }
 
-            public double getLon() { return currentLocation.get().getLongitude(); }
+            public double getLon() {
+                return currentLocation.get().getLongitude();
+            }
         };
 
         v.setEnabled(false);
@@ -100,9 +107,20 @@ public class ProfessionalMapActivity extends ActivityWnavigation implements OnMa
         usecase.searchProfessionals(form, profs -> {
             v.setEnabled(true);
             profs.forEach(this::addMarker);
+            if (profs.isEmpty()) {
+                Toast.makeText(this, R.string.prof_map_no_results, Toast.LENGTH_SHORT).show();
+            }
         }, err -> {
             v.setEnabled(true);
-            DialogHelper.INSTANCE.showNonCancelableDialog(this, "Error al buscar profesionales", "Ocurrio un error al obtener profesionales cercanos");
+            switch (err.getMessage()) {
+                case INVALID_FORM:
+                    Toast.makeText(this, R.string.prof_map_no_filters, Toast.LENGTH_SHORT).show();
+                    break;
+                case UNKNOWN_ERROR:
+                case INTERNAL_ERROR:
+                default:
+                    DialogHelper.INSTANCE.showNonCancelableDialog(this, "Error al buscar profesionales", "Ocurrio un error al obtener profesionales cercanos");
+            }
         });
     }
 
@@ -110,7 +128,7 @@ public class ProfessionalMapActivity extends ActivityWnavigation implements OnMa
         Optional.ofNullable(mMap).ifPresent(m -> {
             Office mainOffice = provider.getMainOffice();
             LatLng latLngLocation = new LatLng(mainOffice.getLat(), mainOffice.getLon());
-            stubMarker = m.addMarker(
+            m.addMarker(
                     new MarkerOptions().position(latLngLocation).title(provider.zip())
             );
         });
@@ -132,6 +150,7 @@ public class ProfessionalMapActivity extends ActivityWnavigation implements OnMa
                         .map(parent::getItemAtPosition)
                         .map(String.class::cast)
                         .map(Double::valueOf)
+                        .map(d -> d * 1000)
                         .orElse(DEF_RADIO);
             }
 
@@ -207,8 +226,6 @@ public class ProfessionalMapActivity extends ActivityWnavigation implements OnMa
 
             locationManager.requestLocationUpdates(NETWORK_PROVIDER, 1000, 5f, this);
             locationManager.requestLocationUpdates(GPS_PROVIDER, 1000, 5f, this);
-
-            addStubMarker();
         } catch (SecurityException se) {
             Log.d("location-get", "SE CAUGHT");
             se.printStackTrace();
@@ -230,33 +247,19 @@ public class ProfessionalMapActivity extends ActivityWnavigation implements OnMa
             Toast.makeText(this, getString(R.string.maps_loc_found_msg), Toast.LENGTH_LONG).show();
         }
         Optional.ofNullable(location).ifPresent(this::centerAndMarkLocation);
-        addStubMarker();
-    }
-
-    Marker stubMarker;
-
-    private void addStubMarker() {
-        Optional.ofNullable(stubMarker).ifPresent(Marker::remove);
-
-        Optional.ofNullable(currentLocation.get()).ifPresent(loc -> {
-            double stubLat = loc.getLatitude() + 0.000274d;
-            double stubLon = loc.getLongitude() - 0.003262d;
-
-            Optional.ofNullable(mMap).ifPresent(m -> {
-                LatLng latLngLocation = new LatLng(stubLat, stubLon);
-                stubMarker = m.addMarker(new MarkerOptions().position(latLngLocation).title("Pepe Argento" + "&" + "Calle falsa 123" + "&" + "Oncologia" + "&1533246698"));
-            });
-        });
     }
 
 
     @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) { }
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+    }
 
     @Override
-    public void onProviderEnabled(String provider) { }
+    public void onProviderEnabled(String provider) {
+    }
 
     @Override
-    public void onProviderDisabled(String provider) { }
+    public void onProviderDisabled(String provider) {
+    }
 }
 

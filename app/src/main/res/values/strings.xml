@@ -71,6 +71,8 @@
     <string name="maps_loc_found_msg">Localizaci\u00F3n obtenida</string>
     <string name="prof_map_radio_prompt">Distancia</string>
     <string name="prof_map_specialty_prompt">Especialidad</string>
+    <string name="prof_map_no_results">No se encontraron profesionales con los filtros indicados</string>
+    <string name="prof_map_no_filters">Debe ingresar valores en los filtros</string>
 
 
     <!-- HUB *********************************************************************** -->

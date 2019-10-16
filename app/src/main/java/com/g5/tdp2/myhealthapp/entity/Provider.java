@@ -19,6 +19,8 @@ import java.util.stream.Collectors;
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
 @JsonSubTypes({@JsonSubTypes.Type(value = Professional.class, name = "PROFESIONAL")})
 public class Provider implements Serializable {
+    public static final String FIELD_DELIM = "&";
+    public static final String VALUE_DELIM = ",";
     private String name;
     private List<String> languages;
     private List<String> specialties;
@@ -54,7 +56,9 @@ public class Provider implements Serializable {
         return specialties;
     }
 
-    public List<Office> getOffices() { return offices; }
+    public List<Office> getOffices() {
+        return offices;
+    }
 
     public String getPlan() {
         return plan;
@@ -65,24 +69,43 @@ public class Provider implements Serializable {
     }
 
     @JsonIgnore
-    public boolean hasOffice() { return offices.size() > 0; }
-
-    @JsonIgnore
-    public Office getMainOffice() { return offices.get(0); }
-
-    //name + "&" + addr + "&" + spec + "&" + phone
-    @JsonIgnore
-    public String zip() {
-        String langs = languages.stream().collect(Collectors.joining(","));
-        String specs = specialties.stream().collect(Collectors.joining(","));
-        String ems = emails.stream().collect(Collectors.joining(","));
-        return Arrays.asList(name, langs, specs, getMainOffice().addressWphone(), plan, ems)
-                .stream().collect(Collectors.joining("&"));
+    public boolean hasOffice() {
+        return offices.size() > 0;
     }
 
+    /**
+     * Obtiene la oficina "principal" del prestador. Se considera como oficina principal a la primera.
+     *
+     * @return oficina "principal" del prestador
+     */
+    @JsonIgnore
+    public Office getMainOffice() {
+        return offices.get(0);
+    }
+
+    /**
+     * Comprime al prestador como un string usando {@link Provider#FIELD_DELIM} como delimitador de campos y {@link Provider#VALUE_DELIM} como delimitador de valores de campos compuestos
+     *
+     * @return prestador como un string
+     */
+    @JsonIgnore
+    public String zip() {
+        String langs = formatField(languages);
+        String specs = formatField(specialties);
+        String ems = formatField(emails);
+        return Arrays.asList(name, langs, specs, getMainOffice().addressWphone(), plan, ems)
+                .stream().collect(Collectors.joining(FIELD_DELIM));
+    }
+
+    /**
+     * Construye una instancia de Prestador a partir de un string generado con {@link Provider#zip()}
+     *
+     * @param zipped String de representacion de prestador
+     * @return instancia de Prestador
+     */
     @JsonIgnore
     public static Provider unzip(String zipped) {
-        String[] rawData = zipped.split(Pattern.quote("&"));
+        String[] rawData = zipped.split(Pattern.quote(FIELD_DELIM));
         int i = 0;
         String name = rawData[i++];
         String langs = rawData[i++];
@@ -90,12 +113,23 @@ public class Provider implements Serializable {
         String addrWphone = rawData[i++];
         String plan = rawData[i++];
         String ems = rawData[i];
-        List<String> languages = Arrays.asList(langs.split(Pattern.quote(",")));
-        List<String> specialties = Arrays.asList(specs.split(Pattern.quote(",")));
+        List<String> languages = Arrays.asList(langs.split(Pattern.quote(VALUE_DELIM)));
+        List<String> specialties = Arrays.asList(specs.split(Pattern.quote(VALUE_DELIM)));
         Office office = Office.unzip(addrWphone);
-        List<String> emails = Arrays.asList(ems.split(Pattern.quote(",")));
+        List<String> emails = Arrays.asList(ems.split(Pattern.quote(VALUE_DELIM)));
 
         return new Provider(name, languages, specialties, Collections.singletonList(office), plan, emails);
+    }
+
+    /**
+     * Formatea una lista de valores como un string usando {@link Provider#VALUE_DELIM} como delimitador
+     *
+     * @param values Valores a formatear
+     * @return String con valores delimitados por {@link Provider#VALUE_DELIM}
+     */
+    @JsonIgnore
+    public static String formatField(List<String> values) {
+        return values.stream().collect(Collectors.joining(VALUE_DELIM));
     }
 }
 
