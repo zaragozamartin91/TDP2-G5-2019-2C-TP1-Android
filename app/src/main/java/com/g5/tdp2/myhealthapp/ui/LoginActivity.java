@@ -72,8 +72,6 @@ public class LoginActivity extends MainActivity {
     }
 
     private void handleLoginOk(Member member) {
-//        Intent mapsIntent = new Intent(this, ProfessionalMapActivity.class);
-//        startActivity(mapsIntent);
         loginBtn.setEnabled(true);
         progressBar.setVisibility(View.INVISIBLE);
 

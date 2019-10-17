@@ -141,7 +141,6 @@ public abstract class MainActivity extends AppCompatActivity {
             }
 
             WebLoginMember webLoginMember = new WebLoginMember("http://" + value + "/auth/login", requestQueue);
-            webLoginMember.setTokenConsumer(AppState.INSTANCE::putToken);
             CrmBeanFactory.INSTANCE.addBean(webLoginMember);
 
             CrmBeanFactory.INSTANCE.addBean(new WebSignupMember("http://" + value + "/auth/register", requestQueue));
@@ -150,7 +149,6 @@ public abstract class MainActivity extends AppCompatActivity {
 
         alert.setNegativeButton("Usar Heroku", (dialog, whichButton) -> {
             WebLoginMember webLoginMember = new WebLoginMember(apiBaseUrl + "/auth/login", requestQueue);
-            webLoginMember.setTokenConsumer(AppState.INSTANCE::putToken);
             CrmBeanFactory.INSTANCE.addBean(webLoginMember);
 
             CrmBeanFactory.INSTANCE.addBean(new WebSignupMember(apiBaseUrl + "/auth/register", requestQueue));

@@ -22,6 +22,7 @@ public class LoginMemberStub implements LoginMember {
 
         succCallback.accept(
                 new Member("Moni", "Argento", DateFormatter.YYYY_MM_DD.deserialize("1991-03-21"), "1234", "A110", 1234, "moni@argento.com")
+                    .withToken("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZG4iOjM0MzE3Njc3LCJyb2xlIjoiYWZmaWxpYXRlIiwiaWF0IjoxNTcxMzM5ODUxfQ.pJoWqleEwItb4iJLMk-_OFy89dHGZ9PEbWIid69IkOw")
         );
     }
 }
