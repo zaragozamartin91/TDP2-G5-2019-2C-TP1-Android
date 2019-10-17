@@ -27,7 +27,6 @@ public class MyHealthApp extends Application {
         WebLoginMember webLoginMember = new WebLoginMember(
                 "https://tdp2-crmedical-api.herokuapp.com/auth/login",
                 requestQueue);
-        webLoginMember.setTokenConsumer(AppState.INSTANCE::putToken);
         return webLoginMember;
     }
 

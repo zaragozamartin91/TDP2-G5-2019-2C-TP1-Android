@@ -22,15 +22,10 @@ import java.util.function.Consumer;
 public class WebLoginMember implements LoginMember {
     private String url;
     private RequestQueue requestQueue;
-    private Consumer<String> tokenConsumer = t -> {};
 
     public WebLoginMember(String url, RequestQueue requestQueue) {
         this.url = url;
         this.requestQueue = requestQueue;
-    }
-
-    public void setTokenConsumer(Consumer<String> tokenConsumer) {
-        this.tokenConsumer = tokenConsumer;
     }
 
     @Override
@@ -44,7 +39,6 @@ public class WebLoginMember implements LoginMember {
                 Log.i("WebLoginMember-onResponse", response.toString());
                 LoginMemberJsonResponse loginResponse = JsonParser.INSTANCE.readValue(response.toString(), LoginMemberJsonResponse.class);
                 succCallback.accept(loginResponse.member);
-                tokenConsumer.accept(loginResponse.token);
             }, error -> {
                 Log.e("WebLoginMember-onErrorResponse", "" + error);
                 Exception ex = Optional.ofNullable(error)
@@ -80,7 +74,7 @@ class LoginMemberJsonResponse {
     public LoginMemberJsonResponse(
             @JsonProperty("user") Member member,
             @JsonProperty("token") String token) {
-        this.member = member;
         this.token = token;
+        this.member = member.withToken(token);
     }
 }

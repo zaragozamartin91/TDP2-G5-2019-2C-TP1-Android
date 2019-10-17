@@ -1,6 +1,7 @@
 package com.g5.tdp2.myhealthapp.entity;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -17,6 +18,7 @@ public class Member implements Serializable {
     private String plan;
     private long id;
     private String email;
+    private String token = "";
 
     @JsonCreator
     public Member(
@@ -63,6 +65,17 @@ public class Member implements Serializable {
 
     public String getEmail() {
         return email;
+    }
+
+    @JsonIgnore
+    public Member withToken(String t) {
+        token = t;
+        return this;
+    }
+
+    @JsonIgnore
+    public String getToken() {
+        return token;
     }
 
     @Override
