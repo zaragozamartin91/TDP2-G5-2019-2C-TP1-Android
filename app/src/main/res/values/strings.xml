@@ -73,6 +73,8 @@
     <string name="prof_map_specialty_prompt">Especialidad</string>
     <string name="prof_map_no_results">No se encontraron profesionales con los filtros indicados</string>
     <string name="prof_map_no_filters">Debe ingresar valores en los filtros</string>
+    <string name="prof_map_dialog_err_title">Error al buscar profesionales</string>
+    <string name="prof_map_dialog_err_msg">Ocurrio un error al obtener profesionales cercanos</string>
 
 
     <!-- HUB *********************************************************************** -->
@@ -100,5 +102,6 @@
     <string name="newcheck_img_contentDesc">Receta de estudio</string>
     <string name="newcheck_title_text">Nuevo Estudio</string>
     <string name="newcheck_btn_text">Solicitar estudio</string>
+    <string name="newcheck_no_img">Seleccione una imagen</string>
 
 </resources>
