@@ -2,6 +2,7 @@ package com.g5.tdp2.myhealthapp.usecase;
 
 import com.g5.tdp2.myhealthapp.entity.Professional;
 import com.g5.tdp2.myhealthapp.entity.ProfessionalSearchForm;
+import com.g5.tdp2.myhealthapp.entity.ProfessionalWdistForm;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -23,4 +24,17 @@ public interface SearchProfessionals extends Usecase {
             Consumer<List<Professional>> succCallback,
             Consumer<Exception> errCallback
     ) throws SearchProfessionalsException;
+
+    /**
+     * Busca profesionales cercanos
+     *
+     * @param form         Formulario de busqueda
+     * @param succCallback Accion a realizar con los resultados
+     * @param errCallback  Accion a realizar ante un error
+     * @throws SearchProfessionalsException Si ocurre un error al realizar la busqueda
+     */
+    void searchProfessionals(
+            ProfessionalWdistForm form,
+            Consumer<List<Professional>> succCallback,
+            Consumer<Exception> errCallback) throws SearchProfessionalsException;
 }

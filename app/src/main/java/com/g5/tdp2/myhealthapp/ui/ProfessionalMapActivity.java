@@ -7,11 +7,26 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.g5.tdp2.myhealthapp.AppState;
+import com.g5.tdp2.myhealthapp.CrmBeanFactory;
 import com.g5.tdp2.myhealthapp.R;
+import com.g5.tdp2.myhealthapp.entity.Member;
+import com.g5.tdp2.myhealthapp.entity.Office;
+import com.g5.tdp2.myhealthapp.entity.Place;
+import com.g5.tdp2.myhealthapp.entity.ProfessionalSearchForm;
+import com.g5.tdp2.myhealthapp.entity.ProfessionalWdistForm;
+import com.g5.tdp2.myhealthapp.entity.Provider;
+import com.g5.tdp2.myhealthapp.entity.Specialty;
+import com.g5.tdp2.myhealthapp.usecase.SearchProfessionals;
+import com.g5.tdp2.myhealthapp.util.DialogHelper;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -21,18 +36,27 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Stream;
 
 import static android.location.LocationManager.*;
 import static android.location.LocationManager.NETWORK_PROVIDER;
+import static com.g5.tdp2.myhealthapp.usecase.Usecase.INTERNAL_ERROR;
+import static com.g5.tdp2.myhealthapp.usecase.Usecase.INVALID_FORM;
+import static com.g5.tdp2.myhealthapp.usecase.Usecase.UNKNOWN_ERROR;
 
 //Antes extendia de FragmentActivity pero lo cambie para agregar el titulo en la vista
 public class ProfessionalMapActivity extends ActivityWnavigation implements OnMapReadyCallback, LocationListener {
+    private static final double DEF_RADIO = -1d;
+    public static final String MEMBER_EXTRA = "member";
 
     private GoogleMap mMap;
     private AtomicReference<Location> currentLocation = new AtomicReference<>();
+    private Specialty specialtyVal;
+    private double radioVal = DEF_RADIO;
+    private Member member;
 
 
     @Override
@@ -50,6 +74,117 @@ public class ProfessionalMapActivity extends ActivityWnavigation implements OnMa
                 .map(f -> f.findFragmentById(R.id.map))
                 .map(SupportMapFragment.class::cast)
                 .ifPresent(m -> m.getMapAsync(this));
+
+        setupDistances();
+
+        setupSpecialties();
+
+        findViewById(R.id.prof_map_search).setOnClickListener(this::searchProfessionals);
+
+        member = (Member) getIntent().getSerializableExtra(MEMBER_EXTRA);
+    }
+
+
+    private void searchProfessionals(View v) {
+        if (currentLocation.get() == null) {
+            Toast.makeText(this, "Ubicacion desconocida", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        Place p = new Place() {
+            public double getLat() {
+                return currentLocation.get().getLatitude();
+            }
+
+            public double getLon() {
+                return currentLocation.get().getLongitude();
+            }
+        };
+
+        v.setEnabled(false);
+        SearchProfessionals usecase = CrmBeanFactory.INSTANCE.getBean(SearchProfessionals.class);
+        ProfessionalWdistForm form = new ProfessionalWdistForm(specialtyVal, member.getPlan(), radioVal, p);
+        usecase.searchProfessionals(form, profs -> {
+            v.setEnabled(true);
+            profs.forEach(this::addMarker);
+            if (profs.isEmpty()) {
+                Toast.makeText(this, R.string.prof_map_no_results, Toast.LENGTH_SHORT).show();
+            }
+        }, err -> {
+            v.setEnabled(true);
+            switch (err.getMessage()) {
+                case INVALID_FORM:
+                    Toast.makeText(this, R.string.prof_map_no_filters, Toast.LENGTH_SHORT).show();
+                    break;
+                case UNKNOWN_ERROR:
+                case INTERNAL_ERROR:
+                default:
+                    DialogHelper.INSTANCE.showNonCancelableDialog(
+                            this,
+                            getString(R.string.prof_map_dialog_err_title),
+                            getString(R.string.prof_map_dialog_err_msg));
+            }
+        });
+    }
+
+    private void addMarker(Provider provider) {
+        Optional.ofNullable(mMap).ifPresent(m -> {
+            Office mainOffice = provider.getMainOffice();
+            LatLng latLngLocation = new LatLng(mainOffice.getLat(), mainOffice.getLon());
+            m.addMarker(
+                    new MarkerOptions().position(latLngLocation).title(provider.zip())
+            );
+        });
+    }
+
+    private void setupDistances() {
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+                this,
+                R.array.map_distances,
+                R.layout.crm_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        Spinner radio = findViewById(R.id.prof_map_radio);
+        radio.setAdapter(adapter);
+        radio.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                radioVal = Optional.of(position)
+                        .filter(p -> p > 0)
+                        .map(parent::getItemAtPosition)
+                        .map(String.class::cast)
+                        .map(Double::valueOf)
+                        .map(d -> d * 1000)
+                        .orElse(DEF_RADIO);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                radioVal = DEF_RADIO;
+            }
+        });
+    }
+
+    private void setupSpecialties() {
+        Spinner specialty = findViewById(R.id.prof_map_specialty);
+        List<Specialty> values = AppState.INSTANCE.getSpecialties();
+        ArrayAdapter<Specialty> adapter = new ArrayAdapter<>(this, R.layout.crm_spinner_item, values);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        specialty.setAdapter(adapter);
+        specialty.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                specialtyVal = Optional.of(position)
+                        .filter(p -> p > 0)
+                        .map(parent::getItemAtPosition)
+                        .map(Specialty.class::cast)
+                        .orElse(Specialty.DEFAULT_SPECIALTY);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                specialtyVal = Specialty.DEFAULT_SPECIALTY;
+            }
+        });
     }
 
 
@@ -94,8 +229,6 @@ public class ProfessionalMapActivity extends ActivityWnavigation implements OnMa
 
             locationManager.requestLocationUpdates(NETWORK_PROVIDER, 1000, 5f, this);
             locationManager.requestLocationUpdates(GPS_PROVIDER, 1000, 5f, this);
-
-            addStubMarker();
         } catch (SecurityException se) {
             Log.d("location-get", "SE CAUGHT");
             se.printStackTrace();
@@ -117,32 +250,19 @@ public class ProfessionalMapActivity extends ActivityWnavigation implements OnMa
             Toast.makeText(this, getString(R.string.maps_loc_found_msg), Toast.LENGTH_LONG).show();
         }
         Optional.ofNullable(location).ifPresent(this::centerAndMarkLocation);
-        addStubMarker();
-    }
-
-    Marker stubMarker;
-
-    private void addStubMarker() {
-        Optional.ofNullable(stubMarker).ifPresent(Marker::remove);
-
-        Optional.ofNullable(currentLocation.get()).ifPresent(loc -> {
-            double stubLat = loc.getLatitude() + 0.000274d;
-            double stubLon = loc.getLongitude() - 0.003262d;
-
-            Optional.ofNullable(mMap).ifPresent(m -> {
-                LatLng latLngLocation = new LatLng(stubLat, stubLon);
-                stubMarker = m.addMarker(new MarkerOptions().position(latLngLocation).title("Pepe Argento" + "&" + "Calle falsa 123" + "&" + "Oncologia" + "&1533246698"));
-            });
-        });
     }
 
 
     @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) { }
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+    }
 
     @Override
-    public void onProviderEnabled(String provider) { }
+    public void onProviderEnabled(String provider) {
+    }
 
     @Override
-    public void onProviderDisabled(String provider) { }
+    public void onProviderDisabled(String provider) {
+    }
 }
+

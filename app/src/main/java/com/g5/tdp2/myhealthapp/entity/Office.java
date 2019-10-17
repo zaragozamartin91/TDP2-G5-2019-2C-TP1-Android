@@ -5,8 +5,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.io.Serializable;
 import java.util.Optional;
+import java.util.regex.Pattern;
 
-public class Office implements Serializable {
+public class Office implements Serializable, Place {
+    private static final String ZONE_DELIM = ", ";
+    private static final String PHONE_DELIM = " - ";
     private String address;
     private String phone;
     private double lat;
@@ -35,10 +38,12 @@ public class Office implements Serializable {
         return phone;
     }
 
+    @Override
     public double getLat() {
         return lat;
     }
 
+    @Override
     public double getLon() {
         return lon;
     }
@@ -48,7 +53,27 @@ public class Office implements Serializable {
     }
 
     public String addressWphone() {
-        String fullAddress = address + ", " + zone;
-        return Optional.ofNullable(phone).filter(p -> !p.isEmpty()).map(p -> fullAddress + " - " + p).orElse(fullAddress);
+        String fullAddress = address + ZONE_DELIM + zone;
+        return Optional.ofNullable(phone)
+                .filter(p -> !p.isEmpty())
+                .map(p -> fullAddress + PHONE_DELIM + p)
+                .orElse(fullAddress);
+    }
+
+    public static Office unzip(String addrWphone) {
+        if (addrWphone.contains(PHONE_DELIM)) {
+            String[] split = addrWphone.split(Pattern.quote(PHONE_DELIM));
+            String addrWzone = split[0];
+            String phone = split[1];
+            String[] addrWzoneSplit = addrWzone.split(ZONE_DELIM);
+            String address = addrWzoneSplit[0];
+            String zone = addrWzoneSplit[1];
+            return new Office(address, phone, 0, 0, zone);
+        } else {
+            String[] addrWzoneSplit = addrWphone.split(ZONE_DELIM);
+            String address = addrWzoneSplit[0];
+            String zone = addrWzoneSplit[1];
+            return new Office(address, "", 0, 0, zone);
+        }
     }
 }

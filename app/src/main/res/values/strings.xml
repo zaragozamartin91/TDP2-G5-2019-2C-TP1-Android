@@ -8,6 +8,10 @@
 
     <string name="api_base_url"><![CDATA[https://tdp2-crmedical-api.herokuapp.com]]></string>
 
+    <!-- CONTEXT MENU ************************************************************************ -->
+    <string name="main_menu_logout_title">Cerrar sesion</string>
+    <string name="main_menu_profile_title">Mi perfil</string>
+
 
     <!-- PERMISSIONS *********************************************************************** -->
     <string name="internet_perm_reject">Se necesita acceso a internet</string>
@@ -65,6 +69,13 @@
     <!-- MAPS *********************************************************************** -->
     <string name="maps_err_noloc_msg">No se tiene acceso a la localizaci\u00F3n</string>
     <string name="maps_loc_found_msg">Localizaci\u00F3n obtenida</string>
+    <string name="prof_map_radio_prompt">Distancia</string>
+    <string name="prof_map_specialty_prompt">Especialidad</string>
+    <string name="prof_map_no_results">No se encontraron profesionales con los filtros indicados</string>
+    <string name="prof_map_no_filters">Debe ingresar valores en los filtros</string>
+    <string name="prof_map_dialog_err_title">Error al buscar profesionales</string>
+    <string name="prof_map_dialog_err_msg">Ocurrio un error al obtener profesionales cercanos</string>
+
 
     <!-- HUB *********************************************************************** -->
     <string name="main_hub_title">Bienvenido %1$s</string>
@@ -86,9 +97,11 @@
     <string name="prof_card_plans">Plan: %1$s</string>
     <string name="prof_card_emails">Emails: %1$s</string>
     <string name="prof_card_offices">Oficinas: %1$s</string>
+
+    <!-- NEW CHECK************************************************************************** -->
     <string name="newcheck_img_contentDesc">Receta de estudio</string>
     <string name="newcheck_title_text">Nuevo Estudio</string>
     <string name="newcheck_btn_text">Solicitar estudio</string>
-    <string name="main_menu_logout_title">Cerrar sesion</string>
-    <string name="main_menu_profile_title">Mi perfil</string>
+    <string name="newcheck_no_img">Seleccione una imagen</string>
+
 </resources>

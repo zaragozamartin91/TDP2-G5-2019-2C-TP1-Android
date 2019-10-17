@@ -6,37 +6,44 @@
 
 
     <TextView
-        android:id="@+id/info_prof_window_special"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:paddingStart="5dp"
-        android:text="Oncologia" />
-
-    <TextView
         android:id="@+id/info_prof_window_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/info_prof_window_special"
+        android:layout_alignParentTop="true"
         android:paddingLeft="5dp"
         android:text="Pepe Argento"
         android:textSize="18sp"
         android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/info_prof_window_addr"
+        android:id="@+id/info_prof_window_special"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/info_prof_window_name"
-        android:paddingLeft="5dp"
-        android:text="Calle falsa 123" />
+        android:paddingStart="5dp"
+        android:text="Oncologia" />
 
     <TextView
-        android:id="@+id/info_prof_window_phone"
+        android:id="@+id/info_prof_window_addrWphone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/info_prof_window_addr"
+        android:layout_below="@id/info_prof_window_special"
         android:paddingLeft="5dp"
-        android:text="1533246698" />
+        android:text="Calle falsa 123 - 1533246698" />
 
+    <TextView
+        android:id="@+id/info_prof_window_plan"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/info_prof_window_addrWphone"
+        android:paddingLeft="5dp"
+        android:text="A310" />
+
+    <TextView
+        android:id="@+id/info_prof_window_email"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/info_prof_window_plan"
+        android:paddingLeft="5dp"
+        android:text="pepe@argento.com" />
 </RelativeLayout>

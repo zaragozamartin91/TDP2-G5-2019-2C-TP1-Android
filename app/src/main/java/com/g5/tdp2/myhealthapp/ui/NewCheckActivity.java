@@ -35,6 +35,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Consumer;
 
 import static com.g5.tdp2.myhealthapp.ui.UiReqCode.NEWCHECK_IMG_REQUEST_CODE;
 
@@ -51,6 +52,8 @@ public class NewCheckActivity extends ActivityWnavigation {
     private byte[] imgData;
     private String imgType;
     private Specialty specialtyVal;
+
+    private Consumer<View> imgUploader = this::missingImgUploader;
 
     @Override
     protected String actionBarTitle() { return "Estudios"; }
@@ -69,9 +72,13 @@ public class NewCheckActivity extends ActivityWnavigation {
         });
 
         Button btn = findViewById(R.id.newcheck_btn);
-        btn.setOnClickListener(this::uploadImage);
+        btn.setOnClickListener(v -> imgUploader.accept(v));
 
         setupSpecialties();
+    }
+
+    private void missingImgUploader(View v) {
+        Toast.makeText(this, R.string.newcheck_no_img, Toast.LENGTH_SHORT).show();
     }
 
     private void setupSpecialties() {
@@ -111,6 +118,7 @@ public class NewCheckActivity extends ActivityWnavigation {
     }
 
     private void loadImage(Uri selectedImage) {
+        imgUploader = this::missingImgUploader;
         imgType = getMimeType(selectedImage);
 
         Optional.ofNullable(imgType).map(s -> OK_IMG_TYPES.contains(s.toLowerCase())).map(t -> (Runnable) () -> {
@@ -120,6 +128,7 @@ public class NewCheckActivity extends ActivityWnavigation {
                 imgView.setImageURI(selectedImage);
                 imgView.setAdjustViewBounds(true);
                 imgView.setScaleType(ImageView.ScaleType.FIT_XY);
+                imgUploader = this::uploadImage;
             } catch (Exception e) {
                 DialogHelper.INSTANCE.showNonCancelableDialog(
                         NewCheckActivity.this, "Error al cargar imagen", e.getMessage());
@@ -180,17 +189,5 @@ public class NewCheckActivity extends ActivityWnavigation {
             String msg = "Image uploaded - " + uri;
             Toast.makeText(NewCheckActivity.this, msg, Toast.LENGTH_SHORT).show();
         }).addOnCompleteListener(t -> v.setEnabled(true));
-
-//        uploadTask.addOnFailureListener(exception -> {
-//            Toast.makeText(NewCheckActivity.this, "Fail to upload image", Toast.LENGTH_SHORT).show();
-//        }).addOnSuccessListener(taskSnapshot -> {
-//            // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
-//            // ...
-//            String msg = "Image uploaded - Size: " + taskSnapshot.getTotalByteCount();
-//            Toast.makeText(NewCheckActivity.this, msg, Toast.LENGTH_SHORT).show();
-//
-//        }).addOnCompleteListener(t -> {
-//            v.setEnabled(true);
-//        });
     }
 }

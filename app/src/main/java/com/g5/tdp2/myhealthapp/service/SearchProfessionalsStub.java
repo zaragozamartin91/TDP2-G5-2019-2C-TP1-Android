@@ -3,6 +3,7 @@ package com.g5.tdp2.myhealthapp.service;
 import com.g5.tdp2.myhealthapp.entity.Office;
 import com.g5.tdp2.myhealthapp.entity.Professional;
 import com.g5.tdp2.myhealthapp.entity.ProfessionalSearchForm;
+import com.g5.tdp2.myhealthapp.entity.ProfessionalWdistForm;
 import com.g5.tdp2.myhealthapp.usecase.SearchProfessionals;
 import com.g5.tdp2.myhealthapp.usecase.SearchProfessionalsException;
 
@@ -32,6 +33,22 @@ public class SearchProfessionalsStub implements SearchProfessionals {
             return;
         }
 
+        getProfs(succCallback);
+    }
+
+    @Override
+    public void searchProfessionals(ProfessionalWdistForm form, Consumer<List<Professional>> succCallback, Consumer<Exception> errCallback) throws SearchProfessionalsException {
+        try {
+            form.validate();
+        } catch (IllegalStateException e) {
+            errCallback.accept(new SearchProfessionalsException(INVALID_FORM, e));
+            return;
+        }
+
+        getProfs(succCallback);
+    }
+
+    private void getProfs(Consumer<List<Professional>> succCallback) {
         List<Professional> professionals = new ArrayList<>();
 
         {
