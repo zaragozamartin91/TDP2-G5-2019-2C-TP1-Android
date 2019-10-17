@@ -119,7 +119,10 @@ public class ProfessionalMapActivity extends ActivityWnavigation implements OnMa
                 case UNKNOWN_ERROR:
                 case INTERNAL_ERROR:
                 default:
-                    DialogHelper.INSTANCE.showNonCancelableDialog(this, "Error al buscar profesionales", "Ocurrio un error al obtener profesionales cercanos");
+                    DialogHelper.INSTANCE.showNonCancelableDialog(
+                            this,
+                            getString(R.string.prof_map_dialog_err_title),
+                            getString(R.string.prof_map_dialog_err_msg));
             }
         });
     }
