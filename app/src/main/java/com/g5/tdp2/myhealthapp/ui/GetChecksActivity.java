@@ -20,6 +20,7 @@ import com.g5.tdp2.myhealthapp.R;
 import com.g5.tdp2.myhealthapp.entity.Check;
 import com.g5.tdp2.myhealthapp.entity.Member;
 import com.g5.tdp2.myhealthapp.usecase.GetChecks;
+import com.g5.tdp2.myhealthapp.util.DateFormatter;
 import com.g5.tdp2.myhealthapp.util.DialogHelper;
 
 import java.time.LocalDate;
@@ -108,20 +109,20 @@ class CheckListViewHolder extends RecyclerView.ViewHolder {
     }
 
     void setCheck(Check p) {
-        String specialty = AppState.INSTANCE.getSpecialty((long) p.getSpecialtyId()).getName();
+        String specialty = p.translateSpecialty(AppState.INSTANCE::getSpecialty);
 
         ((TextView) cardView.findViewById(R.id.check_card_specialty))
                 .setText(ctx.getString(R.string.check_card_specialty, specialty));
 
-        // TODO : Obtener la fecha de alta del formulario
         ((TextView) cardView.findViewById(R.id.check_card_date))
-                .setText(ctx.getString(R.string.check_card_date, new Date().toString()));
+                .setText(ctx.getString(R.string.check_card_date,
+                        p.translateCreatedAt(DateFormatter.YYYY_MM_DD::serialize)));
 
-        // TODO : Obtener la fecha de actualizacion del formulario
         ((TextView) cardView.findViewById(R.id.check_card_update))
-                .setText(ctx.getString(R.string.check_card_update, new Date().toString()));
+                .setText(ctx.getString(R.string.check_card_update,
+                        p.translateUpdatedAt(DateFormatter.YYYY_MM_DD::serialize)));
 
         ((TextView) cardView.findViewById(R.id.check_card_status))
-                .setText(ctx.getString(R.string.check_card_status, p.getStatus()));
+                .setText(ctx.getString(R.string.check_card_status, p.translateStatus()));
     }
 }
