@@ -16,6 +16,8 @@ import android.widget.Toast;
 import com.g5.tdp2.myhealthapp.R;
 import com.g5.tdp2.myhealthapp.entity.Member;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 public class HubActivity extends ActivityWnavigation {
@@ -23,7 +25,8 @@ public class HubActivity extends ActivityWnavigation {
     public static final String PROF_SEARCH = "Listar profesionales";
     public static final String PROF_NEARBY = "Profesionales cercanos";
     private static final String NEW_CHECK = "Solicitar estudio";
-    static final String[] VIEWS = new String[]{PROF_SEARCH, PROF_NEARBY, NEW_CHECK};
+    private static final String GET_CHECKS = "Mis estudios";
+    static final String[] VIEWS = new String[]{PROF_SEARCH, PROF_NEARBY, NEW_CHECK, GET_CHECKS};
 
     private Member member;
 
@@ -44,32 +47,29 @@ public class HubActivity extends ActivityWnavigation {
         title.setText(getString(R.string.main_hub_title, member.getFirstname()));
 
         ListView listView = findViewById(R.id.main_hub_list_view);
-        int[] logos = new int[]{R.drawable.professional_logo, R.drawable.map_logo, R.drawable.newcheck_logo};
+        int[] logos = new int[]{
+                R.drawable.professional_logo,
+                R.drawable.map_logo,
+                R.drawable.newcheck_logo,
+                R.drawable.md_check};
         ArrayAdapter<String> listAdapter = new HubArrayAdapter(this, VIEWS, logos);
         listView.setAdapter(listAdapter);
-        listView.setOnItemClickListener((parent, view, position, id) -> {
-            String selectedValue = Optional.ofNullable(listAdapter.getItem(position)).orElse("");
-
-            // TODO : REEMPLAZAR ESTO POR UNA LISTA DE RUNNABLES INDEXADOS POR position
-            switch (selectedValue) {
-                case PROF_SEARCH:
-                    Intent intent = new Intent(this, ProfessionalSearchActivity.class);
-                    intent.putExtra(ProfessionalSearchActivity.MEMBER_EXTRA, member);
-                    startActivity(intent);
-                    return;
-                case PROF_NEARBY:
-                    Intent mintent = new Intent(this, ProfessionalMapActivity.class);
-                    mintent.putExtra(ProfessionalSearchActivity.MEMBER_EXTRA, member);
-                    startActivity(mintent);
-                    return;
-                case NEW_CHECK:
-                    Intent ncintent = new Intent(this, NewCheckActivity.class);
-                    ncintent.putExtra(ProfessionalSearchActivity.MEMBER_EXTRA, member);
-                    startActivity(ncintent);
-                default:
-                    Toast.makeText(HubActivity.this, selectedValue, Toast.LENGTH_SHORT).show();
-            }
-        });
+        List<Runnable> intents = Arrays.asList(
+                () -> startActivity(
+                        new Intent(this, ProfessionalSearchActivity.class)
+                                .putExtra(ProfessionalSearchActivity.MEMBER_EXTRA, member)),
+                () -> startActivity(
+                        new Intent(this, ProfessionalMapActivity.class)
+                                .putExtra(ProfessionalSearchActivity.MEMBER_EXTRA, member)),
+                () -> startActivity(
+                        new Intent(this, NewCheckActivity.class)
+                                .putExtra(ProfessionalSearchActivity.MEMBER_EXTRA, member)),
+                () -> startActivity(
+                        new Intent(this, GetChecksActivity.class)
+                                .putExtra(ProfessionalSearchActivity.MEMBER_EXTRA, member))
+        );
+        listView.setOnItemClickListener(
+                (parent, view, position, id) -> intents.get(position).run());
     }
 }
 

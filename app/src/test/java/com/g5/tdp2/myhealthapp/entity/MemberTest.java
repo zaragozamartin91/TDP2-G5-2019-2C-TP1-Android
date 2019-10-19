@@ -28,7 +28,7 @@ public class MemberTest {
         assertEquals("1990-08-31", DateFormatter.YYYY_MM_DD.serialize(member.getBirthdate()));
         assertEquals("0987654321", member.getMemberId());
         assertEquals("A310", member.getPlan());
-        assertEquals(34317677L, member.getId());
+        assertEquals(34317677L, member.getIdn());
         assertEquals("zaragozamartin91@gmail.com", member.getEmail());
         System.out.println(member);
 
