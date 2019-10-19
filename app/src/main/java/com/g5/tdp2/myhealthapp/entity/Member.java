@@ -11,31 +11,41 @@ import java.util.Date;
 import java.util.Objects;
 
 public class Member implements Serializable {
+    private long id; // id del afiliado en la BBDD
     private String firstname;
     private String lastname;
     private Date birthdate;
-    private String memberId;
+    private String memberId; // numero de afiliado
     private String plan;
-    private long id;
+    private long idn; // DNI del afiliado
     private String email;
     private String token = "";
 
     @JsonCreator
     public Member(
+            @JsonProperty("id") long id,
             @JsonProperty("firstname") String firstname,
             @JsonProperty("lastname") String lastname,
             @JsonProperty("birthdate") @JsonDeserialize(using = YyyymmddDeserializer.class) Date birthdate,
             @JsonProperty("affiliate_id") String memberId,
             @JsonProperty("plan") String plan,
-            @JsonProperty("idn") long id,
+            @JsonProperty("idn") long idn,
             @JsonProperty("email") String email) {
+        this.id = id;
         this.firstname = firstname;
         this.lastname = lastname;
         this.birthdate = birthdate;
         this.memberId = memberId;
         this.plan = plan;
-        this.id = id;
+        this.idn = idn;
         this.email = email;
+    }
+
+    /**
+     * Obtiene el id del afiliado. Necesario para buscar estudios
+     */
+    public long getId() {
+        return id;
     }
 
     public String getFirstname() {
@@ -59,8 +69,8 @@ public class Member implements Serializable {
         return plan;
     }
 
-    public long getId() {
-        return id;
+    public long getIdn() {
+        return idn;
     }
 
     public String getEmail() {
@@ -78,35 +88,55 @@ public class Member implements Serializable {
         return token;
     }
 
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+
         Member member = (Member) o;
-        return id == member.id &&
-                Objects.equals(firstname, member.firstname) &&
-                Objects.equals(lastname, member.lastname) &&
-                Objects.equals(birthdate, member.birthdate) &&
-                Objects.equals(memberId, member.memberId) &&
-                Objects.equals(plan, member.plan) &&
-                Objects.equals(email, member.email);
+
+        if (id != member.id) return false;
+        if (idn != member.idn) return false;
+        if (firstname != null ? !firstname.equals(member.firstname) : member.firstname != null)
+            return false;
+        if (lastname != null ? !lastname.equals(member.lastname) : member.lastname != null)
+            return false;
+        if (birthdate != null ? !birthdate.equals(member.birthdate) : member.birthdate != null)
+            return false;
+        if (memberId != null ? !memberId.equals(member.memberId) : member.memberId != null)
+            return false;
+        if (plan != null ? !plan.equals(member.plan) : member.plan != null) return false;
+        if (email != null ? !email.equals(member.email) : member.email != null) return false;
+        return token != null ? token.equals(member.token) : member.token == null;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(firstname, lastname, birthdate, memberId, plan, id, email);
+        int result = (int) (id ^ (id >>> 32));
+        result = 31 * result + (firstname != null ? firstname.hashCode() : 0);
+        result = 31 * result + (lastname != null ? lastname.hashCode() : 0);
+        result = 31 * result + (birthdate != null ? birthdate.hashCode() : 0);
+        result = 31 * result + (memberId != null ? memberId.hashCode() : 0);
+        result = 31 * result + (plan != null ? plan.hashCode() : 0);
+        result = 31 * result + (int) (idn ^ (idn >>> 32));
+        result = 31 * result + (email != null ? email.hashCode() : 0);
+        result = 31 * result + (token != null ? token.hashCode() : 0);
+        return result;
     }
 
     @Override
     public String toString() {
         return "Member{" +
-                "firstname='" + firstname + '\'' +
+                "id=" + id +
+                ", firstname='" + firstname + '\'' +
                 ", lastname='" + lastname + '\'' +
                 ", birthdate=" + birthdate +
                 ", memberId='" + memberId + '\'' +
                 ", plan='" + plan + '\'' +
-                ", id=" + id +
+                ", idn=" + idn +
                 ", email='" + email + '\'' +
+                ", token='" + token + '\'' +
                 '}';
     }
 }

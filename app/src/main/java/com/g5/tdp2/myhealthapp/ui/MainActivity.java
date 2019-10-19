@@ -19,6 +19,7 @@ import com.g5.tdp2.myhealthapp.gateway.SpecialtyGateway;
 import com.g5.tdp2.myhealthapp.gateway.ZoneGateway;
 import com.g5.tdp2.myhealthapp.gateway.impl.WebSpecialtyGateway;
 import com.g5.tdp2.myhealthapp.gateway.impl.WebZoneGateway;
+import com.g5.tdp2.myhealthapp.service.GetChecksStub;
 import com.g5.tdp2.myhealthapp.service.LoginMemberStub;
 import com.g5.tdp2.myhealthapp.service.SearchProfessionalsStub;
 import com.g5.tdp2.myhealthapp.service.SignupMemberStub;
@@ -164,6 +165,8 @@ public abstract class MainActivity extends AppCompatActivity {
             dialog.cancel();
         });
 
+        // TODO : eliminar este bean en cuanto se desarrolle el "posta" que va contra el API
+        CrmBeanFactory.INSTANCE.addBean(new GetChecksStub());
 
         setupZones(new WebZoneGateway(apiBaseUrl + "/zones", requestQueue));
         setupSpecialties(new WebSpecialtyGateway(apiBaseUrl + "/specialties", requestQueue));

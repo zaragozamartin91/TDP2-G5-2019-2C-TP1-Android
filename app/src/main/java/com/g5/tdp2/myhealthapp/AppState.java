@@ -45,6 +45,19 @@ public enum AppState {
      */
     public List<Specialty> getSpecialties() { return (List<Specialty>) getOrDefault(SPECIALTIES_KEY, Collections.emptyList()); }
 
+    /**
+     * Obtiene una especialidad a partir de su id
+     *
+     * @param specId Id de especialidad
+     * @return Especialidad con el id solicitado
+     */
+    public Specialty getSpecialty(long specId) {
+        return getSpecialties().stream()
+                .filter(s -> specId == s.getId())
+                .findFirst()
+                .orElse(Specialty.DEFAULT_SPECIALTY);
+    }
+
     public Object getOrDefault(String key, Object defaultValue) {
         return state.getOrDefault(key, defaultValue);
     }

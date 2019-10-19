@@ -104,4 +104,10 @@
     <string name="newcheck_btn_text">Solicitar estudio</string>
     <string name="newcheck_no_img">Seleccione una imagen</string>
 
+    <!-- CHECK_CARD************************************************************************* -->
+    <string name="check_card_specialty">Especialidad: %1$s</string>
+    <string name="check_card_date">Fecha de alta: %1$s</string>
+    <string name="check_card_update">Fecha de actualizacion: %1$s</string>
+    <string name="check_card_status">Estado: %1$s</string>
+
 </resources>
