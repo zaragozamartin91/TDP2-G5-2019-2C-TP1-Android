@@ -4,9 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -15,14 +13,14 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-
 import com.g5.tdp2.myhealthapp.AppState;
 import com.g5.tdp2.myhealthapp.R;
+import com.g5.tdp2.myhealthapp.entity.Member;
+import com.g5.tdp2.myhealthapp.entity.NewCheckForm;
 import com.g5.tdp2.myhealthapp.entity.Specialty;
 import com.g5.tdp2.myhealthapp.util.DialogHelper;
 import com.g5.tdp2.myhealthapp.util.MimeTypeResolver;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
@@ -47,13 +45,14 @@ public class NewCheckActivity extends ActivityWnavigation {
     private static final List<String> OK_IMG_TYPES =
             Arrays.asList("img", "jpg", "jpeg", "gif", "png");
 
+    private Member member;
     private FirebaseStorage storage = FirebaseStorage.getInstance();
     private ImageView imageView;
     private byte[] imgData;
     private String imgType;
     private Specialty specialtyVal;
-
-    private Consumer<View> imgUploader = this::missingImgUploader;
+    private String imgUri;
+    private StorageReference imgRef;
 
     @Override
     protected String actionBarTitle() { return "Estudios"; }
@@ -62,6 +61,8 @@ public class NewCheckActivity extends ActivityWnavigation {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_check);
+
+        member = (Member) getIntent().getSerializableExtra(MEMBER_EXTRA);
 
         imageView = findViewById(R.id.newcheck_img);
 
@@ -72,13 +73,9 @@ public class NewCheckActivity extends ActivityWnavigation {
         });
 
         Button btn = findViewById(R.id.newcheck_btn);
-        btn.setOnClickListener(v -> imgUploader.accept(v));
+        btn.setOnClickListener(this::postNewCheck);
 
         setupSpecialties();
-    }
-
-    private void missingImgUploader(View v) {
-        Toast.makeText(this, R.string.newcheck_no_img, Toast.LENGTH_SHORT).show();
     }
 
     private void setupSpecialties() {
@@ -118,7 +115,6 @@ public class NewCheckActivity extends ActivityWnavigation {
     }
 
     private void loadImage(Uri selectedImage) {
-        imgUploader = this::missingImgUploader;
         imgType = getMimeType(selectedImage);
 
         Optional.ofNullable(imgType).map(s -> OK_IMG_TYPES.contains(s.toLowerCase())).map(t -> (Runnable) () -> {
@@ -128,7 +124,6 @@ public class NewCheckActivity extends ActivityWnavigation {
                 imgView.setImageURI(selectedImage);
                 imgView.setAdjustViewBounds(true);
                 imgView.setScaleType(ImageView.ScaleType.FIT_XY);
-                imgUploader = this::uploadImage;
             } catch (Exception e) {
                 DialogHelper.INSTANCE.showNonCancelableDialog(
                         NewCheckActivity.this, "Error al cargar imagen", e.getMessage());
@@ -167,11 +162,35 @@ public class NewCheckActivity extends ActivityWnavigation {
         return MimeTypeResolver.INSTANCE.fromUri(this, uri);
     }
 
-    private void uploadImage(View v) {
+    private void postNewCheck(View v) {
+        String path = Optional.ofNullable(imgRef).map(StorageReference::getPath).orElse("");
+        long specId = Optional.ofNullable(specialtyVal).orElse(Specialty.DEFAULT_SPECIALTY).getId();
+        long userId = member.getId();
+        NewCheckForm form = new NewCheckForm(imgUri, path, specId, userId);
+    }
+
+    /**
+     * Accion a ejecutar si no se selecciono una especialidad al dar de alta un estudio.
+     */
+    private void onMissingSpecialty(View v) {
+        Toast.makeText(this, "Debe seleccionar una especialidad", Toast.LENGTH_SHORT)
+                .show();
+    }
+
+    private void onSpecialtyOk(View v) { imgUploader.accept(v); }
+
+    /**
+     * Accion a ejecutar si no se selecciono una imagen antes de intentar dar de alta un estudio
+     */
+    private void onMissingImg(View v) {
+        Toast.makeText(this, R.string.newcheck_no_img, Toast.LENGTH_SHORT).show();
+    }
+
+    private void onImgOk(View v) {
         v.setEnabled(false);
 
         StorageReference storageRef = storage.getReference();
-        StorageReference imgRef = storageRef.child("myhealthapp").child("checks").child("pending").child(UUID.randomUUID() + "." + imgType);
+        imgRef = storageRef.child("myhealthapp").child("checks").child("pending").child(UUID.randomUUID() + "." + imgType);
         StorageMetadata metadata = new StorageMetadata.Builder()
                 .setContentType("image/" + imgType.toLowerCase()).build();
         UploadTask uploadTask = imgRef.putBytes(imgData, metadata);
@@ -183,10 +202,11 @@ public class NewCheckActivity extends ActivityWnavigation {
                 throw (task.getException() == null ? new Exception("Error desconocido") : task.getException());
             }
         }).addOnFailureListener(exception -> {
-            Log.e("NewCheckActivity::uploadImage", "Error al subir imagen de estudio", exception);
+            Log.e("NewCheckActivity::onImgOk", "Error al subir imagen de estudio", exception);
             Toast.makeText(NewCheckActivity.this, "Error al subir imagen de estudio", Toast.LENGTH_SHORT).show();
         }).addOnSuccessListener(uri -> {
             String msg = "Image uploaded - " + uri;
+            imgUri = uri.toString();
             Toast.makeText(NewCheckActivity.this, msg, Toast.LENGTH_SHORT).show();
         }).addOnCompleteListener(t -> v.setEnabled(true));
     }

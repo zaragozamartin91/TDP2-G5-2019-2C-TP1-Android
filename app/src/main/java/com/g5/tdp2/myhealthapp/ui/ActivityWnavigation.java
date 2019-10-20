@@ -16,6 +16,8 @@ import java.util.Optional;
  * Pantalla con navegacion y un menu de contexto
  */
 abstract public class ActivityWnavigation extends AppCompatActivity {
+    public static final String MEMBER_EXTRA = "member";
+
     /**
      * Establece el titulo de la pantalla
      *

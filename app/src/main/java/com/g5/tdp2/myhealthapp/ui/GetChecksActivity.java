@@ -29,8 +29,6 @@ import java.util.List;
 import java.util.StringJoiner;
 
 public class GetChecksActivity extends ActivityWnavigation {
-    public static final String MEMBER_EXTRA = "member";
-
     private RecyclerView recyclerView;
     private CheckListAdapter mAdapter;
 

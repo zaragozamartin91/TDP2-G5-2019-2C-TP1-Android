@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.Optional;
 
 public class HubActivity extends ActivityWnavigation {
-    public static final String MEMBER_EXTRA = "member";
     public static final String PROF_SEARCH = "Listar profesionales";
     public static final String PROF_NEARBY = "Profesionales cercanos";
     private static final String NEW_CHECK = "Solicitar estudio";
@@ -57,16 +56,16 @@ public class HubActivity extends ActivityWnavigation {
         List<Runnable> intents = Arrays.asList(
                 () -> startActivity(
                         new Intent(this, ProfessionalSearchActivity.class)
-                                .putExtra(ProfessionalSearchActivity.MEMBER_EXTRA, member)),
+                                .putExtra(MEMBER_EXTRA, member)),
                 () -> startActivity(
                         new Intent(this, ProfessionalMapActivity.class)
-                                .putExtra(ProfessionalSearchActivity.MEMBER_EXTRA, member)),
+                                .putExtra(MEMBER_EXTRA, member)),
                 () -> startActivity(
                         new Intent(this, NewCheckActivity.class)
-                                .putExtra(ProfessionalSearchActivity.MEMBER_EXTRA, member)),
+                                .putExtra(MEMBER_EXTRA, member)),
                 () -> startActivity(
                         new Intent(this, GetChecksActivity.class)
-                                .putExtra(ProfessionalSearchActivity.MEMBER_EXTRA, member))
+                                .putExtra(MEMBER_EXTRA, member))
         );
         listView.setOnItemClickListener(
                 (parent, view, position, id) -> intents.get(position).run());

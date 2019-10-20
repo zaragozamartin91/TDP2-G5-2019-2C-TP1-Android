@@ -33,8 +33,6 @@ import static com.g5.tdp2.myhealthapp.usecase.Usecase.INVALID_FORM;
 import static com.g5.tdp2.myhealthapp.usecase.SearchProfessionals.UNKNOWN_ERROR;
 
 public class ProfessionalSearchActivity extends ActivityWnavigation {
-    public static final String MEMBER_EXTRA = "member";
-
     private Member member;
 
     private TextView name;
