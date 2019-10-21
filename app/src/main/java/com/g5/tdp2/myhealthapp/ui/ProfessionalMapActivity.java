@@ -50,7 +50,6 @@ import static com.g5.tdp2.myhealthapp.usecase.Usecase.UNKNOWN_ERROR;
 //Antes extendia de FragmentActivity pero lo cambie para agregar el titulo en la vista
 public class ProfessionalMapActivity extends ActivityWnavigation implements OnMapReadyCallback, LocationListener {
     private static final double DEF_RADIO = -1d;
-    public static final String MEMBER_EXTRA = "member";
 
     private GoogleMap mMap;
     private AtomicReference<Location> currentLocation = new AtomicReference<>();
