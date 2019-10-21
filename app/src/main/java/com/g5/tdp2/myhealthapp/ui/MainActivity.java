@@ -21,9 +21,11 @@ import com.g5.tdp2.myhealthapp.gateway.impl.WebSpecialtyGateway;
 import com.g5.tdp2.myhealthapp.gateway.impl.WebZoneGateway;
 import com.g5.tdp2.myhealthapp.service.GetChecksStub;
 import com.g5.tdp2.myhealthapp.service.LoginMemberStub;
+import com.g5.tdp2.myhealthapp.service.PostNewCheckStub;
 import com.g5.tdp2.myhealthapp.service.SearchProfessionalsStub;
 import com.g5.tdp2.myhealthapp.service.SignupMemberStub;
 import com.g5.tdp2.myhealthapp.service.WebLoginMember;
+import com.g5.tdp2.myhealthapp.service.WebPostNewCheck;
 import com.g5.tdp2.myhealthapp.service.WebSearchProfessionals;
 import com.g5.tdp2.myhealthapp.service.WebSignupMember;
 import com.g5.tdp2.myhealthapp.CrmBeanFactory;
@@ -141,20 +143,12 @@ public abstract class MainActivity extends AppCompatActivity {
                 return;
             }
 
-            WebLoginMember webLoginMember = new WebLoginMember("http://" + value + "/auth/login", requestQueue);
-            CrmBeanFactory.INSTANCE.addBean(webLoginMember);
-
-            CrmBeanFactory.INSTANCE.addBean(new WebSignupMember("http://" + value + "/auth/register", requestQueue));
-            CrmBeanFactory.INSTANCE.addBean(new WebSearchProfessionals("http://" + value + "/lenders", requestQueue));
+            String prefix = "http://" + value;
+            setupBeans(prefix, requestQueue);
         });
 
         alert.setNegativeButton("Usar Heroku", (dialog, whichButton) -> {
-            WebLoginMember webLoginMember = new WebLoginMember(apiBaseUrl + "/auth/login", requestQueue);
-            CrmBeanFactory.INSTANCE.addBean(webLoginMember);
-
-            CrmBeanFactory.INSTANCE.addBean(new WebSignupMember(apiBaseUrl + "/auth/register", requestQueue));
-            CrmBeanFactory.INSTANCE.addBean(new WebSearchProfessionals(apiBaseUrl + "/lenders", requestQueue));
-
+            setupBeans(apiBaseUrl, requestQueue);
             dialog.cancel();
         });
 
@@ -162,17 +156,25 @@ public abstract class MainActivity extends AppCompatActivity {
             CrmBeanFactory.INSTANCE.addBean(new LoginMemberStub());
             CrmBeanFactory.INSTANCE.addBean(new SignupMemberStub());
             CrmBeanFactory.INSTANCE.addBean(new SearchProfessionalsStub());
+            CrmBeanFactory.INSTANCE.addBean(new PostNewCheckStub());
             dialog.cancel();
         });
 
         // TODO : eliminar este bean en cuanto se desarrolle el "posta" que va contra el API
         CrmBeanFactory.INSTANCE.addBean(new GetChecksStub());
 
-        setupZones(new WebZoneGateway(apiBaseUrl + "/zones", requestQueue));
-        setupSpecialties(new WebSpecialtyGateway(apiBaseUrl + "/specialties", requestQueue));
 
         alert.setTitle("Configuracion de API");
         alert.show();
+    }
+
+    private void setupBeans(String prefix, RequestQueue requestQueue) {
+        CrmBeanFactory.INSTANCE.addBean(new WebLoginMember(prefix + "/auth/login", requestQueue));
+        CrmBeanFactory.INSTANCE.addBean(new WebSignupMember(prefix + "/auth/register", requestQueue));
+        CrmBeanFactory.INSTANCE.addBean(new WebSearchProfessionals(prefix + "/lenders", requestQueue));
+        CrmBeanFactory.INSTANCE.addBean(new WebPostNewCheck(prefix + "/authorizations", requestQueue));
+        setupZones(new WebZoneGateway(prefix + "/zones", requestQueue));
+        setupSpecialties(new WebSpecialtyGateway(prefix + "/specialties", requestQueue));
     }
 
     private void setupZones(ZoneGateway zoneGateway) {

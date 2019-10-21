@@ -10,21 +10,27 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.g5.tdp2.myhealthapp.AppState;
+import com.g5.tdp2.myhealthapp.CrmBeanFactory;
 import com.g5.tdp2.myhealthapp.R;
 import com.g5.tdp2.myhealthapp.entity.Member;
 import com.g5.tdp2.myhealthapp.entity.NewCheckForm;
 import com.g5.tdp2.myhealthapp.entity.Specialty;
+import com.g5.tdp2.myhealthapp.usecase.PostNewCheck;
 import com.g5.tdp2.myhealthapp.util.DialogHelper;
 import com.g5.tdp2.myhealthapp.util.MimeTypeResolver;
+import com.g5.tdp2.myhealthapp.util.ToastHelper;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+
+import org.apache.commons.lang3.Validate;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -53,6 +59,10 @@ public class NewCheckActivity extends ActivityWnavigation {
     private Specialty specialtyVal;
     private String imgUri;
     private StorageReference imgRef;
+    private Button btn;
+    private ToastHelper toastHelper = ToastHelper.INSTANCE;
+    private ProgressBar progressBar;
+
 
     @Override
     protected String actionBarTitle() { return "Estudios"; }
@@ -61,6 +71,9 @@ public class NewCheckActivity extends ActivityWnavigation {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_check);
+
+        progressBar = findViewById(R.id.newcheck_progress);
+        progressBar.setVisibility(View.INVISIBLE);
 
         member = (Member) getIntent().getSerializableExtra(MEMBER_EXTRA);
 
@@ -72,7 +85,7 @@ public class NewCheckActivity extends ActivityWnavigation {
             startActivityForResult(photoPickerIntent, NEWCHECK_IMG_REQUEST_CODE);
         });
 
-        Button btn = findViewById(R.id.newcheck_btn);
+        btn = findViewById(R.id.newcheck_btn);
         btn.setOnClickListener(this::postNewCheck);
 
         setupSpecialties();
@@ -114,6 +127,11 @@ public class NewCheckActivity extends ActivityWnavigation {
                 .ifPresent(this::loadImage);
     }
 
+    /**
+     * Carga un preview de la imagen en la pantalla
+     *
+     * @param selectedImage Uri de imagen seleccionada
+     */
     private void loadImage(Uri selectedImage) {
         imgType = getMimeType(selectedImage);
 
@@ -144,9 +162,7 @@ public class NewCheckActivity extends ActivityWnavigation {
     }
 
     private byte[] getData(InputStream is, ByteArrayOutputStream baos) throws IOException {
-        if (baos.size() > MAX_SIZE) {
-            throw new IllegalArgumentException("Imagen demasiado grande!");
-        }
+        Validate.inclusiveBetween(0, MAX_SIZE, baos.size(), "Imagen demasiado grande!");
 
         byte[] buf = new byte[1024 * 64];
         int bytesRead = is.read(buf);
@@ -163,31 +179,18 @@ public class NewCheckActivity extends ActivityWnavigation {
     }
 
     private void postNewCheck(View v) {
-        String path = Optional.ofNullable(imgRef).map(StorageReference::getPath).orElse("");
-        long specId = Optional.ofNullable(specialtyVal).orElse(Specialty.DEFAULT_SPECIALTY).getId();
-        long userId = member.getId();
-        NewCheckForm form = new NewCheckForm(imgUri, path, specId, userId);
-    }
+        if (specialtyVal == null || Specialty.DEFAULT_SPECIALTY.equals(specialtyVal)) {
+            Toast.makeText(this, "Debe seleccionar una especialidad", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
-    /**
-     * Accion a ejecutar si no se selecciono una especialidad al dar de alta un estudio.
-     */
-    private void onMissingSpecialty(View v) {
-        Toast.makeText(this, "Debe seleccionar una especialidad", Toast.LENGTH_SHORT)
-                .show();
-    }
+        if (imgType == null || imgData == null) {
+            Toast.makeText(this, R.string.newcheck_no_img, Toast.LENGTH_SHORT).show();
+            return;
+        }
 
-    private void onSpecialtyOk(View v) { imgUploader.accept(v); }
-
-    /**
-     * Accion a ejecutar si no se selecciono una imagen antes de intentar dar de alta un estudio
-     */
-    private void onMissingImg(View v) {
-        Toast.makeText(this, R.string.newcheck_no_img, Toast.LENGTH_SHORT).show();
-    }
-
-    private void onImgOk(View v) {
         v.setEnabled(false);
+        progressBar.setVisibility(View.VISIBLE);
 
         StorageReference storageRef = storage.getReference();
         imgRef = storageRef.child("myhealthapp").child("checks").child("pending").child(UUID.randomUUID() + "." + imgType);
@@ -201,13 +204,33 @@ public class NewCheckActivity extends ActivityWnavigation {
             } else {
                 throw (task.getException() == null ? new Exception("Error desconocido") : task.getException());
             }
-        }).addOnFailureListener(exception -> {
-            Log.e("NewCheckActivity::onImgOk", "Error al subir imagen de estudio", exception);
-            Toast.makeText(NewCheckActivity.this, "Error al subir imagen de estudio", Toast.LENGTH_SHORT).show();
-        }).addOnSuccessListener(uri -> {
-            String msg = "Image uploaded - " + uri;
-            imgUri = uri.toString();
-            Toast.makeText(NewCheckActivity.this, msg, Toast.LENGTH_SHORT).show();
-        }).addOnCompleteListener(t -> v.setEnabled(true));
+        }).addOnFailureListener(this::onImgUploadErr).addOnSuccessListener(this::onImgUploadOk);
+    }
+
+    private void onImgUploadErr(Exception exception) {
+        Log.e("NewCheckActivity::onImgOk", "Error al subir imagen de estudio", exception);
+        Toast.makeText(NewCheckActivity.this, "Error al subir imagen de estudio", Toast.LENGTH_SHORT).show();
+    }
+
+    private void onImgUploadOk(Uri uri) {
+        ToastHelper.INSTANCE.showShort(NewCheckActivity.this, "Image uploaded - " + uri);
+
+        imgUri = uri.toString();
+        String path = Optional.ofNullable(imgRef).map(StorageReference::getPath).orElse("");
+        long specId = Optional.ofNullable(specialtyVal).orElse(Specialty.DEFAULT_SPECIALTY).getId();
+        long userId = member.getId();
+        NewCheckForm form = new NewCheckForm(imgUri, path, specId, userId);
+
+        PostNewCheck usecase = CrmBeanFactory.INSTANCE.getBean(PostNewCheck.class);
+        usecase.postNewCheck(form, () -> {
+            btn.setEnabled(true);
+            progressBar.setVisibility(View.INVISIBLE);
+            toastHelper.showShort(NewCheckActivity.this, "Estudio subido exitosamente");
+        }, err -> {
+            btn.setEnabled(true);
+            progressBar.setVisibility(View.INVISIBLE);
+            Log.e("NewCheckActivity-onImgUploadOk-error", err.toString());
+            toastHelper.showShort(NewCheckActivity.this, "Ocurrio un error al crear el estudio");
+        });
     }
 }
