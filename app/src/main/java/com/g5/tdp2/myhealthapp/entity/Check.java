@@ -5,11 +5,12 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Optional;
 import java.util.function.Function;
 
-public class Check {
+public class Check implements Serializable {
     private long id;
     private String url;
     private String path;

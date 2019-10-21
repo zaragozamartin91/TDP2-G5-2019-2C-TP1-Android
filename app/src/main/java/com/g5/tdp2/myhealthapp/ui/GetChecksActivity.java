@@ -1,12 +1,14 @@
 package com.g5.tdp2.myhealthapp.ui;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -25,10 +27,12 @@ import java.util.List;
 
 public class GetChecksActivity extends ActivityWnavigation {
     private RecyclerView recyclerView;
-    private CheckListAdapter mAdapter;
+    private ChecksAdapter mAdapter;
 
     @Override
-    protected String actionBarTitle() { return "Mis estudios"; }
+    protected String actionBarTitle() {
+        return "Mis estudios";
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +52,7 @@ public class GetChecksActivity extends ActivityWnavigation {
         GetChecks usecase = CrmBeanFactory.INSTANCE.getBean(GetChecks.class);
         usecase.getChecks((int) member.getId(), checks -> {
             progressBar.setVisibility(View.INVISIBLE);
-            mAdapter = new CheckListAdapter(checks);
+            mAdapter = new ChecksAdapter(checks);
             recyclerView.setAdapter(mAdapter);
         }, err -> {
             progressBar.setVisibility(View.INVISIBLE);
@@ -62,24 +66,24 @@ public class GetChecksActivity extends ActivityWnavigation {
     }
 }
 
-class CheckListAdapter extends RecyclerView.Adapter<CheckListViewHolder> {
+class ChecksAdapter extends RecyclerView.Adapter<ChecksViewHolder> {
     private List<Check> mDataset;
 
-    CheckListAdapter(List<Check> mDataset) {
+    ChecksAdapter(List<Check> mDataset) {
         this.mDataset = mDataset;
     }
 
     @Override
-    public CheckListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ChecksViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Context context = parent.getContext();
         CardView v = (CardView) LayoutInflater.from(context)
                 .inflate(R.layout.check_card, parent, false);
 
-        return new CheckListViewHolder(v, context);
+        return new ChecksViewHolder(v, context);
     }
 
     @Override
-    public void onBindViewHolder(CheckListViewHolder holder, int position) {
+    public void onBindViewHolder(ChecksViewHolder holder, int position) {
         holder.setCheck(mDataset.get(position));
     }
 
@@ -90,11 +94,11 @@ class CheckListAdapter extends RecyclerView.Adapter<CheckListViewHolder> {
 }
 
 
-class CheckListViewHolder extends RecyclerView.ViewHolder {
+class ChecksViewHolder extends RecyclerView.ViewHolder {
     private CardView cardView;
     private Context ctx;
 
-    CheckListViewHolder(CardView v, Context c) {
+    ChecksViewHolder(CardView v, Context c) {
         super(v);
         cardView = v;
         ctx = c;
@@ -116,5 +120,14 @@ class CheckListViewHolder extends RecyclerView.ViewHolder {
 
         ((TextView) cardView.findViewById(R.id.check_card_status))
                 .setText(ctx.getString(R.string.check_card_status, p.translateStatus()));
+
+
+        cardView.setOnClickListener(v -> viewDetail(p));
+    }
+
+    private void viewDetail(Check c) {
+        Toast.makeText(ctx, "Detalle de " + c.getPath(), Toast.LENGTH_SHORT).show();
+        ctx.startActivity(new Intent(
+                ctx, CheckDetailActivity.class).putExtra(ActivityWnavigation.CHECK_EXTRA, c));
     }
 }

@@ -17,6 +17,7 @@ import java.util.Optional;
  */
 abstract public class ActivityWnavigation extends AppCompatActivity {
     public static final String MEMBER_EXTRA = "member";
+    public static final String CHECK_EXTRA = "check";
 
     /**
      * Establece el titulo de la pantalla
