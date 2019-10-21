@@ -2,14 +2,12 @@ package com.g5.tdp2.myhealthapp.ui;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -23,10 +21,7 @@ import com.g5.tdp2.myhealthapp.usecase.GetChecks;
 import com.g5.tdp2.myhealthapp.util.DateFormatter;
 import com.g5.tdp2.myhealthapp.util.DialogHelper;
 
-import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
-import java.util.StringJoiner;
 
 public class GetChecksActivity extends ActivityWnavigation {
     private RecyclerView recyclerView;
@@ -57,7 +52,6 @@ public class GetChecksActivity extends ActivityWnavigation {
             recyclerView.setAdapter(mAdapter);
         }, err -> {
             progressBar.setVisibility(View.INVISIBLE);
-            // TODO : analizar el tipo de error con un switch
             DialogHelper.INSTANCE.showNonCancelableDialogWaction(
                     this,
                     "Error al obtener historial de estudios",

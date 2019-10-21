@@ -5,6 +5,6 @@ import com.g5.tdp2.myhealthapp.entity.Check;
 import java.util.List;
 import java.util.function.Consumer;
 
-public interface GetChecks {
+public interface GetChecks extends Usecase {
     void getChecks(int affiliateId, Consumer<List<Check>> succCallback, Consumer<Exception> errCallback);
 }

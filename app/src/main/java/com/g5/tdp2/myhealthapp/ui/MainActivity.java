@@ -24,6 +24,7 @@ import com.g5.tdp2.myhealthapp.service.LoginMemberStub;
 import com.g5.tdp2.myhealthapp.service.PostNewCheckStub;
 import com.g5.tdp2.myhealthapp.service.SearchProfessionalsStub;
 import com.g5.tdp2.myhealthapp.service.SignupMemberStub;
+import com.g5.tdp2.myhealthapp.service.WebGetChecks;
 import com.g5.tdp2.myhealthapp.service.WebLoginMember;
 import com.g5.tdp2.myhealthapp.service.WebPostNewCheck;
 import com.g5.tdp2.myhealthapp.service.WebSearchProfessionals;
@@ -157,11 +158,9 @@ public abstract class MainActivity extends AppCompatActivity {
             CrmBeanFactory.INSTANCE.addBean(new SignupMemberStub());
             CrmBeanFactory.INSTANCE.addBean(new SearchProfessionalsStub());
             CrmBeanFactory.INSTANCE.addBean(new PostNewCheckStub());
+            CrmBeanFactory.INSTANCE.addBean(new GetChecksStub());
             dialog.cancel();
         });
-
-        // TODO : eliminar este bean en cuanto se desarrolle el "posta" que va contra el API
-        CrmBeanFactory.INSTANCE.addBean(new GetChecksStub());
 
 
         alert.setTitle("Configuracion de API");
@@ -173,6 +172,7 @@ public abstract class MainActivity extends AppCompatActivity {
         CrmBeanFactory.INSTANCE.addBean(new WebSignupMember(prefix + "/auth/register", requestQueue));
         CrmBeanFactory.INSTANCE.addBean(new WebSearchProfessionals(prefix + "/lenders", requestQueue));
         CrmBeanFactory.INSTANCE.addBean(new WebPostNewCheck(prefix + "/authorizations", requestQueue));
+        CrmBeanFactory.INSTANCE.addBean(new WebGetChecks(prefix + "/authorizations", requestQueue));
         setupZones(new WebZoneGateway(prefix + "/zones", requestQueue));
         setupSpecialties(new WebSpecialtyGateway(prefix + "/specialties", requestQueue));
     }
