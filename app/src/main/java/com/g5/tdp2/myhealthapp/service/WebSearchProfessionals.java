@@ -47,7 +47,7 @@ public class WebSearchProfessionals implements SearchProfessionals {
 
         try {
             String url = form.concat(baseUrl + "?", "=", "&", this::encode);
-            CrmJsonArrayRequest request = new CrmJsonArrayRequest(Request.Method.GET, url, null, response -> {
+            CrmJsonArrayRequest request = CrmJsonArrayRequest.get(url, response -> {
                 Log.i("WebSearchProfessionals-response", response.toString());
                 Professional[] professionals = JsonParser.INSTANCE.readValue(response.toString(), Professional[].class);
                 succCallback.accept(Arrays.asList(professionals));
