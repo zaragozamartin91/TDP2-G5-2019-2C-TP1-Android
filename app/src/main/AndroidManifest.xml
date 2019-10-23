@@ -77,8 +77,16 @@
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/colorAccent" />
-    </application>
 
+        <!--        Previene la inicializacion automatica de Firebase. Esto es necesario para cuando la app es instalada en un -->
+        <!--        dispositivo nuevo (en el cual aun no se tienen permisos de red)-->
+        <meta-data
+            android:name="firebase_messaging_auto_init_enabled"
+            android:value="false" />
+        <meta-data
+            android:name="firebase_analytics_collection_enabled"
+            android:value="false" />
+    </application>
 
 
 </manifest>

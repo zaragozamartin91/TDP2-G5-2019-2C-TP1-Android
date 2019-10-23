@@ -32,6 +32,7 @@ import com.g5.tdp2.myhealthapp.service.WebSignupMember;
 import com.g5.tdp2.myhealthapp.CrmBeanFactory;
 import com.g5.tdp2.myhealthapp.usecase.SearchProfessionals;
 import com.g5.tdp2.myhealthapp.util.DialogHelper;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -119,6 +120,8 @@ public abstract class MainActivity extends AppCompatActivity {
      */
     private void initialize() {
         if (initialized.compareAndSet(false, true)) {
+            /* Activamos firebase cloud messaging manualmente */
+            FirebaseMessaging.getInstance().setAutoInitEnabled(true);
             RequestQueue requestQueue = Volley.newRequestQueue(this);
             showConfigDialog(requestQueue);
         }
