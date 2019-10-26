@@ -21,6 +21,7 @@ import com.google.firebase.iid.InstanceIdResult;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -60,24 +61,17 @@ public class CrmFirebaseMessagingService extends FirebaseMessagingService {
         Log.d(TAG, "From: " + remoteMessage.getFrom());
 
         // Check if message contains a data payload.
-        if (remoteMessage.getData().size() > 0) {
-            Log.d(TAG, "Message data payload: " + remoteMessage.getData());
-
-            if (/* Check if data needs to be processed by long running job */ true) {
-                // For long-running tasks (10 seconds or more) use WorkManager.
-                scheduleJob();
-            } else {
-                // Handle message within 10 seconds
-                handleNow();
-            }
-
+        Map<String, String> data = remoteMessage.getData();
+        if (data.size() > 0) {
+            Log.d(TAG, "Message data payload: " + data);
+            sendNotification(data.get("title"), data.get("message"));
         }
 
         // Check if message contains a notification payload.
         Optional.ofNullable(remoteMessage.getNotification())
                 .map(RemoteMessage.Notification::getBody).ifPresent(body -> {
             Log.d(TAG, "Message Notification Body: " + body);
-            sendNotification(body);
+            sendNotification("Notificacion", body);
         });
     }
 
@@ -101,7 +95,7 @@ public class CrmFirebaseMessagingService extends FirebaseMessagingService {
      *
      * @param messageBody FCM message body received.
      */
-    private void sendNotification(String messageBody) {
+    private void sendNotification(String title, String messageBody) {
         Intent intent = new Intent(this, LoginActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
@@ -112,7 +106,7 @@ public class CrmFirebaseMessagingService extends FirebaseMessagingService {
         NotificationCompat.Builder notificationBuilder =
                 new NotificationCompat.Builder(this, channelId)
                         .setSmallIcon(R.drawable.md_check)
-                        .setContentTitle("Nueva notificacion")
+                        .setContentTitle(title)
                         .setContentText(messageBody)
                         .setAutoCancel(true)
                         .setSound(defaultSoundUri)
