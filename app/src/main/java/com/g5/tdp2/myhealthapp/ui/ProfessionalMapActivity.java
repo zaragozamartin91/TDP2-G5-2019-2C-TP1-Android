@@ -36,9 +36,11 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import static android.location.LocationManager.*;
@@ -56,7 +58,7 @@ public class ProfessionalMapActivity extends ActivityWnavigation implements OnMa
     private Specialty specialtyVal;
     private double radioVal = DEF_RADIO;
     private Member member;
-
+    private List<Marker> currMarkers = new ArrayList<>();
 
     @Override
     protected String actionBarTitle() {
@@ -81,6 +83,8 @@ public class ProfessionalMapActivity extends ActivityWnavigation implements OnMa
         findViewById(R.id.prof_map_search).setOnClickListener(this::searchProfessionals);
 
         member = (Member) getIntent().getSerializableExtra(MEMBER_EXTRA);
+
+        findViewById(R.id.prof_map_progress).setVisibility(View.INVISIBLE);
     }
 
 
@@ -89,6 +93,9 @@ public class ProfessionalMapActivity extends ActivityWnavigation implements OnMa
             Toast.makeText(this, "Ubicacion desconocida", Toast.LENGTH_SHORT).show();
             return;
         }
+
+        findViewById(R.id.prof_map_progress).setVisibility(View.VISIBLE);
+        clearCurrMarkers();
 
         Place p = new Place() {
             public double getLat() {
@@ -109,7 +116,9 @@ public class ProfessionalMapActivity extends ActivityWnavigation implements OnMa
             if (profs.isEmpty()) {
                 Toast.makeText(this, R.string.prof_map_no_results, Toast.LENGTH_SHORT).show();
             }
+            findViewById(R.id.prof_map_progress).setVisibility(View.INVISIBLE);
         }, err -> {
+            findViewById(R.id.prof_map_progress).setVisibility(View.INVISIBLE);
             v.setEnabled(true);
             switch (err.getMessage()) {
                 case INVALID_FORM:
@@ -130,10 +139,16 @@ public class ProfessionalMapActivity extends ActivityWnavigation implements OnMa
         Optional.ofNullable(mMap).ifPresent(m -> {
             Office mainOffice = provider.getMainOffice();
             LatLng latLngLocation = new LatLng(mainOffice.getLat(), mainOffice.getLon());
-            m.addMarker(
+            Marker marker = m.addMarker(
                     new MarkerOptions().position(latLngLocation).title(provider.zip())
             );
+            currMarkers.add(marker);
         });
+    }
+
+    private void clearCurrMarkers() {
+        currMarkers.forEach(Marker::remove);
+        currMarkers.clear();
     }
 
     private void setupDistances() {
@@ -151,6 +166,7 @@ public class ProfessionalMapActivity extends ActivityWnavigation implements OnMa
                         .filter(p -> p > 0)
                         .map(parent::getItemAtPosition)
                         .map(String.class::cast)
+                        .map(s -> s.split(Pattern.quote(" "))[0])
                         .map(Double::valueOf)
                         .map(d -> d * 1000)
                         .orElse(DEF_RADIO);
@@ -161,6 +177,8 @@ public class ProfessionalMapActivity extends ActivityWnavigation implements OnMa
                 radioVal = DEF_RADIO;
             }
         });
+        int _5kmPosition = 3;
+        radio.setSelection(_5kmPosition, true);
     }
 
     private void setupSpecialties() {

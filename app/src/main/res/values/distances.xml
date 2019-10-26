@@ -2,9 +2,9 @@
 <resources>
     <string-array name="map_distances">
         <item>Distancia en Kilomentros</item>
-        <item>1</item>
-        <item>2</item>
-        <item>5</item>
-        <item>10</item>
+        <item>1 Km</item>
+        <item>2 Km</item>
+        <item>5 Km</item>
+        <item>10 Km</item>
     </string-array>
 </resources>
