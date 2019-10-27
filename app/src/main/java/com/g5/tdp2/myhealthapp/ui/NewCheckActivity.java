@@ -62,7 +62,7 @@ public class NewCheckActivity extends ActivityWnavigation {
     private Button btn;
     private ToastHelper toastHelper = ToastHelper.INSTANCE;
     private ProgressBar progressBar;
-
+    private Spinner specialty;
 
     @Override
     protected String actionBarTitle() { return "Estudios"; }
@@ -92,7 +92,7 @@ public class NewCheckActivity extends ActivityWnavigation {
     }
 
     private void setupSpecialties() {
-        Spinner specialty = findViewById(R.id.newcheck_specialty);
+        specialty = findViewById(R.id.newcheck_specialty);
         List<Specialty> values = AppState.INSTANCE.getSpecialties();
         ArrayAdapter<Specialty> specAdapter = new ArrayAdapter<>(NewCheckActivity.this, R.layout.crm_spinner_item, values);
         specAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -226,11 +226,20 @@ public class NewCheckActivity extends ActivityWnavigation {
             btn.setEnabled(true);
             progressBar.setVisibility(View.INVISIBLE);
             toastHelper.showShort(NewCheckActivity.this, "Estudio subido exitosamente");
+            resetInput();
         }, err -> {
             btn.setEnabled(true);
             progressBar.setVisibility(View.INVISIBLE);
             Log.e("NewCheckActivity-onImgUploadOk-error", err.toString());
             toastHelper.showShort(NewCheckActivity.this, "Ocurrio un error al crear el estudio");
         });
+    }
+
+    private void resetInput() {
+        specialtyVal = Specialty.DEFAULT_SPECIALTY;
+        specialty.setSelection(0, true);
+        imgType = null;
+        imgData = null;
+        imageView.setImageResource(R.drawable.med_chart_logo);
     }
 }
