@@ -72,14 +72,21 @@ public class Check implements Serializable {
     public String translateStatus() {
         String s = Optional.ofNullable(status).orElse("");
         switch (s.toUpperCase()) {
+            case "PENDIENTE":
             case "PENDING":
                 return "PENDIENTE";
+            case "CANCELADA":
+            case "CANCELADO":
             case "CANCELLED":
             case "CANCELED":
-                return "CANCELADA";
+                return "CANCELADO";
+            case "APROBADA":
+            case "APROBADO":
+            case "AUTORIZADO":
             case "ACCEPTED":
             case "APPROVED":
-                return "APROBADA";
+                return "AUTORIZADO";
+            case "FALTA INFORMACION":
             case "MISSING_INFO":
             case "MISSING_DATA":
             case "MISSING INFO":
