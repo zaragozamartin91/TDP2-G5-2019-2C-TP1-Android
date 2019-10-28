@@ -52,6 +52,7 @@ public class GetChecksActivity extends ActivityWnavigation {
         GetChecks usecase = CrmBeanFactory.INSTANCE.getBean(GetChecks.class);
         usecase.getChecks((int) member.getId(), checks -> {
             progressBar.setVisibility(View.INVISIBLE);
+            checks.sort(Check.comparator());
             mAdapter = new ChecksAdapter(checks);
             recyclerView.setAdapter(mAdapter);
         }, err -> {

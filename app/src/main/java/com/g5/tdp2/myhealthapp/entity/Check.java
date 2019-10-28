@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import java.io.Serializable;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.Optional;
 import java.util.function.Function;
@@ -75,17 +76,23 @@ public class Check implements Serializable {
             case "PENDIENTE":
             case "PENDING":
                 return "PENDIENTE";
+
+            case "RECHAZADO":
+            case "RECHAZADA":
             case "CANCELADA":
             case "CANCELADO":
             case "CANCELLED":
             case "CANCELED":
-                return "CANCELADO";
+                return "RECHAZADO";
+
             case "APROBADA":
             case "APROBADO":
             case "AUTORIZADO":
             case "ACCEPTED":
             case "APPROVED":
                 return "AUTORIZADO";
+
+            case "NECESITA MAS INFORMACION":
             case "FALTA INFORMACION":
             case "MISSING_INFO":
             case "MISSING_DATA":
@@ -93,7 +100,8 @@ public class Check implements Serializable {
             case "MISSING DATA":
             case "MISSINGINFO":
             case "MISSINGDATA":
-                return "FALTA INFORMACION";
+                return "NECESITA MAS INFORMACION";
+
             default:
                 return "DESCONOCIDO";
         }
@@ -112,5 +120,16 @@ public class Check implements Serializable {
     @JsonIgnore
     public String translateUpdatedAt(Function<Date, String> translator) {
         return translator.apply(getUpdatedAt());
+    }
+
+    /**
+     * Obtiene un comparador de estudios para ordenarlos.
+     * Los estudios mas recientes van primero.
+     *
+     * @return comparador de estudios
+     */
+    @JsonIgnore
+    public static Comparator<Check> comparator() {
+        return (c1, c2) -> c2.createdAt.compareTo(c1.createdAt);
     }
 }
