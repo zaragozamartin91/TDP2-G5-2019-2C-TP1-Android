@@ -13,6 +13,7 @@ import com.g5.tdp2.myhealthapp.entity.Member;
 import com.g5.tdp2.myhealthapp.entity.MemberCredentials;
 import com.g5.tdp2.myhealthapp.usecase.LoginMember;
 import com.g5.tdp2.myhealthapp.CrmBeanFactory;
+import com.g5.tdp2.myhealthapp.util.CrmFirebaseMessagingService;
 import com.g5.tdp2.myhealthapp.util.DialogHelper;
 
 import static com.g5.tdp2.myhealthapp.entity.MemberCredentials.EMPTY_PASSWORD;
@@ -59,16 +60,19 @@ public class LoginActivity extends MainActivity {
         String id = idField.getText().toString();
         String pass = passField.getText().toString();
 
-        MemberCredentials memberCredentials;
+
         try {
-            memberCredentials = MemberCredentials.of(id, pass);
+            CrmFirebaseMessagingService.getCurrToken(token -> {
+                MemberCredentials memberCredentials = MemberCredentials.of(id, pass, token);
+                LoginMember usecase = CrmBeanFactory.INSTANCE.getBean(LoginMember.class); // obtengo el caso de uso de inicio de sesion
+                usecase.loginMember(memberCredentials, this::handleLoginOk, this::handleError);
+            }, err -> {
+                Log.e("LoginActivity::handleLogin::error", "Error al obtener token de firebase de usuario", err);
+                this.handleError(new RuntimeException(UNKNOWN_ERROR));
+            });
         } catch (NumberFormatException e) {
             idField.setError(getString(R.string.login_id_error_msg));
-            return;
         }
-
-        LoginMember usecase = CrmBeanFactory.INSTANCE.getBean(LoginMember.class); // obtengo el caso de uso de inicio de sesion
-        usecase.loginMember(memberCredentials, this::handleLoginOk, this::handleError);
     }
 
     private void handleLoginOk(Member member) {

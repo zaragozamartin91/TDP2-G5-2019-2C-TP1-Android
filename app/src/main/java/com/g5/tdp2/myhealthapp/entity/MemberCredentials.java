@@ -12,14 +12,20 @@ public class MemberCredentials {
 
     private long id;
     private String password;
+    private String fbToken; // token de firebase
 
-    public MemberCredentials(long id, String password) {
+    public MemberCredentials(long id, String password, String fbToken) {
         this.id = id;
         this.password = password;
+        this.fbToken = fbToken;
     }
 
     public static MemberCredentials of(String sid, String password) throws NumberFormatException {
-        return new MemberCredentials(Long.valueOf(sid), password);
+        return of(sid, password, "");
+    }
+
+    public static MemberCredentials of(String sid, String password, String fbToken) throws NumberFormatException {
+        return new MemberCredentials(Long.valueOf(sid), password, fbToken);
     }
 
     /**
@@ -44,4 +50,7 @@ public class MemberCredentials {
 
     @JsonProperty("role")
     public String getRole() { return "affiliate"; }
+
+    @JsonProperty("device_token")
+    public String getFbToken() { return fbToken; }
 }
