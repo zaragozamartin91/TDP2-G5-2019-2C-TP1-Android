@@ -11,6 +11,7 @@ import java.util.function.Consumer;
 public class UrlImgTask extends AsyncTask<String, Void, Drawable> {
     private Consumer<Drawable> consumer;
     private final Consumer<Exception> errCallback;
+    private Exception error;
 
     public UrlImgTask(Consumer<Drawable> consumer, Consumer<Exception> errCallback) {
         this.consumer = consumer;
@@ -24,7 +25,7 @@ public class UrlImgTask extends AsyncTask<String, Void, Drawable> {
             InputStream is = (InputStream) new URL(url).getContent();
             return Drawable.createFromStream(is, "src name");
         } catch (Exception e) {
-            errCallback.accept(e);
+            error = e;
             return null;
         }
     }
@@ -32,5 +33,6 @@ public class UrlImgTask extends AsyncTask<String, Void, Drawable> {
     @Override
     protected void onPostExecute(Drawable drawable) {
         Optional.ofNullable(drawable).ifPresent(consumer);
+        Optional.ofNullable(error).ifPresent(errCallback);
     }
 }

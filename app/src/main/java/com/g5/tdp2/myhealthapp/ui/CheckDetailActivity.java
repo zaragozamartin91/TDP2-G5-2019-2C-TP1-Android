@@ -65,6 +65,7 @@ public class CheckDetailActivity extends ActivityWnavigation {
     }
 
     private void handleError(Exception e) {
+        progressBar.setVisibility(View.INVISIBLE);
         Log.e("CheckDetailActivity-handleError", "Error al mostrar imagen", e);
         Toast.makeText(this, "Error al cargar imagen", Toast.LENGTH_SHORT).show();
     }
