@@ -24,7 +24,6 @@ import com.g5.tdp2.myhealthapp.usecase.PostNewCheck;
 import com.g5.tdp2.myhealthapp.util.DialogHelper;
 import com.g5.tdp2.myhealthapp.util.MimeTypeResolver;
 import com.g5.tdp2.myhealthapp.util.ToastHelper;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
@@ -36,10 +35,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.function.Consumer;
 
 import static com.g5.tdp2.myhealthapp.ui.UiReqCode.NEWCHECK_IMG_REQUEST_CODE;
 
@@ -63,6 +62,7 @@ public class NewCheckActivity extends ActivityWnavigation {
     private ToastHelper toastHelper = ToastHelper.INSTANCE;
     private ProgressBar progressBar;
     private Spinner specialty;
+    private Spinner checkType;
 
     @Override
     protected String actionBarTitle() { return "Estudios"; }
@@ -89,6 +89,7 @@ public class NewCheckActivity extends ActivityWnavigation {
         btn.setOnClickListener(this::postNewCheck);
 
         setupSpecialties();
+        setupCheckTypes();
     }
 
     private void setupSpecialties() {
@@ -98,6 +99,15 @@ public class NewCheckActivity extends ActivityWnavigation {
         specAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         specialty.setAdapter(specAdapter);
         specialty.setOnItemSelectedListener(new SpecialtyItemSelectedListener());
+    }
+
+    private void setupCheckTypes() {
+        // TODO : agregar logica
+        checkType = findViewById(R.id.newcheck_checktype);
+        List<String> values = Collections.singletonList("Seleccione un tipo de estudio");
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(NewCheckActivity.this, R.layout.crm_spinner_item, values);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        checkType.setAdapter(adapter);
     }
 
     class SpecialtyItemSelectedListener implements AdapterView.OnItemSelectedListener {

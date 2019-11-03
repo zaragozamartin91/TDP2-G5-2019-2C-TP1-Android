@@ -84,6 +84,7 @@
     <string name="prof_search_title">Listar Profesionales</string>
     <string name="prof_search_name_hint">Nombre</string>
     <string name="prof_search_specialty_hint">Especialidad</string>
+    <string name="prof_search_checktype_hint">Tipo de estudio</string>
     <string name="prof_search_zone_hint">Localidad</string>
     <string name="prof_search_btn_text">Buscar</string>
     <string name="prof_search_empty_results">No se encontraron resultados para la b\u00FAsqueda realizada. Puede ampliar su b\u00FAsqueda llamando a 0800-MYHEALTH</string>
@@ -108,14 +109,14 @@
     <string name="check_card_specialty">Especialidad: %1$s</string>
     <string name="check_card_date">Fecha de alta: %1$s</string>
     <string name="check_card_update">Fecha de actualizacion: %1$s</string>
-    <string name="check_card_status">Estado: %1$s</string>
+    <string name="check_card_status">%1$s</string>
 
 
     <!-- CHECK_DETAIL************************************************************************* -->
     <string name="check_detail_specialty">Especialidad: %1$s</string>
     <string name="check_detail_date">Fecha de alta: %1$s</string>
     <string name="check_detail_update">Fecha de actualizacion: %1$s</string>
-    <string name="check_detail_status">Estado: %1$s</string>
+    <string name="check_detail_status">%1$s</string>
     <string name="default_notification_channel_id">notif_channel</string>
 
 
