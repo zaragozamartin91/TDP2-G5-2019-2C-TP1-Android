@@ -16,6 +16,7 @@ public class Check implements Serializable {
     private String url;
     private String path;
     private String status;
+    private String checktype;
     private long specialtyId;
     private long affiliateId;
     private final Date updatedAt;
@@ -27,6 +28,7 @@ public class Check implements Serializable {
             @JsonProperty("url") String url,
             @JsonProperty("path") String path,
             @JsonProperty("status") String status,
+            @JsonProperty("authtype") String checktype,
             @JsonProperty("specialty_id") long specialtyId,
             @JsonProperty("affiliate_id") long affiliateId,
             @JsonProperty("created_at") @JsonDeserialize(using = YyyymmddDeserializer.class) Date createdAt,
@@ -39,6 +41,7 @@ public class Check implements Serializable {
         this.affiliateId = affiliateId;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+        this.checktype = checktype;
     }
 
     public long getId() {
@@ -56,6 +59,8 @@ public class Check implements Serializable {
     public String getStatus() {
         return status;
     }
+
+    public String getChecktype() { return checktype; }
 
     public long getSpecialtyId() {
         return specialtyId;
@@ -101,6 +106,10 @@ public class Check implements Serializable {
             case "MISSINGINFO":
             case "MISSINGDATA":
                 return "NECESITA MAS INFORMACION";
+
+            case "AUTORIZADO AUTOMATICAMENTE":
+            case "APROBADO AUTOMATICAMENTE":
+                return "AUTORIZADO AUTOMATICAMENTE";
 
             default:
                 return "DESCONOCIDO";

@@ -1,6 +1,7 @@
 package com.g5.tdp2.myhealthapp;
 
 
+import com.g5.tdp2.myhealthapp.entity.Checktype;
 import com.g5.tdp2.myhealthapp.entity.Specialty;
 import com.g5.tdp2.myhealthapp.entity.Zone;
 
@@ -18,6 +19,7 @@ public enum AppState {
 
     public static final String ZONES_KEY = "ZONES";
     public static final String SPECIALTIES_KEY = "SPECIALTIES";
+    public static final String CHECKTYPES_KEY = "AUTHTYPES";
 
     private Map<String, Object> state = new ConcurrentHashMap<>();
 
@@ -44,6 +46,13 @@ public enum AppState {
      * @return catalogo de especialidades
      */
     public List<Specialty> getSpecialties() { return (List<Specialty>) getOrDefault(SPECIALTIES_KEY, Collections.emptyList()); }
+
+    /**
+     * Obtiene el catalogo de tipos de estudio
+     *
+     * @return catalogo de tipos de estudio
+     */
+    public List<Checktype> getChecktypes() { return (List<Checktype>) getOrDefault(CHECKTYPES_KEY, Collections.emptyList()); }
 
     /**
      * Obtiene una especialidad a partir de su id
