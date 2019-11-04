@@ -12,11 +12,14 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.g5.tdp2.myhealthapp.AppState;
 import com.g5.tdp2.myhealthapp.R;
+import com.g5.tdp2.myhealthapp.entity.Checktype;
 import com.g5.tdp2.myhealthapp.entity.SimpleEntity;
 import com.g5.tdp2.myhealthapp.entity.Specialty;
 import com.g5.tdp2.myhealthapp.entity.Zone;
+import com.g5.tdp2.myhealthapp.gateway.ChecktypeGateway;
 import com.g5.tdp2.myhealthapp.gateway.SpecialtyGateway;
 import com.g5.tdp2.myhealthapp.gateway.ZoneGateway;
+import com.g5.tdp2.myhealthapp.gateway.impl.WebChecktypeGateway;
 import com.g5.tdp2.myhealthapp.gateway.impl.WebSpecialtyGateway;
 import com.g5.tdp2.myhealthapp.gateway.impl.WebZoneGateway;
 import com.g5.tdp2.myhealthapp.service.GetChecksStub;
@@ -30,7 +33,6 @@ import com.g5.tdp2.myhealthapp.service.WebPostNewCheck;
 import com.g5.tdp2.myhealthapp.service.WebSearchProfessionals;
 import com.g5.tdp2.myhealthapp.service.WebSignupMember;
 import com.g5.tdp2.myhealthapp.CrmBeanFactory;
-import com.g5.tdp2.myhealthapp.usecase.SearchProfessionals;
 import com.g5.tdp2.myhealthapp.util.DialogHelper;
 import com.google.firebase.messaging.FirebaseMessaging;
 
@@ -178,6 +180,7 @@ public abstract class MainActivity extends AppCompatActivity {
         CrmBeanFactory.INSTANCE.addBean(new WebGetChecks(prefix + "/authorizations", requestQueue));
         setupZones(new WebZoneGateway(prefix + "/zones", requestQueue));
         setupSpecialties(new WebSpecialtyGateway(prefix + "/specialties", requestQueue));
+        setChecktypes(new WebChecktypeGateway(prefix + "/authtypes", requestQueue));
     }
 
     private void setupZones(ZoneGateway zoneGateway) {
@@ -214,4 +217,22 @@ public abstract class MainActivity extends AppCompatActivity {
             AppState.INSTANCE.put(AppState.SPECIALTIES_KEY, SimpleEntity.fromNames(ss, Specialty.class));
         });
     }
+
+    private void setChecktypes(ChecktypeGateway gateway) {
+        CrmBeanFactory.INSTANCE.addBean(gateway);
+
+        gateway.getChecktypes(checktypes -> {
+            List<Checktype> values = Stream.of(Collections.singletonList(Checktype.DEFAULT_CHECKTYPE), checktypes)
+                    .flatMap(Collection::stream)
+                    .collect(Collectors.toList());
+            AppState.INSTANCE.put(AppState.CHECKTYPES_KEY, values);
+            Toast.makeText(this, "Tipos de estudios cargados", Toast.LENGTH_SHORT).show();
+        }, e -> {
+            Toast.makeText(this, "Ocurrio un error al obtener los Tipos de estudios. Cargando valores por defecto", Toast.LENGTH_LONG).show();
+            String[] values = getResources().getStringArray(R.array.available_authtypes);
+            List<String> ss = Arrays.asList(values);
+            AppState.INSTANCE.put(AppState.CHECKTYPES_KEY, SimpleEntity.fromNames(ss, Checktype.class));
+        });
+    }
+
 }

@@ -15,23 +15,27 @@ public class NewCheckForm {
     private static final String INVALID_URL = "INVALID_URL";
     private static final String INVALID_SPECIALTY = "INVALID_SPECIALTY";
     private static final String INVALID_PATH = "INVALID_PATH";
+    private static final String INVALID_CHECKTYPE = "INVALID_CHECKTYPE";
 
     private String url;
     private String path;
     private long specId;
     private long userId;
     private Boolean preAuthorize = null;
+    private final long checktype;
 
     @JsonCreator
     public NewCheckForm(
             @JsonProperty("url") String url,
             @JsonProperty("path") String path,
             @JsonProperty("specialty_id") long specId,
-            @JsonProperty("affiliate_id") long userId) {
+            @JsonProperty("affiliate_id") long userId,
+            @JsonProperty("authtype_id") long checktype) {
         this.url = url;
         this.path = path;
         this.specId = specId;
         this.userId = userId;
+        this.checktype = checktype;
     }
 
     public String getUrl() {
@@ -52,6 +56,9 @@ public class NewCheckForm {
         return userId;
     }
 
+    @JsonProperty("authtype_id")
+    public long getChecktype() { return checktype; }
+
     @JsonProperty("authorize")
     public Boolean getPreAuthorize() {
         return preAuthorize;
@@ -68,6 +75,7 @@ public class NewCheckForm {
         Validate.validState(StringUtils.isNotBlank(path), INVALID_PATH);
         Validate.validState(StringUtils.isNotBlank(url), INVALID_URL);
         Validate.validState(specId > 0, INVALID_SPECIALTY);
+        Validate.validState(checktype > 0, INVALID_CHECKTYPE);
     }
 
     @Override

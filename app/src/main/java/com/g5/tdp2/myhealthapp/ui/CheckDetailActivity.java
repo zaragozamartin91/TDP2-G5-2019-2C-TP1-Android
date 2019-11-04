@@ -37,6 +37,10 @@ public class CheckDetailActivity extends ActivityWnavigation {
         TextView status = findViewById(R.id.check_detail_status);
         status.setText(getString(R.string.check_detail_status, check.translateStatus()));
 
+        TextView checktype = findViewById(R.id.check_detail_checktype);
+        String schecktype = check.getChecktype() == null ? "" : check.getChecktype();
+        checktype.setText(getString(R.string.check_detail_checktype, schecktype));
+
         TextView specialty = findViewById(R.id.check_detail_specialty);
         specialty.setText(getString(
                 R.string.check_card_specialty,

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="available_authtypes">
+        <item>Seleccione un tipo de estudio</item>
+        <item>TOMOGRAFIA</item>
+        <item>RADIOGRAFIA</item>
+        <item>ESCANOGRAMA</item>
+        <item>ESPINOGRAMA DIGITAL</item>
+        <item>RADIOLOGÍA DIGITAL CONVENCIONAL</item>
+        <item>ECOGRAFÍA ARTICULACIONES</item>
+        <item>ECOGRAFÍA CON TRANSLUSCENCIA NUCAL</item>
+        <item>ECOGRAFÍA GENERAL</item>
+        <item>ECOGRAFÍA MÚSCULO ESQUELÉTICA</item>
+        <item>ECOGRAFÍA OBSTÉTRICA CON SCAN FETAL</item>
+        <item>ECOGRAFÍA PARTES BLANDAS</item>
+        <item>ECOGRAFÍA TRANSRECTAL DE PRÓSTATA</item>
+        <item>MONITOREO DE OVULACIÓN INTRACAVITARIO</item>
+        <item>MONITOREO ECOGRÁFICO DE LA OVULACIÓN</item>
+        <item>ANGIOTOMOGRAFÍA COMPUTADA MULTISLICE</item>
+        <item>TOMOGRAFÍA COMPUTADA MULTISLICE CON CONTRASTE</item>
+        <item>TOMOGRAFÍA COMPUTADA MULTISLICE SIN CONTRASTE</item>
+        <item>TOMOGRAFÍA COMPUTADA MULTISLICE CON RECONSTRUCCIÓN 3D</item>
+        <item>UROGRAMA POR TOMOGRAFÍA COMPUTADA</item>
+        <item>RESONANCIA MAGNÉTICA CON O SIN CONTRASTE</item>
+        <item>RESONANCIA MAGNÉTICA CON PROTOCOLO DE EPILEPSIA</item>
+        <item>COMPRESIÓN FOCALIZADA</item>
+        <item>MAGNIFICACIÓN UNILATERAL Y BILATERAL</item>
+        <item>MAMOGRAFÍA CON TÉCNICA DE EKLUND</item>
+        <item>MAMOGRAFÍA DIGITAL CON PROYECCIÓN AXILAR</item>
+        <item>TOMOSÍNTESIS O MAMOGRAFÍA 3D</item>
+
+    </string-array>
+</resources>

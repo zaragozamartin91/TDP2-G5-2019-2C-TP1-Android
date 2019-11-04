@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.g5.tdp2.myhealthapp.AppState;
 import com.g5.tdp2.myhealthapp.CrmBeanFactory;
 import com.g5.tdp2.myhealthapp.R;
+import com.g5.tdp2.myhealthapp.entity.Checktype;
 import com.g5.tdp2.myhealthapp.entity.Member;
 import com.g5.tdp2.myhealthapp.entity.NewCheckForm;
 import com.g5.tdp2.myhealthapp.entity.Specialty;
@@ -56,6 +57,7 @@ public class NewCheckActivity extends ActivityWnavigation {
     private byte[] imgData;
     private String imgType;
     private Specialty specialtyVal;
+    private Checktype checktypeVal;
     private String imgUri;
     private StorageReference imgRef;
     private Button btn;
@@ -104,10 +106,11 @@ public class NewCheckActivity extends ActivityWnavigation {
     private void setupCheckTypes() {
         // TODO : agregar logica
         checkType = findViewById(R.id.newcheck_checktype);
-        List<String> values = Collections.singletonList("Seleccione un tipo de estudio");
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(NewCheckActivity.this, R.layout.crm_spinner_item, values);
+        List<Checktype> values = AppState.INSTANCE.getChecktypes();
+        ArrayAdapter<Checktype> adapter = new ArrayAdapter<>(NewCheckActivity.this, R.layout.crm_spinner_item, values);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         checkType.setAdapter(adapter);
+        checkType.setOnItemSelectedListener(new ChecktypeItemSelectedListener());
     }
 
     class SpecialtyItemSelectedListener implements AdapterView.OnItemSelectedListener {
@@ -123,6 +126,22 @@ public class NewCheckActivity extends ActivityWnavigation {
         @Override
         public void onNothingSelected(AdapterView<?> parent) {
             specialtyVal = Specialty.DEFAULT_SPECIALTY;
+        }
+    }
+
+    class ChecktypeItemSelectedListener implements AdapterView.OnItemSelectedListener {
+        @Override
+        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            checktypeVal = Optional.of(position)
+                    .filter(p -> p > 0)
+                    .map(parent::getItemAtPosition)
+                    .map(Checktype.class::cast)
+                    .orElse(Checktype.DEFAULT_CHECKTYPE);
+        }
+
+        @Override
+        public void onNothingSelected(AdapterView<?> parent) {
+            checktypeVal = Checktype.DEFAULT_CHECKTYPE;
         }
     }
 
@@ -194,6 +213,11 @@ public class NewCheckActivity extends ActivityWnavigation {
             return;
         }
 
+        if (checktypeVal == null || Checktype.DEFAULT_CHECKTYPE.equals(checktypeVal)) {
+            Toast.makeText(this, "Debe seleccionar un tipo de estudio", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         if (imgType == null || imgData == null) {
             Toast.makeText(this, R.string.newcheck_no_img, Toast.LENGTH_SHORT).show();
             return;
@@ -229,7 +253,8 @@ public class NewCheckActivity extends ActivityWnavigation {
         String path = Optional.ofNullable(imgRef).map(StorageReference::getPath).orElse("");
         long specId = Optional.ofNullable(specialtyVal).orElse(Specialty.DEFAULT_SPECIALTY).getId();
         long userId = member.getId();
-        NewCheckForm form = new NewCheckForm(imgUri, path, specId, userId);
+        long checktypeId = Optional.ofNullable(checktypeVal).orElse(Checktype.DEFAULT_CHECKTYPE).getId();
+        NewCheckForm form = new NewCheckForm(imgUri, path, specId, userId, checktypeId);
 
         PostNewCheck usecase = CrmBeanFactory.INSTANCE.getBean(PostNewCheck.class);
         usecase.postNewCheck(form, () -> {
@@ -250,6 +275,8 @@ public class NewCheckActivity extends ActivityWnavigation {
         specialty.setSelection(0, true);
         imgType = null;
         imgData = null;
+        checkType.setSelection(0, true);
+        checktypeVal = Checktype.DEFAULT_CHECKTYPE;
         imageView.setImageResource(R.drawable.med_chart_logo);
     }
 }
