@@ -108,7 +108,7 @@ class ChecksViewHolder extends RecyclerView.ViewHolder {
 
     void setCheck(Check p) {
         String specialty = p.translateSpecialty(AppState.INSTANCE::getSpecialty);
-        String checktype = Optional.ofNullable(p.getChecktype()).orElse("");
+        String checktype = p.translateChecktype(AppState.INSTANCE::getChecktype);
 
         ((TextView) cardView.findViewById(R.id.check_card_specialty))
                 .setText(ctx.getString(R.string.check_card_specialty, specialty));
