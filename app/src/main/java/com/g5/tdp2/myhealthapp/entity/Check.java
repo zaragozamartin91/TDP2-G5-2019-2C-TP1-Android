@@ -16,7 +16,7 @@ public class Check implements Serializable {
     private String url;
     private String path;
     private String status;
-    private String checktype;
+    private final long checktypeId;
     private long specialtyId;
     private long affiliateId;
     private final Date updatedAt;
@@ -29,7 +29,7 @@ public class Check implements Serializable {
             @JsonProperty("url") String url,
             @JsonProperty("path") String path,
             @JsonProperty("status") String status,
-            @JsonProperty("authtype") String checktype,
+            @JsonProperty("authtype_id") long checktypeId,
             @JsonProperty("specialty_id") long specialtyId,
             @JsonProperty("affiliate_id") long affiliateId,
             @JsonProperty("created_at") @JsonDeserialize(using = YyyymmddDeserializer.class) Date createdAt,
@@ -43,7 +43,7 @@ public class Check implements Serializable {
         this.affiliateId = affiliateId;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
-        this.checktype = checktype;
+        this.checktypeId = checktypeId;
         this.observations = observations;
     }
 
@@ -63,9 +63,7 @@ public class Check implements Serializable {
         return status;
     }
 
-    public String getChecktype() { return checktype; }
-
-    public String translateChecktype() { return Optional.ofNullable(getChecktype()).orElse(""); }
+    public long getChecktypeId() { return checktypeId; }
 
     public long getSpecialtyId() {
         return specialtyId;
@@ -128,6 +126,11 @@ public class Check implements Serializable {
     @JsonIgnore
     public String translateSpecialty(Function<Long, Specialty> translator) {
         return translator.apply(getSpecialtyId()).getName();
+    }
+
+    @JsonIgnore
+    public String translateChecktype(Function<Long, Checktype> trans) {
+        return trans.apply(getChecktypeId()).getName();
     }
 
     @JsonIgnore

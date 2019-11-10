@@ -41,7 +41,9 @@ public class CheckDetailActivity extends ActivityWnavigation {
         obs.setText(getString(R.string.check_detail_obs, check.translateObs()));
 
         TextView checktype = findViewById(R.id.check_detail_checktype);
-        checktype.setText(getString(R.string.check_detail_checktype, check.translateChecktype()));
+        checktype.setText(getString(
+                R.string.check_detail_checktype,
+                check.translateChecktype(AppState.INSTANCE::getChecktype)));
 
         TextView specialty = findViewById(R.id.check_detail_specialty);
         specialty.setText(getString(

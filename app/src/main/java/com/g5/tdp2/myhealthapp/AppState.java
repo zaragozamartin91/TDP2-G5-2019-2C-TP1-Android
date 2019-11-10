@@ -67,6 +67,19 @@ public enum AppState {
                 .orElse(Specialty.DEFAULT_SPECIALTY);
     }
 
+    /**
+     * Obtiene un tipo de estudio a partir de su id
+     *
+     * @param cid id de tipo de estudio
+     * @return tipo de estudio a partir de su id
+     */
+    public Checktype getChecktype(long cid) {
+        return getChecktypes().stream()
+                .filter(ct -> cid == ct.getId())
+                .findFirst()
+                .orElse(Checktype.DEFAULT_CHECKTYPE);
+    }
+
     public Object getOrDefault(String key, Object defaultValue) {
         return state.getOrDefault(key, defaultValue);
     }
