@@ -114,7 +114,7 @@ class ChecksViewHolder extends RecyclerView.ViewHolder {
                 .setText(ctx.getString(R.string.check_card_specialty, specialty));
 
         ((TextView) cardView.findViewById(R.id.check_card_checktype))
-                .setText(ctx.getString(R.string.check_card_specialty, checktype));
+                .setText(ctx.getString(R.string.check_card_checktype, checktype));
 
         ((TextView) cardView.findViewById(R.id.check_card_date))
                 .setText(ctx.getString(R.string.check_card_date,
