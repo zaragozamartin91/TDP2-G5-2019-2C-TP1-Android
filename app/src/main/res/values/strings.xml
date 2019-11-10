@@ -119,6 +119,7 @@
     <string name="check_detail_date">Fecha de alta: %1$s</string>
     <string name="check_detail_update">Fecha de actualizacion: %1$s</string>
     <string name="check_detail_status">%1$s</string>
+    <string name="check_detail_obs">%1$s</string>
     <string name="default_notification_channel_id">notif_channel</string>
 
 

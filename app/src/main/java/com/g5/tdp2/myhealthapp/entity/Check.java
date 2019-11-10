@@ -21,6 +21,7 @@ public class Check implements Serializable {
     private long affiliateId;
     private final Date updatedAt;
     private final Date createdAt;
+    private final String observations;
 
     @JsonCreator
     public Check(
@@ -32,7 +33,8 @@ public class Check implements Serializable {
             @JsonProperty("specialty_id") long specialtyId,
             @JsonProperty("affiliate_id") long affiliateId,
             @JsonProperty("created_at") @JsonDeserialize(using = YyyymmddDeserializer.class) Date createdAt,
-            @JsonProperty("updated_at") @JsonDeserialize(using = YyyymmddDeserializer.class) Date updatedAt) {
+            @JsonProperty("updated_at") @JsonDeserialize(using = YyyymmddDeserializer.class) Date updatedAt,
+            @JsonProperty("observations") String observations) {
         this.id = id;
         this.url = url;
         this.path = path;
@@ -42,6 +44,7 @@ public class Check implements Serializable {
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.checktype = checktype;
+        this.observations = observations;
     }
 
     public long getId() {
@@ -62,6 +65,8 @@ public class Check implements Serializable {
 
     public String getChecktype() { return checktype; }
 
+    public String translateChecktype() { return Optional.ofNullable(getChecktype()).orElse(""); }
+
     public long getSpecialtyId() {
         return specialtyId;
     }
@@ -73,6 +78,10 @@ public class Check implements Serializable {
     public Date getUpdatedAt() { return updatedAt; }
 
     public Date getCreatedAt() { return createdAt; }
+
+    public String getObservations() { return observations; }
+
+    public String translateObs() { return Optional.ofNullable(getObservations()).orElse(""); }
 
     @JsonIgnore
     public String translateStatus() {
