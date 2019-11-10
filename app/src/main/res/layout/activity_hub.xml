@@ -6,6 +6,15 @@
     android:layout_height="match_parent"
     tools:context=".ui.HubActivity">
 
+    <ImageView
+        android:id="@+id/signup_background"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:alpha="0.3"
+        android:contentDescription="@string/signup_background_contentDescription"
+        app:srcCompat="@drawable/login_logo" />
+
+
     <TextView
         android:id="@+id/hub_title"
         android:layout_width="wrap_content"
