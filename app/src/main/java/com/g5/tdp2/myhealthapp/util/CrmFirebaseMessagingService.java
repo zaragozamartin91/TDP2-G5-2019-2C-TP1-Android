@@ -64,7 +64,11 @@ public class CrmFirebaseMessagingService extends FirebaseMessagingService {
         Map<String, String> data = remoteMessage.getData();
         if (data.size() > 0) {
             Log.d(TAG, "Message data payload: " + data);
-            sendNotification(data.get("title"), data.get("message"));
+            String message = Optional.ofNullable(data.get("message"))
+                    .map(s -> s.replaceAll(" +", " "))
+                    .map(s -> s.replace('\n', '\0'))
+                    .orElse("");
+            sendNotification(data.get("title"), message);
         }
 
         // Check if message contains a notification payload.
@@ -96,10 +100,12 @@ public class CrmFirebaseMessagingService extends FirebaseMessagingService {
      * @param messageBody FCM message body received.
      */
     private void sendNotification(String title, String messageBody) {
-        Intent intent = new Intent(this, LoginActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
-                PendingIntent.FLAG_ONE_SHOT);
+        /* CODIGO PARA ABRIR UNA NUEVA PANTALLA AL CLICKEAR UNA NOTIFICACION */
+//        Intent intent = new Intent(this, LoginActivity.class);
+//        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent, PendingIntent.FLAG_ONE_SHOT);
+
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, new Intent(), PendingIntent.FLAG_ONE_SHOT);
 
         String channelId = getString(R.string.default_notification_channel_id);
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
@@ -107,9 +113,10 @@ public class CrmFirebaseMessagingService extends FirebaseMessagingService {
                 new NotificationCompat.Builder(this, channelId)
                         .setSmallIcon(R.drawable.md_check)
                         .setContentTitle(title)
-                        .setContentText(messageBody)
+//                        .setContentText(title)
                         .setAutoCancel(true)
                         .setSound(defaultSoundUri)
+                        .setStyle(new NotificationCompat.BigTextStyle().bigText(messageBody))
                         .setContentIntent(pendingIntent);
 
         NotificationManager notificationManager =
