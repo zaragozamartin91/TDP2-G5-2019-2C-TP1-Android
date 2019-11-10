@@ -130,7 +130,11 @@ public class Check implements Serializable {
 
     @JsonIgnore
     public String translateChecktype(Function<Long, Checktype> trans) {
-        return trans.apply(getChecktypeId()).getName();
+        return Optional.of(getChecktypeId())
+                .filter(ctid -> ctid > 0)
+                .map(trans)
+                .map(SimpleEntity::getName)
+                .orElse("");
     }
 
     @JsonIgnore
