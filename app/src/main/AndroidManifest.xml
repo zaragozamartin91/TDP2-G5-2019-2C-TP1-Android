@@ -20,7 +20,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ui.CheckDetailActivity"></activity>
+        <activity android:name=".ui.SanatoriumMapActivity"></activity>
+        <activity android:name=".ui.CheckDetailActivity" />
         <activity android:name=".ui.GetChecksActivity" />
         <activity android:name=".ui.NewCheckActivity" />
         <activity android:name=".ui.ProfessionalListActivity" />
@@ -67,20 +68,21 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-
-        <!-- Set custom default icon. This is used when no icon is set for incoming notification messages.
-     See README(https://goo.gl/l4GJaQ) for more. -->
+        <!--
+ Set custom default icon. This is used when no icon is set for incoming notification messages.
+     See README(https://goo.gl/l4GJaQ) for more.
+        -->
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@drawable/md_logo" />
-        <!-- Set color used with incoming notification messages. This is used when no color is set for the incoming
-             notification message. See README(https://goo.gl/6BKBk7) for more. -->
+        <!--
+ Set color used with incoming notification messages. This is used when no color is set for the incoming
+             notification message. See README(https://goo.gl/6BKBk7) for more.
+        -->
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
-            android:resource="@color/colorAccent" />
-
-        <!--        Previene la inicializacion automatica de Firebase. Esto es necesario para cuando la app es instalada en un -->
-        <!--        dispositivo nuevo (en el cual aun no se tienen permisos de red)-->
+            android:resource="@color/colorAccent" /> <!-- Previene la inicializacion automatica de Firebase. Esto es necesario para cuando la app es instalada en un -->
+        <!-- dispositivo nuevo (en el cual aun no se tienen permisos de red) -->
         <meta-data
             android:name="firebase_messaging_auto_init_enabled"
             android:value="false" />
@@ -88,6 +90,5 @@
             android:name="firebase_analytics_collection_enabled"
             android:value="false" />
     </application>
-
 
 </manifest>

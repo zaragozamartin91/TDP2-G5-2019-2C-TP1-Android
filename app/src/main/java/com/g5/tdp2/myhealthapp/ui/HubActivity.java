@@ -25,7 +25,8 @@ public class HubActivity extends ActivityWnavigation {
     public static final String PROF_NEARBY = "Profesionales cercanos";
     private static final String NEW_CHECK = "Solicitar estudio";
     private static final String GET_CHECKS = "Mis estudios";
-    static final String[] VIEWS = new String[]{PROF_SEARCH, PROF_NEARBY, NEW_CHECK, GET_CHECKS};
+    public static final String SANS_NEARBY = "Sanatorios cercanos";
+    static final String[] VIEWS = new String[]{PROF_SEARCH, PROF_NEARBY, NEW_CHECK, GET_CHECKS, SANS_NEARBY};
 
     private Member member;
 
@@ -50,7 +51,8 @@ public class HubActivity extends ActivityWnavigation {
                 R.drawable.professional_logo,
                 R.drawable.map_logo,
                 R.drawable.newcheck_logo,
-                R.drawable.md_check};
+                R.drawable.md_check,
+                R.drawable.map_logo};
         ArrayAdapter<String> listAdapter = new HubArrayAdapter(this, VIEWS, logos);
         listView.setAdapter(listAdapter);
         List<Runnable> intents = Arrays.asList(
@@ -65,7 +67,11 @@ public class HubActivity extends ActivityWnavigation {
                                 .putExtra(MEMBER_EXTRA, member)),
                 () -> startActivity(
                         new Intent(this, GetChecksActivity.class)
-                                .putExtra(MEMBER_EXTRA, member))
+                                .putExtra(MEMBER_EXTRA, member)),
+                () -> startActivity(
+                        new Intent(this, SanatoriumMapActivity.class)
+                                .putExtra(MEMBER_EXTRA, member)
+                )
         );
         listView.setOnItemClickListener(
                 (parent, view, position, id) -> intents.get(position).run());

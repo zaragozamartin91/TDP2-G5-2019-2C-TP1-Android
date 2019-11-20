@@ -17,7 +17,10 @@ import java.util.stream.Collectors;
  * Entidad prestador
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
-@JsonSubTypes({@JsonSubTypes.Type(value = Professional.class, name = "PROFESIONAL")})
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = Professional.class, name = "PROFESIONAL"),
+        @JsonSubTypes.Type(value = Sanatorium.class, name = "SANATORIO")
+})
 public class Provider implements Serializable {
     public static final String FIELD_DELIM = "&";
     public static final String VALUE_DELIM = ",";

@@ -2,14 +2,14 @@ package com.g5.tdp2.myhealthapp.entity;
 
 import java.util.function.Function;
 
-public class ProfessionalWdistForm extends ProviderWdistForm {
+public class SanatoriumWdistForm extends ProviderWdistForm {
 
-    public ProfessionalWdistForm(Specialty specialty, String plan, double distance, Place myPlace) {
+    public SanatoriumWdistForm(Specialty specialty, String plan, double distance, Place myPlace) {
         super(specialty, plan, distance, myPlace);
     }
 
     /**
-     * Concatena valores para armar un query string de un profesional.
+     * Concatena valores para armar un query string de un sanatorio.
      *
      * @param base    String base (ej: una url)
      * @param valSep  Separador de valor (ej: '=')
@@ -18,14 +18,14 @@ public class ProfessionalWdistForm extends ProviderWdistForm {
      * @return Query string
      */
     public String concat(String base, String valSep, String itemSep, Function<String, String> encode) {
-        return base + "type" + valSep + "PROFESIONAL" + // type
+        return base + "type" + valSep + "SANATORIO" + // type
                 itemSep + "plan" + valSep + plan + // plan
                 (Specialty.DEFAULT_SPECIALTY.equals(specialty) ? "" : itemSep + "specialty" + valSep + encode.apply("" + specialty.getId()));  // especialidad
     }
 
     @Override
     public String toString() {
-        return "ProfessionalWdistForm{" +
+        return "SanatoriumWdistForm{" +
                 "specialty=" + specialty +
                 ", plan='" + plan + '\'' +
                 ", distance=" + distance +
