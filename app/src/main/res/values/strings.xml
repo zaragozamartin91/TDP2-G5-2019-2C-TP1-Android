@@ -109,7 +109,7 @@
     <string name="check_card_specialty">Especialidad: %1$s</string>
     <string name="check_card_checktype">Tipo de estudio: %1$s</string>
     <string name="check_card_date">Fecha de alta: %1$s</string>
-    <string name="check_card_update">Fecha de actualizacion: %1$s</string>
+    <string name="check_card_update">Fecha de actualizaci\u00F3n: %1$s</string>
     <string name="check_card_status">%1$s</string>
 
 
@@ -117,7 +117,7 @@
     <string name="check_detail_specialty">Especialidad: %1$s</string>
     <string name="check_detail_checktype">Tipo de estudio: %1$s</string>
     <string name="check_detail_date">Fecha de alta: %1$s</string>
-    <string name="check_detail_update">Fecha de actualizacion: %1$s</string>
+    <string name="check_detail_update">Fecha de actualizaci\u00F3n: %1$s</string>
     <string name="check_detail_status">%1$s</string>
     <string name="check_detail_obs">%1$s</string>
     <string name="default_notification_channel_id">notif_channel</string>
