@@ -20,18 +20,18 @@ public class ProviderInfoWindow implements GoogleMap.InfoWindowAdapter {
 
     @Override
     public View getInfoContents(final Marker m) {
-        View v = inflater.inflate(R.layout.info_prof_window, null);
+        View v = inflater.inflate(R.layout.info_prov_window, null);
         Provider p = Provider.unzip(m.getTitle());
 
         Log.d("ProviderInfoWindow-getInfoContents", p.toString());
 
         //"Pepe Argento" + "&" + "Calle falsa 123" + "&" + "Oncologia" + "&1533246698"
 
-        ((TextView) v.findViewById(R.id.info_prof_window_name)).setText(p.getName());
-        ((TextView) v.findViewById(R.id.info_prof_window_special)).setText(Provider.formatField(p.getSpecialties()));
-        ((TextView) v.findViewById(R.id.info_prof_window_addrWphone)).setText(p.getMainOffice().addressWphone());
-        ((TextView) v.findViewById(R.id.info_prof_window_plan)).setText(p.getPlan());
-        ((TextView) v.findViewById(R.id.info_prof_window_email)).setText(Provider.formatField(p.getEmails()));
+        ((TextView) v.findViewById(R.id.info_prov_window_name)).setText(p.getName());
+        ((TextView) v.findViewById(R.id.info_prov_window_special)).setText(Provider.formatField(p.getSpecialties()));
+        ((TextView) v.findViewById(R.id.info_prov_window_addrWphone)).setText(p.getMainOffice().addressWphone());
+        ((TextView) v.findViewById(R.id.info_prov_window_plan)).setText(p.getPlan());
+        ((TextView) v.findViewById(R.id.info_prov_window_email)).setText(Provider.formatField(p.getEmails()));
         return v;
     }
 
