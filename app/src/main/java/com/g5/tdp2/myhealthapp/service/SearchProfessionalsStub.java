@@ -5,7 +5,7 @@ import com.g5.tdp2.myhealthapp.entity.Professional;
 import com.g5.tdp2.myhealthapp.entity.ProfessionalSearchForm;
 import com.g5.tdp2.myhealthapp.entity.ProfessionalWdistForm;
 import com.g5.tdp2.myhealthapp.usecase.SearchProfessionals;
-import com.g5.tdp2.myhealthapp.usecase.SearchProfessionalsException;
+import com.g5.tdp2.myhealthapp.usecase.SearchProvidersException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,11 +19,11 @@ public class SearchProfessionalsStub implements SearchProfessionals {
     public void searchProfessionals(
             ProfessionalSearchForm form,
             Consumer<List<Professional>> succCallback,
-            Consumer<Exception> errCallback) throws SearchProfessionalsException {
+            Consumer<Exception> errCallback) throws SearchProvidersException {
         try {
             form.validate();
         } catch (IllegalStateException e) {
-            errCallback.accept(new SearchProfessionalsException(INVALID_FORM, e));
+            errCallback.accept(new SearchProvidersException(INVALID_FORM, e));
             return;
         }
 
@@ -37,11 +37,11 @@ public class SearchProfessionalsStub implements SearchProfessionals {
     }
 
     @Override
-    public void searchProfessionals(ProfessionalWdistForm form, Consumer<List<Professional>> succCallback, Consumer<Exception> errCallback) throws SearchProfessionalsException {
+    public void searchProfessionals(ProfessionalWdistForm form, Consumer<List<Professional>> succCallback, Consumer<Exception> errCallback) throws SearchProvidersException {
         try {
             form.validate();
         } catch (IllegalStateException e) {
-            errCallback.accept(new SearchProfessionalsException(INVALID_FORM, e));
+            errCallback.accept(new SearchProvidersException(INVALID_FORM, e));
             return;
         }
 

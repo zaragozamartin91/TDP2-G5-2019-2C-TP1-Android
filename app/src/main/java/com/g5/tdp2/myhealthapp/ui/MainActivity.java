@@ -26,11 +26,13 @@ import com.g5.tdp2.myhealthapp.service.GetChecksStub;
 import com.g5.tdp2.myhealthapp.service.LoginMemberStub;
 import com.g5.tdp2.myhealthapp.service.PostNewCheckStub;
 import com.g5.tdp2.myhealthapp.service.SearchProfessionalsStub;
+import com.g5.tdp2.myhealthapp.service.SearchSanatoriumsStub;
 import com.g5.tdp2.myhealthapp.service.SignupMemberStub;
 import com.g5.tdp2.myhealthapp.service.WebGetChecks;
 import com.g5.tdp2.myhealthapp.service.WebLoginMember;
 import com.g5.tdp2.myhealthapp.service.WebPostNewCheck;
 import com.g5.tdp2.myhealthapp.service.WebSearchProfessionals;
+import com.g5.tdp2.myhealthapp.service.WebSearchSanatoriums;
 import com.g5.tdp2.myhealthapp.service.WebSignupMember;
 import com.g5.tdp2.myhealthapp.CrmBeanFactory;
 import com.g5.tdp2.myhealthapp.util.DialogHelper;
@@ -164,6 +166,7 @@ public abstract class MainActivity extends AppCompatActivity {
             CrmBeanFactory.INSTANCE.addBean(new SearchProfessionalsStub());
             CrmBeanFactory.INSTANCE.addBean(new PostNewCheckStub());
             CrmBeanFactory.INSTANCE.addBean(new GetChecksStub());
+            CrmBeanFactory.INSTANCE.addBean(new SearchSanatoriumsStub());
             dialog.cancel();
         });
 
@@ -181,6 +184,7 @@ public abstract class MainActivity extends AppCompatActivity {
         setupZones(new WebZoneGateway(prefix + "/zones", requestQueue));
         setupSpecialties(new WebSpecialtyGateway(prefix + "/specialties", requestQueue));
         setChecktypes(new WebChecktypeGateway(prefix + "/authtypes", requestQueue));
+        CrmBeanFactory.INSTANCE.addBean(new WebSearchSanatoriums(prefix + "/lenders", requestQueue));
     }
 
     private void setupZones(ZoneGateway zoneGateway) {

@@ -11,10 +11,10 @@ import com.g5.tdp2.myhealthapp.entity.Provider;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.Marker;
 
-public class ProfessionalInfoWindow implements GoogleMap.InfoWindowAdapter {
+public class ProviderInfoWindow implements GoogleMap.InfoWindowAdapter {
     private LayoutInflater inflater;
 
-    public ProfessionalInfoWindow(LayoutInflater inflater) {
+    public ProviderInfoWindow(LayoutInflater inflater) {
         this.inflater = inflater;
     }
 
@@ -23,7 +23,7 @@ public class ProfessionalInfoWindow implements GoogleMap.InfoWindowAdapter {
         View v = inflater.inflate(R.layout.info_prof_window, null);
         Provider p = Provider.unzip(m.getTitle());
 
-        Log.d("ProfessionalInfoWindow-getInfoContents", p.toString());
+        Log.d("ProviderInfoWindow-getInfoContents", p.toString());
 
         //"Pepe Argento" + "&" + "Calle falsa 123" + "&" + "Oncologia" + "&1533246698"
 

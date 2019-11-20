@@ -18,10 +18,10 @@ import com.g5.tdp2.myhealthapp.R;
 import com.g5.tdp2.myhealthapp.entity.Member;
 import com.g5.tdp2.myhealthapp.entity.Office;
 import com.g5.tdp2.myhealthapp.entity.Place;
-import com.g5.tdp2.myhealthapp.entity.ProfessionalWdistForm;
 import com.g5.tdp2.myhealthapp.entity.Provider;
+import com.g5.tdp2.myhealthapp.entity.SanatoriumWdistForm;
 import com.g5.tdp2.myhealthapp.entity.Specialty;
-import com.g5.tdp2.myhealthapp.usecase.SearchProfessionals;
+import com.g5.tdp2.myhealthapp.usecase.SearchSanatoriums;
 import com.g5.tdp2.myhealthapp.util.DialogHelper;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -39,14 +39,13 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
-import static android.location.LocationManager.*;
+import static android.location.LocationManager.GPS_PROVIDER;
 import static android.location.LocationManager.NETWORK_PROVIDER;
 import static com.g5.tdp2.myhealthapp.usecase.Usecase.INTERNAL_ERROR;
 import static com.g5.tdp2.myhealthapp.usecase.Usecase.INVALID_FORM;
 import static com.g5.tdp2.myhealthapp.usecase.Usecase.UNKNOWN_ERROR;
 
-//Antes extendia de FragmentActivity pero lo cambie para agregar el titulo en la vista
-public class ProfessionalMapActivity extends ActivityWnavigation implements OnMapReadyCallback, LocationListener {
+public class SanatoriumMapActivity extends ActivityWnavigation implements OnMapReadyCallback, LocationListener {
     private static final double DEF_RADIO = -1d;
 
     private GoogleMap mMap;
@@ -58,13 +57,14 @@ public class ProfessionalMapActivity extends ActivityWnavigation implements OnMa
 
     @Override
     protected String actionBarTitle() {
-        return "Profesionales";
+        return "Sanatorios";
     }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_professional_map);
+        setContentView(R.layout.activity_sanatorium_map);
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         Optional.ofNullable(getSupportFragmentManager())
@@ -76,21 +76,21 @@ public class ProfessionalMapActivity extends ActivityWnavigation implements OnMa
 
         setupSpecialties();
 
-        findViewById(R.id.prof_map_search).setOnClickListener(this::searchProfessionals);
+        findViewById(R.id.san_map_search).setOnClickListener(this::searchSanatoriums);
 
         member = (Member) getIntent().getSerializableExtra(MEMBER_EXTRA);
 
-        findViewById(R.id.prof_map_progress).setVisibility(View.INVISIBLE);
+        findViewById(R.id.san_map_progress).setVisibility(View.INVISIBLE);
     }
 
 
-    private void searchProfessionals(View v) {
+    private void searchSanatoriums(View v) {
         if (currentLocation.get() == null) {
             Toast.makeText(this, "Ubicacion desconocida", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        findViewById(R.id.prof_map_progress).setVisibility(View.VISIBLE);
+        findViewById(R.id.san_map_progress).setVisibility(View.VISIBLE);
         clearCurrMarkers();
 
         Place p = new Place() {
@@ -104,29 +104,29 @@ public class ProfessionalMapActivity extends ActivityWnavigation implements OnMa
         };
 
         v.setEnabled(false);
-        SearchProfessionals usecase = CrmBeanFactory.INSTANCE.getBean(SearchProfessionals.class);
-        ProfessionalWdistForm form = new ProfessionalWdistForm(specialtyVal, member.getPlan(), radioVal, p);
-        usecase.searchProfessionals(form, profs -> {
+        SearchSanatoriums usecase = CrmBeanFactory.INSTANCE.getBean(SearchSanatoriums.class);
+        SanatoriumWdistForm form = new SanatoriumWdistForm(specialtyVal, member.getPlan(), radioVal, p);
+        usecase.searchSanatoriums(form, sans -> {
             v.setEnabled(true);
-            profs.forEach(this::addMarker);
-            if (profs.isEmpty()) {
-                Toast.makeText(this, R.string.prof_map_no_results, Toast.LENGTH_SHORT).show();
+            sans.forEach(this::addMarker);
+            if (sans.isEmpty()) {
+                Toast.makeText(this, R.string.san_map_no_results, Toast.LENGTH_SHORT).show();
             }
-            findViewById(R.id.prof_map_progress).setVisibility(View.INVISIBLE);
+            findViewById(R.id.san_map_progress).setVisibility(View.INVISIBLE);
         }, err -> {
-            findViewById(R.id.prof_map_progress).setVisibility(View.INVISIBLE);
+            findViewById(R.id.san_map_progress).setVisibility(View.INVISIBLE);
             v.setEnabled(true);
             switch (err.getMessage()) {
                 case INVALID_FORM:
-                    Toast.makeText(this, R.string.prof_map_no_filters, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, R.string.san_map_no_filters, Toast.LENGTH_SHORT).show();
                     break;
                 case UNKNOWN_ERROR:
                 case INTERNAL_ERROR:
                 default:
                     DialogHelper.INSTANCE.showNonCancelableDialog(
                             this,
-                            getString(R.string.prof_map_dialog_err_title),
-                            getString(R.string.prof_map_dialog_err_msg));
+                            getString(R.string.san_map_dialog_err_title),
+                            getString(R.string.san_map_dialog_err_msg));
             }
         });
     }
@@ -153,7 +153,7 @@ public class ProfessionalMapActivity extends ActivityWnavigation implements OnMa
                 R.array.map_distances,
                 R.layout.crm_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        Spinner radio = findViewById(R.id.prof_map_radio);
+        Spinner radio = findViewById(R.id.san_map_radio);
         radio.setAdapter(adapter);
         radio.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -178,7 +178,7 @@ public class ProfessionalMapActivity extends ActivityWnavigation implements OnMa
     }
 
     private void setupSpecialties() {
-        Spinner specialty = findViewById(R.id.prof_map_specialty);
+        Spinner specialty = findViewById(R.id.san_map_specialty);
         List<Specialty> values = AppState.INSTANCE.getSpecialties();
         ArrayAdapter<Specialty> adapter = new ArrayAdapter<>(this, R.layout.crm_spinner_item, values);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -278,4 +278,3 @@ public class ProfessionalMapActivity extends ActivityWnavigation implements OnMa
     public void onProviderDisabled(String provider) {
     }
 }
-

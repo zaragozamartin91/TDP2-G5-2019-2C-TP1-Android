@@ -17,13 +17,13 @@ public interface SearchProfessionals extends Usecase {
      * @param form         Formulario de busqueda
      * @param succCallback Accion a realizar con los resultados
      * @param errCallback  Accion a realizar ante un error
-     * @throws SearchProfessionalsException Si ocurre un error al realizar la busqueda
+     * @throws SearchProvidersException Si ocurre un error al realizar la busqueda
      */
     void searchProfessionals(
             ProfessionalSearchForm form,
             Consumer<List<Professional>> succCallback,
             Consumer<Exception> errCallback
-    ) throws SearchProfessionalsException;
+    ) throws SearchProvidersException;
 
     /**
      * Busca profesionales cercanos
@@ -31,10 +31,10 @@ public interface SearchProfessionals extends Usecase {
      * @param form         Formulario de busqueda
      * @param succCallback Accion a realizar con los resultados
      * @param errCallback  Accion a realizar ante un error
-     * @throws SearchProfessionalsException Si ocurre un error al realizar la busqueda
+     * @throws SearchProvidersException Si ocurre un error al realizar la busqueda
      */
     void searchProfessionals(
             ProfessionalWdistForm form,
             Consumer<List<Professional>> succCallback,
-            Consumer<Exception> errCallback) throws SearchProfessionalsException;
+            Consumer<Exception> errCallback) throws SearchProvidersException;
 }

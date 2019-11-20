@@ -69,12 +69,21 @@
     <!-- MAPS *********************************************************************** -->
     <string name="maps_err_noloc_msg">No se tiene acceso a la localizaci\u00F3n</string>
     <string name="maps_loc_found_msg">Localizaci\u00F3n obtenida</string>
+
     <string name="prof_map_radio_prompt">Distancia</string>
     <string name="prof_map_specialty_prompt">Especialidad</string>
     <string name="prof_map_no_results">No se encontraron profesionales con los filtros indicados</string>
     <string name="prof_map_no_filters">Debe ingresar valores en los filtros</string>
     <string name="prof_map_dialog_err_title">Error al buscar profesionales</string>
     <string name="prof_map_dialog_err_msg">Ocurrio un error al obtener profesionales cercanos</string>
+
+    <string name="san_map_radio_prompt">Distancia</string>
+    <string name="san_map_specialty_prompt">Especialidad</string>
+    <string name="san_map_no_results">No se encontraron sanatorios con los filtros indicados</string>
+    <string name="san_map_no_filters">Debe ingresar valores en los filtros</string>
+    <string name="san_map_dialog_err_title">Error al buscar sanatorios</string>
+    <string name="san_map_dialog_err_msg">Ocurrio un error al obtener sanatorios cercanos</string>
+
 
 
     <!-- HUB *********************************************************************** -->
