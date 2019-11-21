@@ -7,6 +7,7 @@ import com.android.volley.RequestQueue;
 import com.g5.tdp2.myhealthapp.entity.Place;
 import com.g5.tdp2.myhealthapp.entity.Provider;
 import com.g5.tdp2.myhealthapp.entity.Sanatorium;
+import com.g5.tdp2.myhealthapp.entity.SanatoriumSearchForm;
 import com.g5.tdp2.myhealthapp.entity.SanatoriumWdistForm;
 import com.g5.tdp2.myhealthapp.usecase.SearchProvidersException;
 import com.g5.tdp2.myhealthapp.usecase.SearchSanatoriums;
@@ -30,6 +31,35 @@ public class WebSearchSanatoriums implements SearchSanatoriums {
     public WebSearchSanatoriums(String baseUrl, RequestQueue requestQueue) {
         this.baseUrl = baseUrl;
         this.requestQueue = requestQueue;
+    }
+
+    @Override
+    public void searchSanatoriums(SanatoriumSearchForm form, Consumer<List<Sanatorium>> succCallback, Consumer<Exception> errCallback) throws SearchProvidersException {
+        try {
+            form.validate();
+        } catch (IllegalStateException e) {
+            errCallback.accept(new SearchProvidersException(INVALID_FORM, e));
+            return;
+        }
+
+        try {
+            String url = form.concat(baseUrl + "?", "=", "&", this::encode);
+            CrmJsonArrayRequest request = CrmJsonArrayRequest.get(url, response -> {
+                Log.i("WebSearchSanatoriums-response", response.toString());
+                Sanatorium[] sanatoriums = JsonParser.INSTANCE.readValue(response.toString(), Sanatorium[].class);
+                succCallback.accept(Arrays.asList(sanatoriums));
+            }, error -> {
+                Exception ex = Optional.ofNullable(error).map(err -> {
+                    Log.e("WebSearchSanatoriums-error", err.toString());
+                    return new SearchProvidersException(UNKNOWN_ERROR);
+                }).orElseGet(() -> new SearchProvidersException(INTERNAL_ERROR));
+                errCallback.accept(ex);
+            });
+            requestQueue.add(request);
+        } catch (Exception e) {
+            errCallback.accept(new SearchProvidersException(INTERNAL_ERROR));
+        }
+
     }
 
     @Override

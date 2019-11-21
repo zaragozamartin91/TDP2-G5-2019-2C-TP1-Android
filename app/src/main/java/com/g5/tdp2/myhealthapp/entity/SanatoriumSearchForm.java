@@ -4,14 +4,14 @@ import java.util.function.Function;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
-public class ProfessionalSearchForm extends ProviderSearchForm {
+public class SanatoriumSearchForm extends ProviderSearchForm {
 
-    public ProfessionalSearchForm(Specialty specialty, Zone zone, String name, String plan) {
+    public SanatoriumSearchForm(Specialty specialty, Zone zone, String name, String plan) {
         super(specialty, zone, name, plan);
     }
 
     /**
-     * Concatena valores para armar un query string de un profesional.
+     * Concatena valores para armar un query string de un sanatorio.
      *
      * @param base    String base (ej: una url)
      * @param valSep  Separador de valor (ej: '=')
@@ -20,7 +20,7 @@ public class ProfessionalSearchForm extends ProviderSearchForm {
      * @return Query string
      */
     public String concat(String base, String valSep, String itemSep, Function<String, String> encode) {
-        return base + "type" + valSep + "PROFESIONAL" + // type
+        return base + "type" + valSep + "SANATORIO" + // type
                 itemSep + "plan" + valSep + plan + // plan
                 (Specialty.DEFAULT_SPECIALTY.equals(specialty) ? "" : itemSep + "specialty" + valSep + encode.apply("" + specialty.getId())) + // especialidad
                 (Zone.DEFAULT_ZONE.equals(zone) ? "" : itemSep + "zone" + valSep + encode.apply("" + zone.getId())) + // zona
@@ -29,7 +29,7 @@ public class ProfessionalSearchForm extends ProviderSearchForm {
 
     @Override
     public String toString() {
-        return "ProfessionalSearchForm{" +
+        return "SanatoriumSearchForm{" +
                 "specialty='" + specialty + '\'' +
                 ", zone='" + zone + '\'' +
                 ", name='" + name + '\'' +
@@ -38,9 +38,3 @@ public class ProfessionalSearchForm extends ProviderSearchForm {
     }
 }
 
-/* * Busqueda de prestadores/profesionales:
- * En buscador:
- * por especialidad
- * por zona (barrio en CABA)
- * por nombre
- */

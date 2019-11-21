@@ -20,7 +20,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ui.SanatoriumMapActivity"></activity>
+        <activity android:name=".ui.SanatoriumListActivity"></activity>
+        <activity android:name=".ui.SanatoriumSearchActivity" />
+        <activity android:name=".ui.SanatoriumMapActivity" />
         <activity android:name=".ui.CheckDetailActivity" />
         <activity android:name=".ui.GetChecksActivity" />
         <activity android:name=".ui.NewCheckActivity" />
