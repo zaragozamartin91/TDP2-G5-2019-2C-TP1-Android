@@ -2,7 +2,6 @@ package com.g5.tdp2.myhealthapp.ui;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -13,31 +12,32 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.g5.tdp2.myhealthapp.R;
 import com.g5.tdp2.myhealthapp.entity.Office;
-import com.g5.tdp2.myhealthapp.entity.Professional;
+import com.g5.tdp2.myhealthapp.entity.Sanatorium;
 
 import java.util.List;
 import java.util.StringJoiner;
 
-public class ProfessionalListActivity extends ActivityWnavigation {
-    public static final String PROFESSIONALS_KEY = "PROFESSIONALS";
+public class SanatoriumListActivity extends ActivityWnavigation {
+    public static final String SANATORIUMS_KEY = "SANATORIUMS";
 
-    private List<Professional> professionals;
+    private List<Sanatorium> sanatoriums;
 
     private RecyclerView recyclerView;
     private LinearLayoutManager layoutManager;
-    private ProfessionalListAdapter mAdapter;
+    private SanatoriumListAdapter mAdapter;
 
     @Override
-    protected String actionBarTitle() { return "Profesionales"; }
+    protected String actionBarTitle() { return "Sanatorios"; }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_professional_list);
+        setContentView(R.layout.activity_sanatorium_list);
 
-        professionals = (List<Professional>) getIntent().getSerializableExtra(PROFESSIONALS_KEY);
+        sanatoriums = (List<Sanatorium>) getIntent().getSerializableExtra(SANATORIUMS_KEY);
 
-        recyclerView = findViewById(R.id.prof_list_rview);
+        recyclerView = findViewById(R.id.san_list_rview);
 
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
@@ -48,42 +48,39 @@ public class ProfessionalListActivity extends ActivityWnavigation {
         recyclerView.setLayoutManager(layoutManager);
 
         // specify an adapter (see also next example)
-        mAdapter = new ProfessionalListAdapter(professionals);
+        mAdapter = new SanatoriumListAdapter(sanatoriums);
         recyclerView.setAdapter(mAdapter);
 
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Log.i("On-destroy", "eliminating activity");
-    }
+
 }
 
-class ProfessionalListAdapter extends RecyclerView.Adapter<ProfessionalListViewHolder> {
-    private List<Professional> mDataset;
 
-    ProfessionalListAdapter(List<Professional> mDataset) {
+class SanatoriumListAdapter extends RecyclerView.Adapter<SanatoriumListViewHolder> {
+    private List<Sanatorium> mDataset;
+
+    SanatoriumListAdapter(List<Sanatorium> mDataset) {
         this.mDataset = mDataset;
     }
 
     // Create new views (invoked by the layout manager)
     @Override
-    public ProfessionalListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public SanatoriumListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
         Context context = parent.getContext();
         CardView v = (CardView) LayoutInflater.from(context)
-                .inflate(R.layout.professional_card, parent, false);
+                .inflate(R.layout.sanatorium_card, parent, false);
 
-        return new ProfessionalListViewHolder(v, context);
+        return new SanatoriumListViewHolder(v, context);
     }
 
     // Replace the contents of a view (invoked by the layout manager)
     @Override
-    public void onBindViewHolder(ProfessionalListViewHolder holder, int position) {
+    public void onBindViewHolder(SanatoriumListViewHolder holder, int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-        holder.setProfessional(mDataset.get(position));
+        holder.setSanatorium(mDataset.get(position));
     }
 
     // Return the size of your dataset (invoked by the layout manager)
@@ -96,34 +93,34 @@ class ProfessionalListAdapter extends RecyclerView.Adapter<ProfessionalListViewH
 // Provide a reference to the views for each data item
 // Complex data items may need more than one view per item, and
 // you provide access to all the views for a data item in a view holder
-class ProfessionalListViewHolder extends RecyclerView.ViewHolder {
+class SanatoriumListViewHolder extends RecyclerView.ViewHolder {
     // each data item is just a string in this case
     private CardView cardView;
     private Context ctx;
 
-    ProfessionalListViewHolder(CardView v, Context c) {
+    SanatoriumListViewHolder(CardView v, Context c) {
         super(v);
         cardView = v;
         ctx = c;
     }
 
-    void setProfessional(Professional p) {
-        ((TextView) cardView.findViewById(R.id.prof_card_name)).setText(p.getName());
+    void setSanatorium(Sanatorium p) {
+        ((TextView) cardView.findViewById(R.id.san_card_name)).setText(p.getName());
 
-        ((TextView) cardView.findViewById(R.id.prof_card_specialty))
-                .setText(ctx.getString(R.string.prof_card_specialty, buildString(p.getSpecialties())));
+        ((TextView) cardView.findViewById(R.id.san_card_specialty))
+                .setText(ctx.getString(R.string.san_card_specialty, buildString(p.getSpecialties())));
 
-        ((TextView) cardView.findViewById(R.id.prof_card_langs))
-                .setText(ctx.getString(R.string.prof_card_langs, buildString(p.getLanguages())));
+        ((TextView) cardView.findViewById(R.id.san_card_langs))
+                .setText(ctx.getString(R.string.san_card_langs, buildString(p.getLanguages())));
 
-        ((TextView) cardView.findViewById(R.id.prof_card_plans))
-                .setText(ctx.getString(R.string.prof_card_plans, p.getPlan()));
+        ((TextView) cardView.findViewById(R.id.san_card_plans))
+                .setText(ctx.getString(R.string.san_card_plans, p.getPlan()));
 
-        ((TextView) cardView.findViewById(R.id.prof_card_emails))
-                .setText(ctx.getString(R.string.prof_card_emails, buildString(p.getEmails())));
+        ((TextView) cardView.findViewById(R.id.san_card_emails))
+                .setText(ctx.getString(R.string.san_card_emails, buildString(p.getEmails())));
 
-        ((TextView) cardView.findViewById(R.id.prof_card_offices))
-                .setText(ctx.getString(R.string.prof_card_offices, buildStringFoffices(p.getOffices())));
+        ((TextView) cardView.findViewById(R.id.san_card_offices))
+                .setText(ctx.getString(R.string.san_card_offices, buildStringFoffices(p.getOffices())));
     }
 
     private String buildString(List<String> ls) {

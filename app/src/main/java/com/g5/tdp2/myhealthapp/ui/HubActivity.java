@@ -25,8 +25,9 @@ public class HubActivity extends ActivityWnavigation {
     public static final String PROF_NEARBY = "Profesionales cercanos";
     private static final String NEW_CHECK = "Solicitar estudio";
     private static final String GET_CHECKS = "Mis estudios";
+    public static final String SANS_SEARCH = "Listar sanatorios";
     public static final String SANS_NEARBY = "Sanatorios cercanos";
-    static final String[] VIEWS = new String[]{PROF_SEARCH, PROF_NEARBY, NEW_CHECK, GET_CHECKS, SANS_NEARBY};
+    static final String[] VIEWS = new String[]{PROF_SEARCH, PROF_NEARBY, NEW_CHECK, GET_CHECKS, SANS_SEARCH, SANS_NEARBY};
 
     private Member member;
 
@@ -52,6 +53,7 @@ public class HubActivity extends ActivityWnavigation {
                 R.drawable.map_logo,
                 R.drawable.newcheck_logo,
                 R.drawable.md_check,
+                R.drawable.hosp_logo,
                 R.drawable.map_logo};
         ArrayAdapter<String> listAdapter = new HubArrayAdapter(this, VIEWS, logos);
         listView.setAdapter(listAdapter);
@@ -67,6 +69,9 @@ public class HubActivity extends ActivityWnavigation {
                                 .putExtra(MEMBER_EXTRA, member)),
                 () -> startActivity(
                         new Intent(this, GetChecksActivity.class)
+                                .putExtra(MEMBER_EXTRA, member)),
+                () -> startActivity(
+                        new Intent(this, SanatoriumSearchActivity.class)
                                 .putExtra(MEMBER_EXTRA, member)),
                 () -> startActivity(
                         new Intent(this, SanatoriumMapActivity.class)

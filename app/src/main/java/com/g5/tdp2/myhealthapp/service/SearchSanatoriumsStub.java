@@ -2,6 +2,7 @@ package com.g5.tdp2.myhealthapp.service;
 
 import com.g5.tdp2.myhealthapp.entity.Office;
 import com.g5.tdp2.myhealthapp.entity.Sanatorium;
+import com.g5.tdp2.myhealthapp.entity.SanatoriumSearchForm;
 import com.g5.tdp2.myhealthapp.entity.SanatoriumWdistForm;
 import com.g5.tdp2.myhealthapp.usecase.SearchProvidersException;
 import com.g5.tdp2.myhealthapp.usecase.SearchSanatoriums;
@@ -14,6 +15,18 @@ import java.util.function.Consumer;
 
 public class SearchSanatoriumsStub implements SearchSanatoriums {
 
+
+    @Override
+    public void searchSanatoriums(SanatoriumSearchForm form, Consumer<List<Sanatorium>> succCallback, Consumer<Exception> errCallback) throws SearchProvidersException {
+        try {
+            form.validate();
+        } catch (IllegalStateException e) {
+            errCallback.accept(new SearchProvidersException(INVALID_FORM, e));
+            return;
+        }
+
+        getSans(succCallback);
+    }
 
     @Override
     public void searchSanatoriums(SanatoriumWdistForm form, Consumer<List<Sanatorium>> succCallback, Consumer<Exception> errCallback) throws SearchProvidersException {

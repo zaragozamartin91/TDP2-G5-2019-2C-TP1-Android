@@ -85,7 +85,6 @@
     <string name="san_map_dialog_err_msg">Ocurrio un error al obtener sanatorios cercanos</string>
 
 
-
     <!-- HUB *********************************************************************** -->
     <string name="main_hub_title">Bienvenido %1$s</string>
 
@@ -101,12 +100,31 @@
     <string name="prof_search_err_dialog_title">Error en la b\u00FAsqueda</string>
     <string name="prof_search_err_dialog_msg">Ocurri\u00F3 un error al buscar profesionales. Int\u00E9ntelo nuevamente m\u00E1s tarde</string>
 
+    <!-- SEARCH_SANATORIUMS****************************************************************** -->
+    <string name="san_search_title">Listar Sanatorios</string>
+    <string name="san_search_name_hint">Nombre</string>
+    <string name="san_search_specialty_hint">Especialidad</string>
+    <string name="san_search_checktype_hint">Tipo de estudio</string>
+    <string name="san_search_zone_hint">Localidad</string>
+    <string name="san_search_btn_text">Buscar</string>
+    <string name="san_search_empty_results">No se encontraron resultados para la b\u00FAsqueda realizada. Puede ampliar su b\u00FAsqueda llamando a 0800-MYHEALTH</string>
+    <string name="san_search_no_filters">Por favor ingrese al menos un filtro para realizar la b\u00FAsqueda</string>
+    <string name="san_search_err_dialog_title">Error en la b\u00FAsqueda</string>
+    <string name="san_search_err_dialog_msg">Ocurri\u00F3 un error al buscar sanatorios. Int\u00E9ntelo nuevamente m\u00E1s tarde</string>
+
     <!-- PROF_CARD****************************************************************** -->
     <string name="prof_card_specialty">Especialidades: %1$s</string>
     <string name="prof_card_langs">Idiomas: %1$s</string>
     <string name="prof_card_plans">Plan: %1$s</string>
     <string name="prof_card_emails">Emails: %1$s</string>
     <string name="prof_card_offices">Oficinas: %1$s</string>
+
+    <!-- SAN_CARD****************************************************************** -->
+    <string name="san_card_specialty">Especialidades: %1$s</string>
+    <string name="san_card_langs">Idiomas: %1$s</string>
+    <string name="san_card_plans">Plan: %1$s</string>
+    <string name="san_card_emails">Emails: %1$s</string>
+    <string name="san_card_offices">Oficinas: %1$s</string>
 
     <!-- NEW CHECK************************************************************************** -->
     <string name="newcheck_img_contentDesc">Receta de estudio</string>
